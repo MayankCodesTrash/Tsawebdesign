@@ -170,9 +170,9 @@ const THEN_NOW_PAIRS = [
     id: 4,
     location: "Drake University Old Main",
     then: {
-      year: "2007",
-      url: "https://upload.wikimedia.org/wikipedia/commons/c/c1/Oldmaindrake.jpg",
-      caption: "Drake University's Old Main as it appeared in 2007 — this Second Renaissance Revival building replaced the original 1881 Old Main. Drake was founded with just 43 students on this hilltop.",
+      year: "c. 1882",
+      url: "https://drakeapedia.library.drake.edu/w/images/7/78/OLDOLDMAIN.jpg",
+      caption: "Drake University's original Old Main building circa 1882 — the very first structure on campus, founded just a year earlier with 43 students. This building was later demolished and replaced.",
     },
     now: {
       year: "2025",
