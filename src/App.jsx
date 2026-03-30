@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import L from 'leaflet';
+import { SplashScreen, ThenNowPage, NeighborhoodPage, PopulationChart, SearchModal, NewspaperSection } from './NewFeatures.jsx';
 import 'leaflet/dist/leaflet.css';
 
 // ─── IMAGE (will be replaced with data URI via build script) ────────────────
@@ -80,6 +81,10 @@ const GlobalStyles = () => (
       0%, 100% { opacity: 1; }
       50% { opacity: 0; }
     }
+    @keyframes coinFloat {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-60px) scale(1.4); }
+    }
 
     .fade-section { opacity: 0; transform: translateY(24px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
     .fade-section.visible { opacity: 1; transform: translateY(0); }
@@ -120,12 +125,12 @@ const NAV_ITEMS = [
   { id: "heroes", label: "Heroes" },
   { id: "voices", label: "Voices" },
   { id: "play", label: "City Builder" },
-  { id: "agriculture", label: "Agriculture" },
-  { id: "map", label: "Historical Map" },
+  { id: "then-now", label: "Then & Now" },
+  { id: "neighborhoods", label: "Neighborhoods" },
   { id: "sources", label: "Sources" },
 ];
 
-function Navbar({ activePage, setPage }) {
+function Navbar({ activePage, setPage, onSearchOpen }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -175,10 +180,27 @@ function Navbar({ activePage, setPage }) {
           ))}
         </div>
 
+        <button
+          onClick={() => onSearchOpen && onSearchOpen()}
+          aria-label="Open search (Ctrl+K)"
+          title="Search (⌘K)"
+          style={{
+            background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)",
+            color: "rgba(255,255,255,0.6)", padding: "7px 14px", borderRadius: 8,
+            cursor: "pointer", fontSize: "0.82rem", display: "flex", alignItems: "center", gap: 6,
+            fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s ease",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,191,163,0.15)"; e.currentTarget.style.color = "var(--peach)"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "rgba(255,255,255,0.6)"; }}
+        >
+          <span aria-hidden="true">🔍</span>
+          <kbd style={{ fontSize: "0.65rem", opacity: 0.6, fontFamily: "'JetBrains Mono', monospace" }}>⌘K</kbd>
+        </button>
+
         <button onClick={() => setMobileOpen(!mobileOpen)} style={{
           display: "none", background: "none", border: "none",
           color: "#fff", fontSize: "1.5rem", cursor: "pointer", padding: 8,
-        }} className="mobile-toggle">{mobileOpen ? "✕" : "☰"}</button>
+        }} className="mobile-toggle" aria-label={mobileOpen ? "Close menu" : "Open menu"}>{mobileOpen ? "✕" : "☰"}</button>
       </div>
 
       {mobileOpen && (
@@ -550,8 +572,21 @@ function HistoryPage() {
   const [imgErr, setImgErr] = useState(false);
   const [animKey, setAnimKey] = useState(0);
   const [playing, setPlaying] = useState(false);
+  const [shareToast, setShareToast] = useState(false);
   const playRef = useRef(false);
   const ev = timelineData[idx];
+
+  const handleShare = () => {
+    const text = `${ev.year}: ${ev.title} — ${ev.desc}`;
+    if (navigator.share) {
+      navigator.share({ title: `${ev.year}: ${ev.title}`, text: ev.desc, url: window.location.href }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(text).then(() => {
+        setShareToast(true);
+        setTimeout(() => setShareToast(false), 2200);
+      }).catch(() => {});
+    }
+  };
 
   useEffect(() => {
     setImgErr(false);
@@ -672,7 +707,13 @@ function HistoryPage() {
                 color: playing ? "var(--charcoal)" : "var(--peach)", fontWeight: 600,
                 cursor: "pointer", fontSize: "0.88rem",
                 fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s ease",
-              }}>{playing ? "⏸ Pause" : "▶ Play"}</button>
+              }} aria-pressed={playing}>{playing ? "⏸ Pause" : "▶ Play"}</button>
+              <button onClick={handleShare} style={{
+                padding: "11px 24px", borderRadius: 10, border: "2px solid rgba(0,0,0,0.08)",
+                background: "transparent", color: "var(--slate)", fontWeight: 600,
+                cursor: "pointer", fontSize: "0.88rem",
+                fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s ease",
+              }} aria-label="Share this historical event">📤 Share</button>
             </div>
           </div>
         </div>
@@ -680,6 +721,29 @@ function HistoryPage() {
         <p style={{ textAlign: "center", marginTop: 20, fontSize: "0.8rem", color: "var(--mist)" }}>
           {idx + 1} of {timelineData.length} events · Click any year to jump
         </p>
+
+        {/* Share toast */}
+        {shareToast && (
+          <div style={{
+            position: "fixed", bottom: 28, left: "50%", transform: "translateX(-50%)",
+            background: "var(--charcoal)", color: "#fff", padding: "12px 24px",
+            borderRadius: 12, fontSize: "0.88rem", fontWeight: 600, zIndex: 9000,
+            animation: "fadeUp 0.3s ease", boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
+          }} role="status" aria-live="polite">
+            ✅ Copied to clipboard!
+          </div>
+        )}
+
+        {/* Population chart section */}
+        <div style={{ marginTop: 64 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 32 }}>
+            <div style={{ width: 32, height: 2, background: "var(--peach)", borderRadius: 1 }} />
+            <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--copper)" }}>
+              By the Numbers
+            </span>
+          </div>
+          <PopulationChart />
+        </div>
       </div>
     </div>
   );
@@ -1073,6 +1137,9 @@ function VoicesPage() {
           ))}
         </div>
       </div>
+
+      {/* Newspaper archive section */}
+      <NewspaperSection />
     </div>
   );
 }
@@ -1274,121 +1341,237 @@ function SourcesPage() {
 // ─── CITY BUILDER STRATEGY GAME ──────────────────────────────────────────────
 const ERAS = [
   { popReq: 0,      name: "Raccoon Fork Wilderness",  year: "1843", log: "You arrive at the Raccoon Fork. Build the garrison!" },
-  { popReq: 200,    name: "Town of Fort Des Moines",  year: "1846", log: "Population 200! Iowa achieves statehood — Fort Des Moines is now a town." },
-  { popReq: 3000,   name: "Railroad Boom Town",        year: "1866", log: "Population 3,000! The railroad arrives — Des Moines explodes in growth." },
-  { popReq: 18000,  name: "City Beautiful Era",        year: "1900", log: "Population 18,000! The City Beautiful plan reshapes downtown." },
-  { popReq: 65000,  name: "Post-War Expansion",        year: "1950", log: "Population 65,000! The suburbs boom as veterans return home." },
-  { popReq: 155000, name: "Downtown Revitalization",   year: "1990", log: "Population 155,000! Skywalk, Principal Park — downtown transforms." },
+  { popReq: 150,    name: "Town of Fort Des Moines",  year: "1846", log: "Population 150! Iowa achieves statehood — Fort Des Moines is now a town." },
+  { popReq: 2000,   name: "Railroad Boom Town",        year: "1866", log: "Population 2,000! The railroad arrives — Des Moines explodes in growth." },
+  { popReq: 12000,  name: "City Beautiful Era",        year: "1900", log: "Population 12,000! The City Beautiful plan reshapes downtown." },
+  { popReq: 45000,  name: "Post-War Expansion",        year: "1950", log: "Population 45,000! The suburbs boom as veterans return home." },
+  { popReq: 120000, name: "Downtown Revitalization",   year: "1990", log: "Population 120,000! Skywalk, Principal Park — downtown transforms." },
   { popReq: 215000, name: "Modern Metropolis",         year: "Present", log: "Population 215,000! You have built modern Des Moines!" },
 ];
 
 const HOUSING = [
-  { name: "Log Cabin",         desc: "+10 pop · Pioneer shelter",        baseCost: 80,       popAdd: 10,    emoji: "🛖",  unlockEra: 0, historical: "First settlers at the Raccoon Fork, 1843" },
-  { name: "Brick Rowhouse",    desc: "+50 pop · Urban housing",           baseCost: 600,      popAdd: 50,    emoji: "🏠",  unlockEra: 1, historical: "Built along Court Avenue in the 1850s" },
-  { name: "Boarding House",    desc: "+200 pop · Railroad worker housing", baseCost: 4000,    popAdd: 200,   emoji: "🏨",  unlockEra: 2, historical: "Housed hundreds of railroad workers in 1866" },
-  { name: "Victorian Home",    desc: "+600 pop · Merchant class housing", baseCost: 18000,    popAdd: 600,   emoji: "🏡",  unlockEra: 3, historical: "Grand homes built in Sherman Hill, 1890s" },
-  { name: "Suburban Tract",    desc: "+2,000 pop · Post-war suburbs",     baseCost: 80000,    popAdd: 2000,  emoji: "🏘️", unlockEra: 4, historical: "Waukee and Ankeny developments, 1950s" },
-  { name: "Apartment Complex", desc: "+8,000 pop · Urban density",        baseCost: 500000,   popAdd: 8000,  emoji: "🏢",  unlockEra: 5, historical: "Downtown redevelopment along Grand Ave, 1990s" },
-  { name: "Master Community",  desc: "+25,000 pop · Modern metro living", baseCost: 2000000,  popAdd: 25000, emoji: "🌇",  unlockEra: 6, historical: "Jordan Creek and Liberty developments, 2000s" },
+  { name: "Pioneer Cabin",      desc: "+25 pop · Quick frontier shelter",   baseCost: 25,      popAdd: 25,    emoji: "⛺",  unlockEra: 0, historical: "Earliest settlers at the Raccoon Fork, 1843" },
+  { name: "Log Cabin",          desc: "+50 pop · Sturdy homestead",          baseCost: 60,      popAdd: 50,    emoji: "🛖",  unlockEra: 0, historical: "First permanent homes in Fort Des Moines, 1843" },
+  { name: "Brick Rowhouse",     desc: "+150 pop · Urban housing row",         baseCost: 350,     popAdd: 150,   emoji: "🏠",  unlockEra: 1, historical: "Built along Court Avenue in the 1850s" },
+  { name: "Worker Tenement",    desc: "+400 pop · Dense labor housing",       baseCost: 900,     popAdd: 400,   emoji: "🏚️", unlockEra: 1, historical: "Tenements near rail yards housed immigrant workers" },
+  { name: "Boarding House",     desc: "+700 pop · Railroad worker housing",   baseCost: 2500,    popAdd: 700,   emoji: "🏨",  unlockEra: 2, historical: "Boarding houses lined the tracks in the 1866 boom" },
+  { name: "Victorian Home",     desc: "+1,500 pop · Merchant class estate",   baseCost: 7000,    popAdd: 1500,  emoji: "🏡",  unlockEra: 3, historical: "Grand Victorian homes in Sherman Hill, 1890s" },
+  { name: "Craftsman Bungalow", desc: "+3,000 pop · Middle-class housing",    baseCost: 18000,   popAdd: 3000,  emoji: "🏘️", unlockEra: 3, historical: "Bungalows spread across Beaverdale & Drake, 1910s" },
+  { name: "Suburban Tract",     desc: "+7,000 pop · Post-war development",    baseCost: 45000,   popAdd: 7000,  emoji: "🏗️", unlockEra: 4, historical: "Levittown-style tracts in Ankeny & Waukee, 1950s" },
+  { name: "Garden Apartments",  desc: "+14,000 pop · Mid-rise living",        baseCost: 130000,  popAdd: 14000, emoji: "🏬",  unlockEra: 4, historical: "Urbandale and Clive apartment booms, 1960s–70s" },
+  { name: "Apartment Complex",  desc: "+28,000 pop · Urban density housing",  baseCost: 320000,  popAdd: 28000, emoji: "🏢",  unlockEra: 5, historical: "High-rise redevelopment along Grand Ave, 1990s" },
+  { name: "Master Community",   desc: "+60,000 pop · Master-planned metro",   baseCost: 900000,  popAdd: 60000, emoji: "🌇",  unlockEra: 6, historical: "Jordan Creek Town Center & Liberty District, 2000s" },
 ];
 
 const INDUSTRY = [
-  { name: "River Farm",       desc: "+$3/s · Fertile bottomland",        baseCost: 120,     incAdd: 3,     emoji: "🌾",  unlockEra: 0, historical: "Settlers farmed the Des Moines River valley from 1843" },
-  { name: "Sawmill",          desc: "+$25/s · Timber for the city",      baseCost: 1200,    incAdd: 25,    emoji: "🪵",  unlockEra: 1, historical: "Sawmills powered early construction along the river" },
-  { name: "Railroad Depot",   desc: "+$200/s · Trade hub",               baseCost: 12000,   incAdd: 200,   emoji: "🚂",  unlockEra: 2, historical: "The Chicago & North Western reached Des Moines in 1867" },
-  { name: "Meatpacking Plant",desc: "+$800/s · Industrial employment",   baseCost: 60000,   incAdd: 800,   emoji: "🏭",  unlockEra: 3, historical: "Hormel and Iowa Beef packing plants employed thousands" },
-  { name: "Insurance Firm",   desc: "+$3,000/s · Financial sector",      baseCost: 400000,  incAdd: 3000,  emoji: "💼",  unlockEra: 4, historical: "Principal and Equitable Life made Des Moines a finance capital" },
-  { name: "Tech Campus",      desc: "+$12,000/s · Knowledge economy",    baseCost: 3000000, incAdd: 12000, emoji: "💻",  unlockEra: 5, historical: "EMC Insurance and DuPont Pioneer anchor the modern tech sector" },
+  { name: "River Farm",        desc: "+$20/s · Fertile bottomland",       baseCost: 60,      incAdd: 20,    emoji: "🌾",  unlockEra: 0, historical: "Settlers farmed the Des Moines River valley from 1843" },
+  { name: "Trading Post",      desc: "+$60/s · Frontier commerce",        baseCost: 180,     incAdd: 60,    emoji: "🏪",  unlockEra: 0, historical: "Trading posts at the Raccoon Fork served trappers & settlers" },
+  { name: "Sawmill",           desc: "+$200/s · Timber for the city",     baseCost: 600,     incAdd: 200,   emoji: "🪵",  unlockEra: 1, historical: "Sawmills powered early construction along the river, 1850s" },
+  { name: "Newspaper Press",   desc: "+$500/s · Inform the public",       baseCost: 2000,    incAdd: 500,   emoji: "📰",  unlockEra: 1, historical: "The Iowa State Register launched in Des Moines in 1849" },
+  { name: "Railroad Depot",    desc: "+$2,000/s · Trade hub",             baseCost: 7000,    incAdd: 2000,  emoji: "🚂",  unlockEra: 2, historical: "The Chicago & North Western reached Des Moines in 1867" },
+  { name: "Coal Mine",         desc: "+$5,000/s · Industrial fuel",       baseCost: 20000,   incAdd: 5000,  emoji: "⛏️", unlockEra: 2, historical: "Coal mining boomed southeast of Des Moines from 1864" },
+  { name: "Meatpacking Plant", desc: "+$12,000/s · Industrial anchor",    baseCost: 50000,   incAdd: 12000, emoji: "🏭",  unlockEra: 3, historical: "Hormel and Iowa Beef packing plants employed thousands, 1880s" },
+  { name: "Publishing House",  desc: "+$25,000/s · Media & print empire", baseCost: 120000,  incAdd: 25000, emoji: "📚",  unlockEra: 3, historical: "Meredith Corporation founded in Des Moines in 1902" },
+  { name: "Insurance Firm",    desc: "+$60,000/s · Financial capital",    baseCost: 300000,  incAdd: 60000, emoji: "💼",  unlockEra: 4, historical: "Principal and Equitable Life made Des Moines the 'Hartford of the West'" },
+  { name: "Bank & Finance",    desc: "+$120,000/s · Wall St. of the Plains", baseCost: 700000, incAdd: 120000, emoji: "🏦", unlockEra: 4, historical: "Des Moines became one of the top 10 U.S. financial centers by 1970" },
+  { name: "Tech Campus",       desc: "+$300,000/s · Innovation economy",  baseCost: 2000000, incAdd: 300000, emoji: "💻",  unlockEra: 5, historical: "EMC Insurance, DuPont Pioneer, and Google data centers anchor the sector" },
 ];
 
 const LANDMARKS = [
-  { name: "Fort Des Moines Garrison",  cost: 2000,       reqPop: 50,     effect: "+30% Income · The founding fort",           multAdd: 0.30, clickAdd: 30,    unlockEra: 0, historical: "Captain James Allen, 1843" },
-  { name: "Iowa State Capitol",        cost: 30000,      reqPop: 2000,   effect: "+60% Income · The golden dome",              multAdd: 0.60, clickAdd: 400,   unlockEra: 2, historical: "Completed after 20 years of construction, 1884" },
-  { name: "Iowa State Fairgrounds",    cost: 300000,     reqPop: 12000,  effect: "+120% Income · Iowa's biggest event",        multAdd: 1.20, clickAdd: 3000,  unlockEra: 3, historical: "Permanent grounds established 1886" },
-  { name: "World Food Prize Hall",     cost: 5000000,    reqPop: 60000,  effect: "+250% Income · Global agriculture hub",      multAdd: 2.50, clickAdd: 30000, unlockEra: 4, historical: "John Ruan brought the Prize to Des Moines, 1990" },
-  { name: "Principal Park",            cost: 8000000,    reqPop: 100000, effect: "+350% Income · Riverfront ballpark",         multAdd: 3.50, clickAdd: 60000, unlockEra: 5, historical: "Opened on the Des Moines riverfront, 1992" },
-  { name: "801 Grand Tower",           cost: 25000000,   reqPop: 150000, effect: "+600% Income · Iowa's tallest skyscraper",   multAdd: 6.00, clickAdd: 200000,unlockEra: 5, historical: "Built by Principal Financial Group, 1991" },
+  { name: "Fort Des Moines Garrison",  cost: 500,        reqPop: 30,     effect: "+40% Income · The founding fort",           multAdd: 0.40, clickAdd: 80,    unlockEra: 0, historical: "Captain James Allen established the fort, 1843" },
+  { name: "Iowa State Capitol",        cost: 12000,      reqPop: 1500,   effect: "+80% Income · The golden dome",              multAdd: 0.80, clickAdd: 800,   unlockEra: 2, historical: "Completed after 20 years of construction, 1884" },
+  { name: "Iowa State Fairgrounds",    cost: 80000,      reqPop: 8000,   effect: "+150% Income · Iowa's biggest event",        multAdd: 1.50, clickAdd: 5000,  unlockEra: 3, historical: "Permanent fairgrounds established in Des Moines, 1886" },
+  { name: "WHO Radio Tower",           cost: 350000,     reqPop: 25000,  effect: "+200% Income · Voice of the Midwest",        multAdd: 2.00, clickAdd: 15000, unlockEra: 3, historical: "WHO became a 50,000-watt clear-channel giant in 1924" },
+  { name: "World Food Prize Hall",     cost: 1500000,    reqPop: 40000,  effect: "+300% Income · Global agriculture hub",      multAdd: 3.00, clickAdd: 50000, unlockEra: 4, historical: "John Ruan brought the Prize to Des Moines, 1990" },
+  { name: "Principal Park",            cost: 3000000,    reqPop: 80000,  effect: "+400% Income · Riverfront ballpark",         multAdd: 4.00, clickAdd: 100000,unlockEra: 5, historical: "Opened on the Des Moines riverfront, 1992" },
+  { name: "801 Grand Tower",           cost: 8000000,    reqPop: 120000, effect: "+700% Income · Iowa's tallest skyscraper",   multAdd: 7.00, clickAdd: 400000,unlockEra: 5, historical: "Built by Principal Financial Group, 1991 — 45 stories" },
 ];
 
-const MAP_DISTRICTS = [
-  { id: "garrison",   name: "Garrison / Fort",      x: 180, y: 220, w: 80,  h: 60,  reqPop: 0,      color: "#8b4513", emoji: "🏰" },
-  { id: "downtown",   name: "Downtown",              x: 200, y: 160, w: 100, h: 70,  reqPop: 500,    color: "#c0832b", emoji: "🏛️" },
-  { id: "eastvillage",name: "East Village",          x: 310, y: 140, w: 90,  h: 70,  reqPop: 3000,   color: "#2c6e7a", emoji: "🏘️" },
-  { id: "northside",  name: "Near North Side",       x: 200, y: 80,  w: 110, h: 80,  reqPop: 8000,   color: "#4a7c59", emoji: "🌳" },
-  { id: "beaverdale", name: "Beaverdale",            x: 90,  y: 60,  w: 100, h: 80,  reqPop: 20000,  color: "#5c4a8b", emoji: "🏡" },
-  { id: "drake",      name: "Drake University Area", x: 80,  y: 140, w: 100, h: 80,  reqPop: 30000,  color: "#7c2c5c", emoji: "🎓" },
-  { id: "westdes",    name: "West Des Moines",       x: 50,  y: 220, w: 120, h: 80,  reqPop: 60000,  color: "#2c4a7c", emoji: "🏙️" },
-  { id: "ankeny",     name: "Ankeny",                x: 220, y: 20,  w: 110, h: 60,  reqPop: 100000, color: "#6a8b2c", emoji: "🌾" },
-  { id: "waukee",     name: "Waukee",                x: 20,  y: 300, w: 100, h: 60,  reqPop: 150000, color: "#8b6a2c", emoji: "🏗️" },
-  { id: "urbandale",  name: "Urbandale",             x: 60,  y: 190, w: 90,  h: 60,  reqPop: 80000,  color: "#2c6a5c", emoji: "🏪" },
-];
+// ─── SOUND ENGINE ────────────────────────────────────────────────────────────
+function playSound(type) {
+  try {
+    const ac = new (window.AudioContext || window.webkitAudioContext)();
+    const seq = {
+      click: [[880, 0, 0.06, "square"]],
+      buy:   [[330, 0, 0.09, "square"], [550, 0.07, 0.10, "square"], [880, 0.15, 0.10, "square"]],
+      era:   [[523, 0, 0.15, "sine"], [659, 0.12, 0.15, "sine"], [784, 0.24, 0.15, "sine"], [1047, 0.36, 0.25, "sine"]],
+      event: [[440, 0, 0.10, "sine"], [660, 0.10, 0.12, "sine"]],
+      nav:   [[700, 0, 0.05, "sine"], [900, 0.04, 0.07, "sine"]],
+    }[type] || [];
+    seq.forEach(([freq, delay, dur, wave]) => {
+      const osc = ac.createOscillator(), g = ac.createGain();
+      osc.connect(g); g.connect(ac.destination);
+      osc.frequency.value = freq; osc.type = wave;
+      g.gain.setValueAtTime(0.06, ac.currentTime + delay);
+      g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + delay + dur);
+      osc.start(ac.currentTime + delay);
+      osc.stop(ac.currentTime + delay + dur + 0.02);
+    });
+    setTimeout(() => ac.close(), 2000);
+  } catch (e) {}
+}
+if (typeof window !== "undefined") window.__playNavSound = () => playSound("nav");
 
-function getCost(b, c) { return Math.floor(b * Math.pow(1.15, c)); }
-
-function CityMap({ pop }) {
-  const active = MAP_DISTRICTS.filter(d => pop >= d.reqPop);
+// ─── ERA CITY SKYLINE SVG ────────────────────────────────────────────────────
+function EraCity({ eraIdx }) {
+  const idx = Math.min(eraIdx, 6);
+  const label = ["Frontier Garrison · 1843","Town of Des Moines · 1851","City Charter · 1866","Industrial Era · 1875","Progressive City · 1900","Modern Des Moines · 1940","Metropolis · 1970+"][idx];
   return (
-    <div style={{ position: "relative", background: "#e8f0e8", borderRadius: 14, overflow: "hidden", border: "2px solid rgba(0,0,0,0.08)" }}>
-      <svg viewBox="0 0 450 380" style={{ width: "100%", display: "block" }}>
-        <rect x="0" y="0" width="450" height="380" fill="#d4e8d4" />
-        <path d="M160,280 Q180,250 200,240 Q220,230 240,260 Q260,290 280,280 Q300,270 310,300 L310,380 L160,380 Z" fill="#6bb5e8" opacity="0.6" />
-        <path d="M100,310 Q130,290 160,280 L160,380 L100,380 Z" fill="#6bb5e8" opacity="0.5" />
-        <text x="195" y="335" fontSize="9" fill="#1a6a9a" fontWeight="700" textAnchor="middle">Des Moines River</text>
-        <path d="M50,260 Q80,255 110,265 Q140,275 160,280" fill="none" stroke="#6bb5e8" strokeWidth="12" strokeLinecap="round" opacity="0.7" />
-        <text x="90" y="252" fontSize="8" fill="#1a6a9a" fontWeight="600" textAnchor="middle">Raccoon R.</text>
-        {MAP_DISTRICTS.map(d => {
-          const isActive = pop >= d.reqPop;
-          return (
-            <g key={d.id}>
-              <rect x={d.x} y={d.y} width={d.w} height={d.h} rx={8}
-                fill={isActive ? d.color : "#ccc"} opacity={isActive ? 0.85 : 0.3}
-                style={{ transition: "all 0.6s ease" }}
-              />
-              {isActive && (
-                <>
-                  <text x={d.x + d.w / 2} y={d.y + d.h / 2 - 6} fontSize="14" textAnchor="middle">{d.emoji}</text>
-                  <text x={d.x + d.w / 2} y={d.y + d.h / 2 + 10} fontSize="7.5" textAnchor="middle" fill="#fff" fontWeight="700">{d.name}</text>
-                </>
-              )}
-              {!isActive && (
-                <text x={d.x + d.w / 2} y={d.y + d.h / 2 + 4} fontSize="7" textAnchor="middle" fill="#999">
-                  {d.reqPop >= 1000 ? `${(d.reqPop / 1000).toFixed(0)}K pop` : `${d.reqPop} pop`}
-                </text>
-              )}
-            </g>
-          );
-        })}
-        <text x="225" y="374" fontSize="8.5" fill="rgba(0,0,0,0.35)" textAnchor="middle" fontStyle="italic">Greater Des Moines Metro</text>
+    <div style={{ background: "#1a1a2e", borderRadius: 14, overflow: "hidden", border: "2px solid rgba(255,255,255,0.08)", marginBottom: 12 }}>
+      <svg viewBox="0 0 500 160" style={{ width: "100%", display: "block" }}>
+        {idx === 0 && <g>
+          <rect width="500" height="160" fill="#87CEEB"/>
+          <rect y="130" width="500" height="30" fill="#8B7355"/>
+          {[...Array(19)].map((_,i)=><rect key={i} x={30+i*23} y={96} width={13} height={38} rx={1} fill="#8B6914"/>)}
+          <rect x="185" y="82" width="130" height="52" fill="#8B6914"/>
+          <polygon points="185,82 250,47 315,82" fill="#6B4F12"/>
+          <rect x="240" y="44" width="14" height="24" fill="#888"/>
+          <rect x="232" y="110" width="22" height="24" fill="#5a3a0a"/>
+          <rect x="196" y="92" width="20" height="15" fill="#aaccee"/>
+          <rect x="284" y="92" width="20" height="15" fill="#aaccee"/>
+          <rect y="148" width="500" height="12" fill="#6bb5e8" opacity="0.5"/>
+        </g>}
+        {idx === 1 && <g>
+          <rect width="500" height="160" fill="#87CEEB"/>
+          <rect y="122" width="500" height="38" fill="#9c8060"/>
+          {[100,165,240,310,375].map((x,i)=><g key={i}>
+            <rect x={x} y={85-(i%2)*12} width={52+(i%3)*8} height={40+(i%2)*12} fill={["#c8a882","#b89060","#d4b896","#c0986a","#b88050"][i]}/>
+            <rect x={x+6} y={90-(i%2)*12} width={13} height={14} fill="#aaccee"/>
+            <rect x={x+26} y={90-(i%2)*12} width={13} height={14} fill="#aaccee"/>
+          </g>)}
+          <rect x="430" y="78" width="52" height="48" fill="#e8e0d4"/>
+          <polygon points="430,78 456,53 482,78" fill="#d4c8b8"/>
+          <line x1="456" y1="38" x2="456" y2="55" stroke="#666" strokeWidth="3"/>
+          <line x1="449" y1="43" x2="463" y2="43" stroke="#666" strokeWidth="2"/>
+          <rect y="138" width="500" height="8" fill="#c4aa88"/>
+        </g>}
+        {idx === 2 && <g>
+          <rect width="500" height="160" fill="#b0c8d8"/>
+          <rect y="112" width="500" height="48" fill="#9c8060"/>
+          {[35,105,170,240,305,370,430].map((x,i)=><g key={i}>
+            <rect x={x} y={72-(i%3)*10} width={50+(i%2)*14} height={44+(i%3)*10} fill={["#b87850","#c89060","#d4a870","#a86840","#c09070","#b88050","#d0a060"][i]}/>
+            <rect x={x+5} y={78-(i%3)*10} width={13} height={14} fill="#aaccee"/>
+            <rect x={x+24} y={78-(i%3)*10} width={13} height={14} fill="#aaccee"/>
+          </g>)}
+          {[60,100,140].map((cx,i)=><ellipse key={i} cx={cx} cy={55-i*8} rx={12-i*2} ry={7-i} fill="rgba(180,180,180,0.5)"/>)}
+          <line x1="0" y1="146" x2="500" y2="146" stroke="#8B6914" strokeWidth="3"/>
+          {[...Array(14)].map((_,i)=><line key={i} x1={i*38} y1="142" x2={i*38} y2="150" stroke="#8B6914" strokeWidth="4"/>)}
+        </g>}
+        {idx === 3 && <g>
+          <rect width="500" height="160" fill="#a0a8b8"/>
+          <rect y="100" width="500" height="60" fill="#907850"/>
+          {[28,118,208,298,390].map((x,i)=><g key={i}>
+            <rect x={x} y={58-(i%2)*10} width={76} height={46+(i%2)*10} fill={["#8a7060","#7a6050","#9a8070","#8a7060","#7a6050"][i]}/>
+            {[0,1,2].map(j=><rect key={j} x={x+8+j*22} y={68-(i%2)*10} width={15} height={14} fill="#ffdd88" opacity="0.7"/>)}
+          </g>)}
+          {[50,100,155,218,270,325,410].map((x,i)=><g key={i}>
+            <rect x={x} y={28-(i%3)*8} width={15} height={42+(i%3)*8} fill="#7a7070"/>
+            <ellipse cx={x+7} cy={26-(i%3)*8} rx={10} ry={5} fill="rgba(160,150,150,0.55)"/>
+          </g>)}
+        </g>}
+        {idx === 4 && <g>
+          <rect width="500" height="160" fill="#6a98c0"/>
+          <rect y="104" width="500" height="56" fill="#a09078"/>
+          <rect x="388" y="50" width="62" height="58" fill="#8a9080"/>
+          <ellipse cx="419" cy="50" rx="31" ry="16" fill="#9aA090"/>
+          <rect x="413" y="28" width="12" height="24" fill="#8a9080"/>
+          <circle cx="419" cy="26" r="5" fill="#d4aa40"/>
+          {[18,88,158,228,298].map((x,i)=><g key={i}>
+            <rect x={x} y={48-(i%3)*10} width={62+(i%2)*12} height={60+(i%3)*10} fill={["#c8a882","#b8946a","#d8b88a","#c0986c","#b88454"][i]}/>
+            {[0,1,2].map(j=>[0,1,2].map(k=><rect key={`${j}${k}`} x={x+4+j*18} y={54-(i%3)*10+k*17} width={12} height={10} fill="#aaccee" opacity="0.8"/>))}
+          </g>)}
+        </g>}
+        {idx === 5 && <g>
+          <rect width="500" height="160" fill="#2a3a5a"/>
+          <rect y="112" width="500" height="48" fill="#3a3a4a"/>
+          {[[38,38,54,82],[108,22,46,98],[162,13,42,107],[214,33,52,87],[274,18,44,102],[328,28,50,90],[388,33,56,82],[446,40,46,75]].map(([x,y,w,h],i)=><g key={i}>
+            <rect x={x} y={y} width={w} height={h} fill={["#8a9090","#9a9898","#7a8888","#8a8898","#9a9090","#8898a0","#7a8898","#9a8888"][i]}/>
+            <rect x={x+w*0.25} y={y-7} width={w*0.5} height={9} fill={["#9aa0a0","#aaA8A8","#8a9898","#9a98A8","#aaa0a0","#98A8b0","#8a98A8","#Aaa898"][i]}/>
+            {[0,1,2,3].map(j=>[0,1,2].map(k=><rect key={`${j}${k}`} x={x+4+j*(w/4.2)} y={y+9+k*21} width={w/5} height={13} fill="rgba(255,220,100,0.7)" rx={1}/>))}
+          </g>)}
+          <ellipse cx="250" cy="160" rx="200" ry="28" fill="rgba(255,180,50,0.08)"/>
+        </g>}
+        {idx === 6 && <g>
+          <rect width="500" height="160" fill="#080e1a"/>
+          {[28,82,138,198,268,328,398,452].map((x,i)=><circle key={i} cx={x} cy={i%2===0?14:24} r={1} fill="white" opacity="0.7"/>)}
+          <rect x="217" y="4" width="46" height="122" fill="#4a6a9a"/>
+          {[0,1,2,3,4,5,6,7].map(j=>[0,1,2].map(k=><rect key={`${j}${k}`} x={221+k*13} y={9+j*14} width={9} height={9} fill="rgba(255,220,80,0.88)" rx={1}/>))}
+          <rect x="219" y="1" width="42" height="6" fill="#5a7aaa"/>
+          <rect x="283" y="19" width="40" height="107" fill="#3a5a88"/>
+          {[0,1,2,3,4,5,6].map(j=>[0,1].map(k=><rect key={`${j}${k}`} x={287+k*17} y={25+j*14} width={11} height={9} fill="rgba(100,200,255,0.6)" rx={1}/>))}
+          {[[138,38,47,88],[168,28,42,98],[333,33,47,93],[358,43,42,83],[58,53,40,73],[98,43,44,83],[408,48,42,78],[440,40,47,86]].map(([x,y,w,h],i)=><g key={i}>
+            <rect x={x} y={y} width={w} height={h} fill={["#3a5070","#4a6080","#304868","#405878","#3a5068","#4a6075","#3a5070","#405878"][i]}/>
+            {[0,1,2].map(j=>[0,1,2].map(k=><rect key={`${j}${k}`} x={x+3+j*(w/3.2)} y={y+7+k*21} width={w/4} height={12} fill="rgba(255,200,50,0.55)" rx={1}/>))}
+          </g>)}
+          <rect x="0" y="128" width="500" height="32" fill="#1a2a4a" opacity="0.7"/>
+          <ellipse cx="250" cy="155" rx="220" ry="22" fill="rgba(80,120,255,0.12)"/>
+        </g>}
       </svg>
+      <div style={{ padding: "5px 14px 8px", background: "rgba(0,0,0,0.35)", fontSize: "0.7rem", color: "rgba(255,255,255,0.45)", textAlign: "center", fontStyle: "italic" }}>{label}</div>
     </div>
   );
 }
 
+// ─── HISTORICAL EVENTS ───────────────────────────────────────────────────────
+const HIST_EVENTS = [
+  { era: 0, title: "Spring Flood!", icon: "🌊", desc: "The Raccoon River flooded the garrison. Settlers scramble to salvage supplies. Lose $500 but gain resolve.", penalty: 500 },
+  { era: 1, title: "Land Rush!", icon: "🏃", desc: "Speculators are flooding into Iowa Territory. A land agent offers $2,000 for your development rights.", bonus: 2000 },
+  { era: 2, title: "The Iron Horse Arrives!", icon: "🚂", desc: "The first railroad reaches Des Moines! Crowds cheer as commerce explodes. Gain $3,000 in economic stimulus.", bonus: 3000 },
+  { era: 3, title: "Coal Strike!", icon: "⛏️", desc: "Mine workers walk out demanding fair wages. Des Moines miners were among the first to organize. Lose $1,000.", penalty: 1000 },
+  { era: 4, title: "Insurance Boom!", icon: "💼", desc: "Des Moines is named the 'Hartford of the West.' Five new insurance firms open headquarters. +$4,000 investment.", bonus: 4000 },
+  { era: 5, title: "War Bond Drive!", icon: "🎖️", desc: "Iowa buys more war bonds per capita than any other state. Community pride earns $3,000 in federal grants.", bonus: 3000 },
+  { era: 6, title: "Fortune 500 HQ!", icon: "🏢", desc: "A Fortune 500 company chooses Des Moines for its new headquarters. +$6,000 economic windfall.", bonus: 6000 },
+];
+
+// ─── COST CALCULATOR ────────────────────────────────────────────────────────
+function getCost(b, c) { return Math.floor(b * Math.pow(1.15, c)); }
+
+// ─── NEW PLAY PAGE ───────────────────────────────────────────────────────────
 function PlayPage() {
-  const [money, setMoney] = useState(500);
+  const [money, setMoney] = useState(2000);
   const [income, setIncome] = useState(0);
   const [pop, setPop] = useState(0);
   const [mult, setMult] = useState(1.0);
-  const [clickPower, setClickPower] = useState(10);
+  const [clickPower, setClickPower] = useState(100);
   const [hC, setHC] = useState(HOUSING.map(() => 0));
   const [iC, setIC] = useState(INDUSTRY.map(() => 0));
   const [bL, setBL] = useState(LANDMARKS.map(() => false));
   const [eraIdx, setEraIdx] = useState(0);
-  const [logs, setLogs] = useState([{ text: "1843 — You arrive at the Raccoon Fork. Begin building the garrison!", era: true }]);
+  const [logs, setLogs] = useState([{ text: "1843 — You arrive at the Raccoon Fork. Start building!", era: true }]);
   const [won, setWon] = useState(false);
   const [showHTP, setShowHTP] = useState(true);
   const [activeTab, setActiveTab] = useState("housing");
+  const [floaters, setFloaters] = useState([]);
+  const [toast, setToast] = useState(null);
+  const [histEvent, setHistEvent] = useState(null);
   const incRef = useRef(income);
   const multRef = useRef(mult);
-  incRef.current = income;
-  multRef.current = mult;
+  const eraIdxRef = useRef(eraIdx);
+  incRef.current = income; multRef.current = mult; eraIdxRef.current = eraIdx;
 
   useEffect(() => {
     const iv = setInterval(() => { setMoney(m => m + (incRef.current * multRef.current) / 10); }, 100);
     return () => clearInterval(iv);
   }, []);
 
+  useEffect(() => {
+    const delay = 45000 + Math.random() * 30000;
+    const t = setTimeout(() => {
+      const possible = HIST_EVENTS.filter(e => e.era <= eraIdxRef.current);
+      if (possible.length) {
+        setHistEvent(possible[Math.floor(Math.random() * possible.length)]);
+        playSound("event");
+      }
+    }, delay);
+    return () => clearTimeout(t);
+  }, [eraIdx]);
+
   const addLog = useCallback((t, e = false) => { setLogs(p => [{ text: t, era: e }, ...p].slice(0, 60)); }, []);
+
+  const showToast = useCallback((msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 3000);
+  }, []);
 
   const checkEra = useCallback((np) => {
     let ni = 0;
@@ -1396,83 +1579,99 @@ function PlayPage() {
     if (ni > eraIdx) {
       for (let i = eraIdx + 1; i <= ni; i++) addLog(`${ERAS[i].year} — ${ERAS[i].log}`, true);
       setEraIdx(ni);
+      playSound("era");
+      showToast(`🏙️ Era Unlocked: ${ERAS[ni].name}!`);
     }
-    if (np >= 215000 && !won) { setWon(true); addLog("🏆 VICTORY! You have built Modern Des Moines!", true); }
-  }, [eraIdx, won, addLog]);
+    const milestones = [1000, 5000, 20000, 60000, 125000, 215000];
+    if (milestones.includes(np)) showToast(`🏆 ${np.toLocaleString()} residents!`);
+    if (np >= 215000 && !won) { setWon(true); addLog("🏆 VICTORY! Modern Des Moines is complete!", true); playSound("era"); }
+  }, [eraIdx, won, addLog, showToast]);
+
+  const spawnCoin = useCallback((e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const id = Date.now() + Math.random();
+    setFloaters(f => [...f, { id, x: e.clientX - rect.left, y: e.clientY - rect.top }]);
+    setTimeout(() => setFloaters(f => f.filter(c => c.id !== id)), 900);
+  }, []);
+
+  const handleDevelop = (e) => { spawnCoin(e); playSound("click"); setMoney(m => m + Math.floor(clickPower * multRef.current)); };
 
   const buyH = (i) => {
-    const h = HOUSING[i];
-    if (eraIdx < h.unlockEra) return;
-    const c = getCost(h.baseCost, hC[i]);
-    if (money < c) return;
-    setMoney(m => m - c);
+    const h = HOUSING[i]; if (eraIdx < h.unlockEra) return;
+    const c = getCost(h.baseCost, hC[i]); if (money < c) return;
+    playSound("buy"); setMoney(m => m - c);
     setHC(x => { const n = [...x]; n[i]++; return n; });
-    const np = pop + h.popAdd;
-    setPop(np);
-    addLog(`Built ${h.emoji} ${h.name} — +${h.popAdd.toLocaleString()} residents`);
-    checkEra(np);
+    const np = pop + h.popAdd; setPop(np);
+    addLog(`Built ${h.emoji} ${h.name} — +${h.popAdd.toLocaleString()} residents`); checkEra(np);
   };
 
   const buyI = (i) => {
-    const ind = INDUSTRY[i];
-    if (eraIdx < ind.unlockEra) return;
-    const c = getCost(ind.baseCost, iC[i]);
-    if (money < c) return;
-    setMoney(m => m - c);
+    const ind = INDUSTRY[i]; if (eraIdx < ind.unlockEra) return;
+    const c = getCost(ind.baseCost, iC[i]); if (money < c) return;
+    playSound("buy"); setMoney(m => m - c);
     setIC(x => { const n = [...x]; n[i]++; return n; });
     setIncome(inc => inc + ind.incAdd);
     addLog(`Established ${ind.emoji} ${ind.name} — +$${ind.incAdd.toLocaleString()}/s`);
   };
 
   const buyL = (i) => {
-    const l = LANDMARKS[i];
-    if (bL[i] || money < l.cost || pop < l.reqPop || eraIdx < l.unlockEra) return;
-    setMoney(m => m - l.cost);
+    const l = LANDMARKS[i]; if (bL[i] || money < l.cost || pop < l.reqPop || eraIdx < l.unlockEra) return;
+    playSound("era"); setMoney(m => m - l.cost);
     setBL(b => { const n = [...b]; n[i] = true; return n; });
-    setMult(m => m + l.multAdd);
-    setClickPower(c => c + l.clickAdd);
+    setMult(m => m + l.multAdd); setClickPower(c => c + l.clickAdd);
     addLog(`Landmark built: ${l.name} — ${l.effect}`, true);
+    showToast(`🏛️ ${l.name} built!`);
+  };
+
+  const claimEvent = () => {
+    if (!histEvent) return;
+    if (histEvent.bonus) { setMoney(m => m + histEvent.bonus); addLog(`📰 ${histEvent.title} — +$${histEvent.bonus.toLocaleString()}!`, true); }
+    if (histEvent.penalty) { setMoney(m => Math.max(0, m - histEvent.penalty)); addLog(`📰 ${histEvent.title} — -$${histEvent.penalty.toLocaleString()}`, true); }
+    setHistEvent(null);
   };
 
   const trI = Math.floor(income * mult);
   const trC = Math.floor(clickPower * mult);
   const ne = ERAS[eraIdx + 1];
   const ep = ne ? Math.min(100, ((pop - ERAS[eraIdx].popReq) / (ne.popReq - ERAS[eraIdx].popReq)) * 100) : 100;
-
-  const tabStyle = (t) => ({
-    padding: "10px 18px", borderRadius: 8, border: "none", fontFamily: "'DM Sans', sans-serif",
-    fontWeight: 600, fontSize: "0.82rem", cursor: "pointer", transition: "all 0.2s",
-    background: activeTab === t ? "var(--charcoal)" : "rgba(0,0,0,0.05)",
-    color: activeTab === t ? "#fff" : "var(--mist)",
-  });
+  const tabStyle = (t) => ({ padding: "9px 16px", borderRadius: 8, border: "none", fontFamily: "'DM Sans', sans-serif", fontWeight: 600, fontSize: "0.82rem", cursor: "pointer", transition: "all 0.2s", background: activeTab === t ? "var(--charcoal)" : "rgba(0,0,0,0.07)", color: activeTab === t ? "#fff" : "var(--mist)" });
+  const cardStyle = (ok, locked) => ({ background: locked ? "#f0ece7" : ok ? "#fff" : "#faf8f5", border: locked ? "1px dashed #ccc" : ok ? "2px solid var(--peach)" : "1px solid #e0d8d0", borderRadius: 12, padding: "14px", textAlign: "left", cursor: locked || !ok ? "not-allowed" : "pointer", opacity: locked ? 0.5 : 1, fontFamily: "'DM Sans', sans-serif", position: "relative", transition: "all 0.15s", boxShadow: ok && !locked ? "0 3px 12px rgba(255,140,90,0.12)" : "none" });
 
   return (
     <div>
       <PageHero title="Build Des Moines" subtitle="Lead Des Moines from a frontier garrison in 1843 to a modern metropolis of 215,000 residents." />
 
+      {toast && (
+        <div style={{ position: "fixed", top: 24, left: "50%", transform: "translateX(-50%)", background: "var(--charcoal)", color: "#fff", padding: "12px 28px", borderRadius: 50, fontWeight: 700, fontSize: "0.9rem", zIndex: 9999, boxShadow: "0 8px 32px rgba(0,0,0,0.3)", fontFamily: "'DM Sans', sans-serif", animation: "slideDown 0.3s ease", whiteSpace: "nowrap" }}>
+          {toast}
+        </div>
+      )}
+
+      {histEvent && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.65)", zIndex: 9998, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }} onClick={claimEvent}>
+          <div style={{ background: "#fff", borderRadius: 20, padding: "36px", maxWidth: 440, width: "100%", boxShadow: "0 20px 80px rgba(0,0,0,0.4)", textAlign: "center", fontFamily: "'DM Sans', sans-serif", animation: "scaleIn 0.3s cubic-bezier(0.16,1,0.3,1)" }} onClick={e => e.stopPropagation()}>
+            <div style={{ fontSize: "3rem", marginBottom: 10 }}>{histEvent.icon}</div>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, color: "var(--mist)", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.1em", fontSize: "0.75rem" }}>Historical Event!</div>
+            <div style={{ fontWeight: 700, fontSize: "1.3rem", marginBottom: 10, color: histEvent.penalty ? "#c0392b" : "var(--copper)" }}>{histEvent.title}</div>
+            <p style={{ color: "var(--mist)", lineHeight: 1.65, marginBottom: 24, fontSize: "0.92rem" }}>{histEvent.desc}</p>
+            <button onClick={claimEvent} style={{ background: "var(--charcoal)", color: "#fff", border: "none", borderRadius: 10, padding: "13px 32px", fontWeight: 700, fontSize: "1rem", cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>
+              {histEvent.bonus ? `Claim $${histEvent.bonus.toLocaleString()} →` : "Continue Building →"}
+            </button>
+          </div>
+        </div>
+      )}
+
       <div style={{ maxWidth: 1280, margin: "0 auto", padding: "32px 24px 80px" }}>
         <div style={{ background: "var(--charcoal)", borderRadius: 16, padding: "20px 24px 16px", marginBottom: 24, color: "#fff" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8, flexWrap: "wrap", gap: 8 }}>
-            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.15rem", fontWeight: 700, color: "var(--peach)" }}>
-              {ERAS[eraIdx].name} · {ERAS[eraIdx].year}
-            </div>
-            <button onClick={() => setShowHTP(true)} style={{
-              background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
-              color: "#fff", borderRadius: 8, padding: "6px 14px", cursor: "pointer",
-              fontSize: "0.78rem", fontWeight: 600, fontFamily: "'DM Sans', sans-serif",
-            }}>How to Play</button>
+            <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.15rem", fontWeight: 700, color: "var(--peach)" }}>{ERAS[eraIdx].name} · {ERAS[eraIdx].year}</div>
+            <button onClick={() => setShowHTP(true)} style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", borderRadius: 8, padding: "6px 14px", cursor: "pointer", fontSize: "0.78rem", fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}>How to Play</button>
           </div>
-          <div style={{ background: "rgba(255,255,255,0.1)", height: 10, borderRadius: 5, overflow: "hidden", marginBottom: 16 }}>
-            <div style={{ height: "100%", background: "var(--success)", width: `${ep}%`, transition: "width 0.5s ease", borderRadius: 5 }} />
+          <div style={{ background: "rgba(255,255,255,0.12)", height: 10, borderRadius: 5, overflow: "hidden", marginBottom: 16 }}>
+            <div style={{ height: "100%", background: "var(--success)", width: `${ep}%`, transition: "width 0.5s ease", borderRadius: 5 }}/>
           </div>
           <div style={{ display: "flex", justifyContent: "space-around", flexWrap: "wrap", gap: 12 }}>
-            {[
-              { val: `$${Math.floor(money).toLocaleString()}`, label: "Treasury" },
-              { val: `+$${trI.toLocaleString()}/s`, label: "Economy" },
-              { val: pop.toLocaleString(), label: "Population", hl: true },
-              { val: `x${mult.toFixed(1)}`, label: "Multiplier" },
-              { val: ne ? `${ne.popReq.toLocaleString()} pop` : "—", label: "Next Era Goal" },
-            ].map((s, i) => (
+            {[{ val: `$${Math.floor(money).toLocaleString()}`, label: "Treasury" },{ val: `+$${trI.toLocaleString()}/s`, label: "Economy" },{ val: pop.toLocaleString(), label: "Population", hl: true },{ val: `×${mult.toFixed(1)}`, label: "Multiplier" },{ val: ne ? `${ne.popReq.toLocaleString()}` : "🏆", label: "Next Era Pop" }].map((s, i) => (
               <div key={i} style={{ textAlign: "center", minWidth: 80 }}>
                 <div style={{ fontSize: "1.25rem", fontWeight: 700, color: s.hl ? "var(--success)" : "#fff", fontFamily: "'JetBrains Mono', monospace" }}>{s.val}</div>
                 <div style={{ fontSize: "0.6rem", textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)", fontWeight: 600 }}>{s.label}</div>
@@ -1483,58 +1682,40 @@ function PlayPage() {
 
         <div style={{ display: "grid", gridTemplateColumns: "1fr 360px", gap: 20 }} className="game-layout">
           <div>
-            <button
-              onClick={() => setMoney(m => m + trC)}
-              style={{
-                width: "100%", padding: "16px", fontSize: "1.15rem", fontWeight: 700,
-                background: "linear-gradient(135deg, var(--charcoal), #3a4550)",
-                color: "#fff", border: "none", borderRadius: 12, cursor: "pointer",
-                marginBottom: 20, fontFamily: "'DM Sans', sans-serif",
-                transition: "transform 0.1s", boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
-              }}
-              onMouseDown={e => e.target.style.transform = "scale(0.97)"}
-              onMouseUp={e => e.target.style.transform = ""}
-            >
-              Develop the Land (+${trC.toLocaleString()})
-            </button>
+            <div style={{ position: "relative", marginBottom: 20 }}>
+              <button onClick={handleDevelop} style={{ width: "100%", padding: "18px", fontSize: "1.12rem", fontWeight: 700, background: "linear-gradient(135deg, #e87030, #c05020)", color: "#fff", border: "none", borderRadius: 14, cursor: "pointer", fontFamily: "'DM Sans', sans-serif", transition: "transform 0.1s", boxShadow: "0 4px 20px rgba(232,112,48,0.35)" }} onMouseDown={e=>e.currentTarget.style.transform="scale(0.97)"} onMouseUp={e=>e.currentTarget.style.transform=""}>
+                ⛏️ Develop the Land &nbsp;<span style={{ opacity: 0.8, fontFamily: "'JetBrains Mono', monospace", fontSize: "0.9rem" }}>(+${trC.toLocaleString()})</span>
+              </button>
+              {floaters.map(f => (
+                <div key={f.id} style={{ position: "absolute", left: f.x - 12, top: f.y - 18, fontSize: "1.3rem", pointerEvents: "none", userSelect: "none", animation: "coinFloat 0.9s ease-out forwards" }}>💰</div>
+              ))}
+            </div>
 
             <div style={{ display: "flex", gap: 8, marginBottom: 20, flexWrap: "wrap" }}>
-              {["housing", "industry", "landmarks"].map(t => (
+              {["housing","industry","landmarks"].map(t => (
                 <button key={t} style={tabStyle(t)} onClick={() => setActiveTab(t)}>
-                  {t === "housing" ? "Housing" : t === "industry" ? "Industry" : "Landmarks"}
+                  {t === "housing" ? "🏠 Housing" : t === "industry" ? "🏭 Industry" : "🏛️ Landmarks"}
                 </button>
               ))}
             </div>
 
             {activeTab === "housing" && (
               <div>
-                <div style={{ fontSize: "0.75rem", color: "var(--mist)", marginBottom: 12 }}>
-                  Buildings unlock as Des Moines advances through eras. Each purchase costs more than the last.
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
+                <div style={{ fontSize: "0.75rem", color: "var(--mist)", marginBottom: 12 }}>Buildings unlock as Des Moines advances through eras. Each purchase costs 15% more than the last.</div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 12 }}>
                   {HOUSING.map((h, i) => {
-                    const locked = eraIdx < h.unlockEra;
-                    const c = getCost(h.baseCost, hC[i]);
-                    const ok = !locked && money >= c;
+                    const locked = eraIdx < h.unlockEra, c = getCost(h.baseCost, hC[i]), ok = !locked && money >= c;
                     return (
-                      <button key={i} onClick={() => buyH(i)} disabled={locked || money < c} style={{
-                        background: locked ? "#f0ece7" : ok ? "#fff" : "#faf8f5",
-                        border: locked ? "1px dashed #ccc" : ok ? "1px solid #e0d8d0" : "1px solid #e0d8d0",
-                        borderRadius: 12, padding: "16px", textAlign: "left",
-                        cursor: locked ? "not-allowed" : ok ? "pointer" : "not-allowed",
-                        opacity: locked ? 0.5 : 1, fontFamily: "'DM Sans', sans-serif",
-                        position: "relative", transition: "all 0.15s",
-                        boxShadow: ok ? "0 2px 8px rgba(0,0,0,0.04)" : "none",
-                      }}>
-                        <span style={{ position: "absolute", top: 10, right: 12, fontWeight: 700, color: "var(--copper)", fontSize: "0.95rem" }}>{hC[i]}</span>
-                        <div style={{ fontWeight: 700, marginBottom: 2, fontSize: "1rem" }}>{h.emoji} {h.name}</div>
-                        <div style={{ fontSize: "0.76rem", color: "var(--mist)", marginBottom: 4 }}>{h.desc}</div>
-                        <div style={{ fontSize: "0.7rem", color: "var(--copper)", fontStyle: "italic", marginBottom: 8 }}>{h.historical}</div>
-                        {locked ? (
-                          <div style={{ fontSize: "0.75rem", color: "#aaa", fontWeight: 600 }}>Unlocks: {ERAS[h.unlockEra].name}</div>
-                        ) : (
-                          <div style={{ fontSize: "0.8rem", fontWeight: 700, background: "#f0ece7", display: "inline-block", padding: "3px 8px", borderRadius: 4 }}>${c.toLocaleString()}</div>
-                        )}
+                      <button key={i} onClick={() => buyH(i)} disabled={locked} style={cardStyle(ok, locked)}>
+                        {hC[i] > 0 && <span style={{ position: "absolute", top: 10, right: 12, background: "var(--copper)", color: "#fff", borderRadius: 50, width: 22, height: 22, fontSize: "0.7rem", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{hC[i]}</span>}
+                        <div style={{ fontWeight: 700, marginBottom: 2, fontSize: "0.95rem" }}>{h.emoji} {h.name}</div>
+                        <div style={{ fontSize: "0.72rem", color: "var(--mist)", marginBottom: 3 }}>{h.desc}</div>
+                        <div style={{ fontSize: "0.67rem", color: "var(--copper)", fontStyle: "italic", marginBottom: 8 }}>{h.historical}</div>
+                        {locked ? <div style={{ fontSize: "0.72rem", color: "#aaa", fontWeight: 600 }}>🔒 {ERAS[h.unlockEra].name}</div>
+                          : <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <span style={{ fontSize: "0.82rem", fontWeight: 700, background: ok ? "var(--peach)" : "#f0ece7", color: ok ? "var(--charcoal)" : "#bbb", padding: "3px 10px", borderRadius: 6 }}>${c.toLocaleString()}</span>
+                              <span style={{ fontSize: "0.72rem", color: "var(--success)", fontWeight: 600 }}>+{h.popAdd.toLocaleString()} pop</span>
+                            </div>}
                       </button>
                     );
                   })}
@@ -1544,33 +1725,21 @@ function PlayPage() {
 
             {activeTab === "industry" && (
               <div>
-                <div style={{ fontSize: "0.75rem", color: "var(--mist)", marginBottom: 12 }}>
-                  Each industry generates passive income per second, scaled by your multiplier.
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 12 }}>
+                <div style={{ fontSize: "0.75rem", color: "var(--mist)", marginBottom: 12 }}>Each industry generates passive income per second, scaled by your multiplier.</div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 12 }}>
                   {INDUSTRY.map((ind, i) => {
-                    const locked = eraIdx < ind.unlockEra;
-                    const c = getCost(ind.baseCost, iC[i]);
-                    const ok = !locked && money >= c;
+                    const locked = eraIdx < ind.unlockEra, c = getCost(ind.baseCost, iC[i]), ok = !locked && money >= c;
                     return (
-                      <button key={i} onClick={() => buyI(i)} disabled={locked || money < c} style={{
-                        background: locked ? "#f0ece7" : ok ? "#fff" : "#faf8f5",
-                        border: locked ? "1px dashed #ccc" : ok ? "1px solid #e0d8d0" : "1px solid #e0d8d0",
-                        borderRadius: 12, padding: "16px", textAlign: "left",
-                        cursor: locked ? "not-allowed" : ok ? "pointer" : "not-allowed",
-                        opacity: locked ? 0.5 : 1, fontFamily: "'DM Sans', sans-serif",
-                        position: "relative", transition: "all 0.15s",
-                        boxShadow: ok ? "0 2px 8px rgba(0,0,0,0.04)" : "none",
-                      }}>
-                        <span style={{ position: "absolute", top: 10, right: 12, fontWeight: 700, color: "var(--copper)", fontSize: "0.95rem" }}>{iC[i]}</span>
-                        <div style={{ fontWeight: 700, marginBottom: 2, fontSize: "1rem" }}>{ind.emoji} {ind.name}</div>
-                        <div style={{ fontSize: "0.76rem", color: "var(--mist)", marginBottom: 4 }}>{ind.desc}</div>
-                        <div style={{ fontSize: "0.7rem", color: "var(--copper)", fontStyle: "italic", marginBottom: 8 }}>{ind.historical}</div>
-                        {locked ? (
-                          <div style={{ fontSize: "0.75rem", color: "#aaa", fontWeight: 600 }}>Unlocks: {ERAS[ind.unlockEra].name}</div>
-                        ) : (
-                          <div style={{ fontSize: "0.8rem", fontWeight: 700, background: "#f0ece7", display: "inline-block", padding: "3px 8px", borderRadius: 4 }}>${c.toLocaleString()}</div>
-                        )}
+                      <button key={i} onClick={() => buyI(i)} disabled={locked} style={cardStyle(ok, locked)}>
+                        {iC[i] > 0 && <span style={{ position: "absolute", top: 10, right: 12, background: "var(--copper)", color: "#fff", borderRadius: 50, width: 22, height: 22, fontSize: "0.7rem", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" }}>{iC[i]}</span>}
+                        <div style={{ fontWeight: 700, marginBottom: 2, fontSize: "0.95rem" }}>{ind.emoji} {ind.name}</div>
+                        <div style={{ fontSize: "0.72rem", color: "var(--mist)", marginBottom: 3 }}>{ind.desc}</div>
+                        <div style={{ fontSize: "0.67rem", color: "var(--copper)", fontStyle: "italic", marginBottom: 8 }}>{ind.historical}</div>
+                        {locked ? <div style={{ fontSize: "0.72rem", color: "#aaa", fontWeight: 600 }}>🔒 {ERAS[ind.unlockEra].name}</div>
+                          : <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <span style={{ fontSize: "0.82rem", fontWeight: 700, background: ok ? "var(--peach)" : "#f0ece7", color: ok ? "var(--charcoal)" : "#bbb", padding: "3px 10px", borderRadius: 6 }}>${c.toLocaleString()}</span>
+                              <span style={{ fontSize: "0.72rem", color: "var(--success)", fontWeight: 600 }}>+${ind.incAdd.toLocaleString()}/s</span>
+                            </div>}
                       </button>
                     );
                   })}
@@ -1580,38 +1749,25 @@ function PlayPage() {
 
             {activeTab === "landmarks" && (
               <div>
-                <div style={{ fontSize: "0.75rem", color: "var(--mist)", marginBottom: 12 }}>
-                  Landmarks are one-time investments that multiply your income and development power permanently.
-                </div>
+                <div style={{ fontSize: "0.75rem", color: "var(--mist)", marginBottom: 12 }}>Landmarks are one-time investments that permanently multiply your income and development power.</div>
                 <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                   {LANDMARKS.map((l, i) => {
                     if (bL[i]) return (
                       <div key={i} style={{ background: "rgba(92,184,122,0.08)", border: "2px solid var(--success)", borderRadius: 12, padding: "16px 20px", display: "flex", gap: 12, alignItems: "center" }}>
                         <span style={{ fontSize: "1.5rem" }}>✓</span>
-                        <div>
-                          <div style={{ fontWeight: 700 }}>{l.name}</div>
-                          <div style={{ fontSize: "0.78rem", color: "var(--mist)" }}>{l.historical}</div>
-                        </div>
+                        <div><div style={{ fontWeight: 700 }}>{l.name}</div><div style={{ fontSize: "0.78rem", color: "var(--mist)" }}>{l.historical}</div></div>
                       </div>
                     );
-                    const locked = eraIdx < l.unlockEra;
-                    const ok = !locked && money >= l.cost && pop >= l.reqPop;
+                    const locked = eraIdx < l.unlockEra, ok = !locked && money >= l.cost && pop >= l.reqPop;
                     return (
-                      <button key={i} onClick={() => buyL(i)} disabled={!ok} style={{
-                        background: ok ? "linear-gradient(135deg,#fff,#fff8f3)" : "#f5f3f0",
-                        border: ok ? "2px solid var(--peach)" : "2px solid #ddd",
-                        borderRadius: 12, padding: "16px 20px", textAlign: "left",
-                        cursor: ok ? "pointer" : "not-allowed", opacity: ok ? 1 : 0.55,
-                        fontFamily: "'DM Sans', sans-serif",
-                        display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10,
-                      }}>
+                      <button key={i} onClick={() => buyL(i)} disabled={!ok} style={{ background: ok ? "linear-gradient(135deg,#fff,#fff8f3)" : "#f5f3f0", border: ok ? "2px solid var(--peach)" : "2px solid #ddd", borderRadius: 12, padding: "16px 20px", textAlign: "left", cursor: ok ? "pointer" : "not-allowed", opacity: ok ? 1 : 0.55, fontFamily: "'DM Sans', sans-serif", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
                         <div>
                           <div style={{ fontWeight: 700, fontSize: "1rem", marginBottom: 2 }}>{l.name}</div>
-                          <div style={{ fontSize: "0.75rem", color: "var(--mist)", marginBottom: 3 }}>{l.historical}</div>
-                          <div style={{ fontSize: "0.78rem", color: "var(--mist)" }}>Requires {l.reqPop.toLocaleString()} pop · {ERAS[l.unlockEra].name} era</div>
+                          <div style={{ fontSize: "0.74rem", color: "var(--mist)", marginBottom: 3 }}>{l.historical}</div>
+                          <div style={{ fontSize: "0.74rem", color: "var(--mist)" }}>Requires {l.reqPop.toLocaleString()} pop · {ERAS[l.unlockEra].name}</div>
                           <div style={{ fontSize: "0.82rem", color: "var(--copper)", fontWeight: 600, marginTop: 4 }}>{l.effect}</div>
                         </div>
-                        <div style={{ fontWeight: 700, background: "#f0ece7", padding: "5px 12px", borderRadius: 6, fontSize: "0.9rem", flexShrink: 0 }}>${l.cost.toLocaleString()}</div>
+                        <div style={{ fontWeight: 700, background: ok ? "var(--peach)" : "#f0ece7", padding: "5px 14px", borderRadius: 6, fontSize: "0.9rem", flexShrink: 0 }}>${l.cost.toLocaleString()}</div>
                       </button>
                     );
                   })}
@@ -1621,15 +1777,9 @@ function PlayPage() {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <div style={{ background: "var(--cream)", borderRadius: 16, padding: 16, boxShadow: "0 2px 12px rgba(0,0,0,0.03)" }}>
-              <div style={{ fontWeight: 700, fontSize: "0.85rem", marginBottom: 10, color: "var(--charcoal)" }}>Des Moines Metro Map</div>
-              <CityMap pop={pop} />
-              <div style={{ fontSize: "0.7rem", color: "var(--mist)", marginTop: 8, textAlign: "center" }}>
-                Districts unlock as your population grows
-              </div>
-            </div>
-            <div style={{ background: "var(--charcoal)", borderRadius: 16, padding: 16, height: 300, overflowY: "auto", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.76rem", color: "rgba(255,255,255,0.65)" }}>
-              <div style={{ fontWeight: 700, color: "var(--peach)", marginBottom: 10, fontSize: "0.82rem" }}>City Ledger</div>
+            <EraCity eraIdx={eraIdx} />
+            <div style={{ background: "var(--charcoal)", borderRadius: 16, padding: 16, height: 280, overflowY: "auto", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.75rem", color: "rgba(255,255,255,0.65)" }}>
+              <div style={{ fontWeight: 700, color: "var(--peach)", marginBottom: 10, fontSize: "0.8rem" }}>City Ledger</div>
               {logs.map((l, i) => (
                 <div key={i} style={{ marginBottom: 6, paddingBottom: 6, borderBottom: "1px solid rgba(255,255,255,0.05)", color: l.era ? "var(--success)" : "rgba(255,255,255,0.55)", fontWeight: l.era ? 600 : 400, lineHeight: 1.4 }}>{l.text}</div>
               ))}
@@ -1639,28 +1789,18 @@ function PlayPage() {
       </div>
 
       {showHTP && (
-        <div onClick={() => setShowHTP(false)} style={{
-          position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)",
-          display: "flex", alignItems: "center", justifyContent: "center",
-          zIndex: 1000, padding: 16, animation: "fadeIn 0.25s ease",
-        }}>
-          <div onClick={e => e.stopPropagation()} style={{
-            background: "#fff", borderRadius: 20, maxWidth: 560, width: "100%",
-            padding: "40px 36px", boxShadow: "0 24px 72px rgba(0,0,0,0.3)",
-            animation: "scaleIn 0.3s cubic-bezier(0.16,1,0.3,1)", maxHeight: "90vh", overflowY: "auto",
-          }}>
+        <div onClick={() => setShowHTP(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000, padding: 16, animation: "fadeIn 0.25s ease" }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 20, maxWidth: 560, width: "100%", padding: "40px 36px", boxShadow: "0 24px 72px rgba(0,0,0,0.3)", animation: "scaleIn 0.3s cubic-bezier(0.16,1,0.3,1)", maxHeight: "90vh", overflowY: "auto" }}>
             <div style={{ fontSize: "2rem", marginBottom: 4, textAlign: "center" }}>🏗️</div>
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.8rem", textAlign: "center", marginBottom: 6, color: "var(--charcoal)" }}>How to Play</h2>
-            <p style={{ color: "var(--mist)", textAlign: "center", marginBottom: 28, fontSize: "0.92rem", lineHeight: 1.5 }}>
-              Guide Des Moines from a frontier garrison in 1843 to a modern metropolis of 215,000 residents — following the real history of the city.
-            </p>
+            <p style={{ color: "var(--mist)", textAlign: "center", marginBottom: 28, fontSize: "0.92rem", lineHeight: 1.5 }}>Guide Des Moines from a frontier garrison in 1843 to a modern metropolis — following real history.</p>
             {[
-              { icon: "🖱️", title: "Develop the Land", desc: "Click the big button to manually generate funds. Each landmark increases your click power." },
-              { icon: "🏠", title: "Build Housing", desc: "Houses grow your population. Population is what advances you through historical eras. Each building costs more each time." },
-              { icon: "🏭", title: "Establish Industry", desc: "Industries generate passive income per second. Build farms, railroads, insurance firms — just like Des Moines did." },
-              { icon: "🏛️", title: "Construct Landmarks", desc: "Landmarks are one-time purchases that multiply your income permanently. They're based on real Des Moines history." },
-              { icon: "🗺️", title: "Watch Des Moines Grow", desc: "The metro map unlocks new districts as your population grows, showing how Des Moines expanded outward from the Raccoon Fork." },
-              { icon: "⏳", title: "Advance Through Eras", desc: "Reach population milestones to unlock new building types. New buildings only become available when Des Moines was historically ready for them." },
+              { icon: "⛏️", title: "Develop the Land", desc: "Click the big orange button to manually earn money. Landmarks increase your click power permanently." },
+              { icon: "🏠", title: "Build Housing", desc: "Houses grow your population. Population unlocks new eras. Each building costs 15% more each time you buy it." },
+              { icon: "🏭", title: "Establish Industry", desc: "Industries generate passive income every second — farms, railroads, insurance firms, just like real Des Moines." },
+              { icon: "🏛️", title: "Construct Landmarks", desc: "One-time purchases that multiply all income permanently. Based on real Des Moines landmarks and history." },
+              { icon: "📰", title: "Historical Events", desc: "Random events based on real Des Moines history will pop up! Some bring bonuses, some bring challenges." },
+              { icon: "🌆", title: "Watch the Skyline Grow", desc: "The city illustration on the right evolves through 7 eras as you advance — from log cabin to modern skyline." },
             ].map((item, i) => (
               <div key={i} style={{ display: "flex", gap: 14, marginBottom: 16 }}>
                 <span style={{ fontSize: "1.4rem", flexShrink: 0 }}>{item.icon}</span>
@@ -1670,11 +1810,7 @@ function PlayPage() {
                 </div>
               </div>
             ))}
-            <button onClick={() => setShowHTP(false)} style={{
-              width: "100%", padding: "14px", background: "var(--charcoal)", color: "#fff",
-              border: "none", borderRadius: 12, fontWeight: 700, fontSize: "1rem",
-              cursor: "pointer", fontFamily: "'DM Sans', sans-serif", marginTop: 8,
-            }}>Start Building →</button>
+            <button onClick={() => setShowHTP(false)} style={{ width: "100%", padding: "14px", background: "var(--charcoal)", color: "#fff", border: "none", borderRadius: 12, fontWeight: 700, fontSize: "1rem", cursor: "pointer", fontFamily: "'DM Sans', sans-serif", marginTop: 8 }}>Start Building →</button>
           </div>
         </div>
       )}
@@ -1684,9 +1820,7 @@ function PlayPage() {
           <div style={{ background: "#fff", borderRadius: 20, padding: "48px 40px", textAlign: "center", maxWidth: 500, margin: 16, animation: "scaleIn 0.4s cubic-bezier(0.16,1,0.3,1)" }}>
             <div style={{ fontSize: "3rem", marginBottom: 8 }}>🎉</div>
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", color: "var(--success)", marginBottom: 12 }}>Des Moines is Complete!</h2>
-            <p style={{ color: "var(--mist)", lineHeight: 1.6, marginBottom: 24 }}>
-              You have grown Des Moines from a frontier garrison to a modern metropolis of 215,000 residents — retracing 180 years of real history.
-            </p>
+            <p style={{ color: "var(--mist)", lineHeight: 1.6, marginBottom: 24 }}>You've grown Des Moines from a frontier garrison to a metropolis of 215,000 — retracing 180 years of real history.</p>
             <button onClick={() => setWon(false)} style={{ background: "var(--charcoal)", color: "#fff", border: "none", padding: "13px 30px", borderRadius: 10, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>Keep Building</button>
           </div>
         </div>
@@ -1810,6 +1944,226 @@ const MAP_LOCATIONS = [
     desc: "Founded in 1881, Drake University has anchored Des Moines' educational and cultural life for over 140 years. The annual Drake Relays track meet, held since 1910, is among the most prestigious in the world.",
     fact: "The Drake Relays have hosted Olympic champions and world-record holders since 1910, cementing Drake's reputation as a landmark in American track and field history.",
   },
+  {
+    id: 11,
+    name: "World Food Prize Hall of Laureates",
+    lat: 41.5902,
+    lng: -93.6216,
+    year: "2011",
+    category: "Government",
+    emoji: "🌾",
+    desc: "The beautifully restored Iowa Historic Building houses the World Food Prize — often called the 'Nobel Prize for Food and Agriculture.' John Ruan brought the prize permanently to Des Moines in 1990, cementing the city's role in global food security.",
+    fact: "The World Food Prize was created by Nobel Peace Prize laureate Dr. Norman Borlaug. Every October the Borlaug Dialogue draws international presidents and scientists to Des Moines.",
+  },
+  {
+    id: 12,
+    name: "Pappajohn Sculpture Park",
+    lat: 41.5857,
+    lng: -93.6470,
+    year: "2009",
+    category: "Arts & Culture",
+    emoji: "🗿",
+    desc: "A free, open-air sculpture park in the heart of the Western Gateway featuring works by some of the world's greatest living artists. Jaume Plensa's towering 'Nomade' figure has become an unofficial symbol of modern Des Moines.",
+    fact: "The park contains 26 sculptures by internationally acclaimed artists, including works by Richard Serra, Jonathan Borofsky, and Jaume Plensa — all permanently gifted to the city.",
+  },
+  {
+    id: 13,
+    name: "Lauridsen Skatepark",
+    lat: 41.5829,
+    lng: -93.6432,
+    year: "2021",
+    category: "Recreation & Sports",
+    emoji: "🛹",
+    desc: "Opened in 2021 along the Des Moines River, the Lauridsen Skatepark is the largest free, open-air skatepark in the United States, covering 88,000 square feet with street plazas, bowls, and competition-grade features.",
+    fact: "The $5 million skatepark was funded entirely by private donations and has drawn professional competitions and skaters from across the country within its first year of opening.",
+  },
+  {
+    id: 14,
+    name: "Gray's Lake Park",
+    lat: 41.5668,
+    lng: -93.6421,
+    year: "1999",
+    category: "Recreation & Sports",
+    emoji: "🏞️",
+    desc: "Gray's Lake is a 167-acre park built around a picturesque man-made lake, featuring a beloved pedestrian bridge, jogging trail, paddleboat rentals, and a beach. It is one of Des Moines' most-visited green spaces year-round.",
+    fact: "The footbridge at Gray's Lake was the first cable-stayed pedestrian bridge built in Iowa. On summer evenings, thousands of runners and cyclists circle the 1.5-mile loop.",
+  },
+  {
+    id: 15,
+    name: "Jordan House (Underground Railroad)",
+    lat: 41.5789,
+    lng: -93.7126,
+    year: "c. 1850",
+    category: "History & Architecture",
+    emoji: "🕊️",
+    desc: "Located in West Des Moines, the Jordan House was the home of Iowa's first governor, James C. Jordan, and is one of the most documented Underground Railroad stations in Iowa. Freedom seekers were hidden here on their journey northward.",
+    fact: "James Jordan and his family hid freedom seekers in a hidden cellar beneath the house. The property is now a museum operated by the West Des Moines Historical Society.",
+  },
+  {
+    id: 16,
+    name: "Valley Junction Historic District",
+    lat: 41.5737,
+    lng: -93.7135,
+    year: "1893",
+    category: "Historic District",
+    emoji: "🛤️",
+    desc: "Once a busy railroad junction where the Rock Island Railroad crossed the Wabash, Valley Junction is now a preserved historic main street in West Des Moines. Over 70 independent boutiques, antique shops, and restaurants occupy its original 1890s commercial buildings.",
+    fact: "Valley Junction was officially renamed West Des Moines in 1938, but the original commercial district kept the 'Valley Junction' name as a beloved historic identity.",
+  },
+  {
+    id: 17,
+    name: "Living History Farms",
+    lat: 41.6401,
+    lng: -93.8083,
+    year: "1970",
+    category: "Agriculture & Culture",
+    emoji: "🚜",
+    desc: "Located in Urbandale, Living History Farms is a 500-acre outdoor history museum where visitors step into Iowa's agricultural past — from a 1700 Ioway Indian village to an 1875 pioneer farm to a 1900 horse-powered farm, all with costumed interpreters.",
+    fact: "Pope John Paul II celebrated an outdoor Mass at Living History Farms in 1979 before a crowd of 350,000 — the largest outdoor gathering in Iowa history.",
+  },
+  {
+    id: 18,
+    name: "Science Center of Iowa",
+    lat: 41.5851,
+    lng: -93.6302,
+    year: "2005",
+    category: "Education",
+    emoji: "🔭",
+    desc: "The Science Center of Iowa, connected to the downtown Blank IMAX Dome Theater, is a hands-on science and technology museum aimed at sparking curiosity in children and families. It was a cornerstone of the 2005 downtown revitalization effort.",
+    fact: "The Blank IMAX Dome is one of the largest in the Midwest at 52 feet in diameter. Over 250,000 visitors come to the Science Center each year.",
+  },
+  {
+    id: 19,
+    name: "Fort Des Moines WAAC Training Site",
+    lat: 41.5503,
+    lng: -93.6261,
+    year: "1942",
+    category: "Military & Founding",
+    emoji: "🎖️",
+    desc: "The second Fort Des Moines, on Army Post Road, was first established in 1901 as a cavalry post. In 1917 it became the first U.S. Army training camp for Black officers. In 1942 it became the nation's first training center for the Women's Army Auxiliary Corps (WAAC).",
+    fact: "Over 72,000 women were trained at Fort Des Moines during WWII. A national monument on the grounds honors both the Black officers of WWI and the WAACs of WWII.",
+  },
+  {
+    id: 20,
+    name: "Blank Park Zoo",
+    lat: 41.5427,
+    lng: -93.6372,
+    year: "1966",
+    category: "Recreation & Sports",
+    emoji: "🦁",
+    desc: "Blank Park Zoo is Iowa's only accredited zoo, located on the south side of Des Moines. It is home to over 1,500 animals representing 200+ species, and is best known for its African safari experience, aquarium, and immersive penguin habitat.",
+    fact: "Blank Park Zoo was founded in 1966 on land donated by Myron Blank. The zoo's Conservation Carousel, built in 1924, is one of Iowa's oldest operating carousels.",
+  },
+  {
+    id: 21,
+    name: "Civic Center of Greater Des Moines",
+    lat: 41.5881,
+    lng: -93.6279,
+    year: "1979",
+    category: "Arts & Culture",
+    emoji: "🎭",
+    desc: "The Civic Center is Des Moines' premier performing arts venue, hosting Broadway shows, symphonies, and world-class performances in the 2,735-seat Cowles Commons stage. It was part of the broader downtown revitalization effort that transformed the Court Avenue corridor.",
+    fact: "The Civic Center opened in 1979 with a concert by Van Cliburn. It has since hosted virtually every major touring Broadway production, making Des Moines one of the top touring markets in the Midwest.",
+  },
+  {
+    id: 22,
+    name: "801 Grand (Iowa's Tallest Building)",
+    lat: 41.5857,
+    lng: -93.6235,
+    year: "1991",
+    category: "Architecture & Residence",
+    emoji: "🏢",
+    desc: "At 45 stories and 630 feet, 801 Grand is the tallest building in Iowa. Completed in 1991, it is home to the Principal Financial Group's headquarters and symbolized Des Moines' ambition to become a major American financial capital during the downtown renaissance.",
+    fact: "The building's exterior is clad in reflective blue-green glass. At its construction, it was the largest office building built in the United States outside of the New York-Chicago corridor in a decade.",
+  },
+  {
+    id: 23,
+    name: "Sherman Hill Historic District",
+    lat: 41.5840,
+    lng: -93.6510,
+    year: "1870s",
+    category: "Historic District",
+    emoji: "🏘️",
+    desc: "Sherman Hill is Des Moines' oldest and most intact Victorian residential neighborhood, built in the 1870s–1890s on the hill west of downtown. It was saved from demolition in the 1970s by pioneering preservationists and is now listed on the National Register of Historic Places.",
+    fact: "Sherman Hill contains over 250 Victorian, Queen Anne, and Italianate-style homes. It was one of Iowa's first successful urban preservation efforts, predating the national preservation movement.",
+  },
+  {
+    id: 24,
+    name: "Camp Dodge (Johnston)",
+    lat: 41.7085,
+    lng: -93.6979,
+    year: "1907",
+    category: "Military & Founding",
+    emoji: "⚔️",
+    desc: "Located in Johnston, Camp Dodge is the headquarters of the Iowa National Guard and one of the most historically significant military installations in the Midwest. It trained over 100,000 soldiers during World War I and served as a major mobilization center in every major U.S. military conflict since.",
+    fact: "Camp Dodge was named for General Grenville M. Dodge, an Iowa Civil War hero and chief engineer of the first transcontinental railroad. At its WWI peak it housed over 20,000 soldiers.",
+  },
+  {
+    id: 25,
+    name: "Adventureland Park (Altoona)",
+    lat: 41.6384,
+    lng: -93.4745,
+    year: "1974",
+    category: "Recreation & Sports",
+    emoji: "🎢",
+    desc: "Located in Altoona just east of Des Moines, Adventureland Park is Iowa's premier amusement park with roller coasters, water rides, and an adjoining resort hotel. It has been a family tradition for generations of Iowans since opening in 1974.",
+    fact: "Adventureland's 'Outlaw' roller coaster, opened in 1993, is one of the longest wooden coasters in the Midwest at 3,200 feet. The park attracts over 500,000 visitors each summer.",
+  },
+  {
+    id: 26,
+    name: "Woodland Cemetery",
+    lat: 41.6033,
+    lng: -93.6261,
+    year: "1848",
+    category: "History & Architecture",
+    emoji: "⚱️",
+    desc: "Established in 1848, Woodland Cemetery is Des Moines' oldest and most historically significant cemetery. It is the resting place of many of Iowa's founders, governors, and Civil War veterans, featuring Victorian funerary art and massive old-growth trees.",
+    fact: "Woodland Cemetery contains the graves of several Iowa governors, Civil War generals, and Frederick M. Hubbell, the city's first millionaire who built Terrace Hill. It is listed on the National Register of Historic Places.",
+  },
+  {
+    id: 27,
+    name: "Prairie Meadows Racetrack (Altoona)",
+    lat: 41.6290,
+    lng: -93.4840,
+    year: "1989",
+    category: "Recreation & Sports",
+    emoji: "🐎",
+    desc: "Prairie Meadows Racetrack and Casino in Altoona is Iowa's most prominent horse racing facility and one of the state's largest entertainment venues. Since opening in 1989, it has contributed over $1 billion in profits to Polk County schools and local government.",
+    fact: "Prairie Meadows has donated over $1 billion to Polk County since its founding — funding schools, parks, and county services. It is one of the few racetrack-casinos in the nation where profits go entirely to local community benefit.",
+  },
+  {
+    id: 28,
+    name: "Locust Street Bridge (Historic)",
+    lat: 41.5895,
+    lng: -93.6280,
+    year: "1893",
+    category: "History & Architecture",
+    emoji: "🌉",
+    desc: "The Locust Street Bridge over the Des Moines River was for decades the city's most important river crossing, carrying the famous electric streetcar line and connecting downtown to the east side neighborhoods. Historical photos show it bustling with horse-drawn carriages and trolleys.",
+    fact: "The original 1893 Locust Street Bridge was replaced multiple times as automobile traffic grew. The current bridge is the fourth iteration on this same critical crossing point.",
+  },
+  {
+    id: 29,
+    name: "Science and Technology Museum (STEM) at Ankeny",
+    lat: 41.7289,
+    lng: -93.6024,
+    year: "2010s",
+    category: "Education",
+    emoji: "🔬",
+    desc: "Ankeny is home to Des Moines Area Community College (DMACC), the largest community college in Iowa with over 25,000 students. The Ankeny campus is a hub for STEM education, workforce training, and community programs serving the booming northern suburbs.",
+    fact: "DMACC serves more students than any community college in Iowa. Its partnership with Corteva Agriscience and other major employers makes it a key pipeline for the metro's growing tech and agri-science sectors.",
+  },
+  {
+    id: 30,
+    name: "Raccoon River Park (West Des Moines)",
+    lat: 41.5849,
+    lng: -93.7773,
+    year: "1969",
+    category: "Recreation & Sports",
+    emoji: "🏊",
+    desc: "Raccoon River Park is a massive 635-acre park in West Des Moines featuring a beach, marina, campgrounds, trails, and a sand volleyball complex. The park sits along the Raccoon River, which has shaped the ecology and flooding history of the Des Moines metro for centuries.",
+    fact: "The Raccoon River flows from northwest Iowa into Des Moines, picking up agricultural runoff along the way. The 2016 Des Moines Water Works lawsuit over nitrate levels in the river sparked a national debate about farming practices and water quality.",
+  },
 ];
 
 // ─── HISTORICAL MAP PAGE ──────────────────────────────────────────────────────
@@ -1826,8 +2180,8 @@ function HistoricalMapPage() {
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
     const map = L.map(mapRef.current, {
-      center: [41.5910, -93.6265],
-      zoom: 13,
+      center: [41.6100, -93.6600],
+      zoom: 11,
       zoomControl: true,
     });
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -1992,25 +2346,62 @@ function HistoricalMapPage() {
 // ─── APP ─────────────────────────────────────────────────────────────────────
 export default function App() {
   const [page, setPage] = useState("home");
-  const navigate = (p) => { setPage(p); window.scrollTo({ top: 0, behavior: "smooth" }); };
+  const [splashDone, setSplashDone] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(o => !o);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+
+  const navigate = (p) => { setPage(p); window.scrollTo({ top: 0, behavior: "smooth" }); if (typeof window.__playNavSound === "function") window.__playNavSound(); };
   const renderPage = () => {
     switch (page) {
       case "history": return <HistoryPage />;
       case "heroes": return <HeroesPage />;
       case "voices": return <VoicesPage />;
       case "play": return <PlayPage />;
-      case "agriculture": return <AgriculturePage />;
-      case "map": return <HistoricalMapPage />;
       case "sources": return <SourcesPage />;
+      case "then-now": return <ThenNowPage />;
+      case "neighborhoods": return <NeighborhoodPage />;
       default: return <HomePage setPage={navigate} />;
     }
   };
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <GlobalStyles />
-      <Navbar activePage={page} setPage={navigate} />
-      <main style={{ flex: 1 }}>{renderPage()}</main>
+      {!splashDone && <SplashScreen onDone={() => setSplashDone(true)} />}
+      {/* Skip to main content — accessibility */}
+      <a
+        href="#main-content"
+        style={{
+          position: "absolute", top: -60, left: 16, zIndex: 10000,
+          background: "var(--peach)", color: "var(--charcoal)", padding: "10px 18px",
+          borderRadius: 8, fontWeight: 700, textDecoration: "none", fontSize: "0.88rem",
+          transition: "top 0.2s ease",
+        }}
+        onFocus={e => { e.currentTarget.style.top = "16px"; }}
+        onBlur={e => { e.currentTarget.style.top = "-60px"; }}
+      >
+        Skip to main content
+      </a>
+      <Navbar activePage={page} setPage={navigate} onSearchOpen={() => setSearchOpen(true)} />
+      <main id="main-content" style={{ flex: 1 }} tabIndex={-1}>{renderPage()}</main>
       <Footer setPage={navigate} />
+      <SearchModal
+        isOpen={searchOpen}
+        onClose={() => setSearchOpen(false)}
+        timelineData={timelineData}
+        heroesData={heroesData}
+        mapLocations={MAP_LOCATIONS}
+        setPage={navigate}
+      />
     </div>
   );
 }
