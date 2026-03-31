@@ -125,6 +125,7 @@ const NAV_ITEMS = [
   { id: "heroes", label: "Heroes" },
   { id: "voices", label: "Voices" },
   { id: "play", label: "City Builder" },
+  { id: "map", label: "Historical Map" },
   { id: "then-now", label: "Then & Now" },
   { id: "neighborhoods", label: "Neighborhoods" },
   { id: "sources", label: "Sources" },
@@ -2367,6 +2368,7 @@ export default function App() {
       case "heroes": return <HeroesPage />;
       case "voices": return <VoicesPage />;
       case "play": return <PlayPage />;
+      case "map": return <HistoricalMapPage />;
       case "sources": return <SourcesPage />;
       case "then-now": return <ThenNowPage />;
       case "neighborhoods": return <NeighborhoodPage />;
