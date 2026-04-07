@@ -12,14 +12,14 @@ const GlobalStyles = () => (
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700&family=Unna:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
     :root {
-      --warm: #F0E6CE;
-      --cream: #E8D5B0;
-      --peach: #7A4F2C;
-      --peach-dark: #5C3318;
-      --copper: #8B4513;
+      --warm: #FAF0DC;
+      --cream: #F2E4C0;
+      --peach: #C4813A;
+      --peach-dark: #8B5A20;
+      --copper: #B8722A;
       --charcoal: #2A1A0E;
       --slate: #3D2410;
-      --mist: #6B5035;
+      --mist: #7A5C38;
       --success: #4A8C5C;
       --river: #3A6F8A;
       --danger: #C0392B;
@@ -521,7 +521,7 @@ function HomePage({ setPage }) {
           {features.map((f, i) => (
             <FadeSection key={i} delay={i * 0.1}>
               <button onClick={() => setPage(f.page)} style={{
-                background: "var(--cream)", border: "2px solid #8B5E3C",
+                background: "var(--cream)", border: "2px solid #C4813A",
                 borderRadius: 8, padding: "36px 24px", textAlign: "left", width: "100%",
                 cursor: "pointer", transition: "all 0.35s cubic-bezier(0.16,1,0.3,1)",
                 boxShadow: "0 2px 16px rgba(44,24,16,0.1)", fontFamily: "'DM Sans', sans-serif",
@@ -1088,7 +1088,7 @@ function VoicesPage() {
       <PageHero title="Voices" subtitle="Oral histories, hidden history, and the diverse stories that complete the full picture of Des Moines." />
 
       {/* Tab navigation — right below page hero */}
-      <div style={{ background: "#3D1F0D", borderBottom: "3px solid #8B5E3C", position: "sticky", top: 60, zIndex: 90 }}>
+      <div style={{ background: "#3D1F0D", borderBottom: "3px solid #C4813A", position: "sticky", top: 60, zIndex: 90 }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 32px", display: "flex", gap: 0, overflowX: "auto" }}>
           {[
             { id: "newspapers", label: "📰 From the Archives" },
@@ -1104,7 +1104,7 @@ function VoicesPage() {
                 border: "none", cursor: "pointer", fontFamily: "'Playfair Display', serif",
                 fontWeight: 700, fontSize: "0.88rem", letterSpacing: "0.04em",
                 color: voicesSection === tab.id ? "#F2E8D5" : "rgba(242,232,213,0.45)",
-                borderBottom: voicesSection === tab.id ? "3px solid #A0522D" : "3px solid transparent",
+                borderBottom: voicesSection === tab.id ? "3px solid #C4813A" : "3px solid transparent",
                 marginBottom: "-3px", transition: "all 0.2s", whiteSpace: "nowrap",
               }}
             >{tab.label}</button>
@@ -1121,8 +1121,12 @@ function VoicesPage() {
         {voicesSection === "oral" && <>
         <FadeSection>
           <SectionLabel text="Oral Histories" />
-          <p style={{ color: "var(--mist)", fontSize: "0.95rem", marginBottom: 32, maxWidth: 680 }}>
-            Short, transcribed accounts from community members across decades of Des Moines history.
+          <p style={{ color: "var(--charcoal)", fontSize: "1rem", marginBottom: 8, maxWidth: 680, fontWeight: 700 }}>
+            Real voices. Real stories.
+          </p>
+          <p style={{ color: "var(--mist)", fontSize: "0.95rem", marginBottom: 32, maxWidth: 680, lineHeight: 1.7 }}>
+            Short, transcribed accounts from <strong>community members across decades of Des Moines history</strong> — 
+            capturing the everyday experiences that shaped the city's identity.
           </p>
         </FadeSection>
 
@@ -1154,8 +1158,12 @@ function VoicesPage() {
         {voicesSection === "hidden" && <>
         <FadeSection>
           <SectionLabel text="Hidden History" />
-          <p style={{ color: "var(--mist)", fontSize: "0.95rem", marginBottom: 32, maxWidth: 680 }}>
-            Lesser-known events and diverse stories that shaped Des Moines but rarely appear in standard histories.
+          <p style={{ color: "var(--charcoal)", fontSize: "1rem", marginBottom: 8, maxWidth: 680, fontWeight: 700 }}>
+            The stories left out of the textbooks.
+          </p>
+          <p style={{ color: "var(--mist)", fontSize: "0.95rem", marginBottom: 32, maxWidth: 680, lineHeight: 1.7 }}>
+            <strong>Lesser-known events and diverse communities</strong> that shaped Des Moines but rarely appear in 
+            standard histories — from the all-Black city of Buxton to the Latino community of the Near South Side.
           </p>
         </FadeSection>
 
@@ -1198,8 +1206,12 @@ function VoicesPage() {
         {voicesSection === "timeline" && <>
         <FadeSection>
           <SectionLabel text="Dynamic Timeline" />
-          <p style={{ color: "var(--mist)", fontSize: "0.95rem", marginBottom: 48, maxWidth: 680 }}>
-            Scroll through the voices and events that shaped the diverse story of Des Moines, from indigenous homeland to modern metropolis.
+          <p style={{ color: "var(--charcoal)", fontSize: "1rem", marginBottom: 8, maxWidth: 680, fontWeight: 700 }}>
+            A city built by many voices.
+          </p>
+          <p style={{ color: "var(--mist)", fontSize: "0.95rem", marginBottom: 48, maxWidth: 680, lineHeight: 1.7 }}>
+            Scroll through the <strong>voices and events that shaped the diverse story of Des Moines</strong> — 
+            from indigenous homeland to modern metropolis, told through the communities who lived it.
           </p>
         </FadeSection>
 
