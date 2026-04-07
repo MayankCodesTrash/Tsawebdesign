@@ -29,11 +29,16 @@ const GlobalStyles = () => (
     html { scroll-behavior: smooth; }
     body {
       font-family: 'DM Sans', sans-serif;
-      background-color: #D4B896;
+      /* CSS-only parchment — zero tiling artifacts */
+      background-color: #C4A46B;
       background-image:
-        url('https://www.photos-public-domain.com/wp-content/uploads/2011/03/golden-parchment-paper-texture.jpg');
-      background-size: 900px auto;
-      background-repeat: repeat;
+        radial-gradient(ellipse at 15% 20%, rgba(160,115,50,0.6) 0%, transparent 40%),
+        radial-gradient(ellipse at 85% 75%, rgba(145,100,40,0.55) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 5%,  rgba(185,145,75,0.45) 0%, transparent 38%),
+        radial-gradient(ellipse at 10% 90%, rgba(130,88,32,0.4)  0%, transparent 36%),
+        radial-gradient(ellipse at 90% 10%, rgba(175,135,65,0.5) 0%, transparent 38%),
+        radial-gradient(ellipse at 60% 50%, rgba(200,165,85,0.3) 0%, transparent 50%);
+      background-attachment: fixed;
       color: var(--charcoal);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
@@ -293,9 +298,7 @@ function PageHero({ title, subtitle }) {
     <div style={{
       padding: "140px 32px 80px", textAlign: "center",
       background: `linear-gradient(170deg, #2A1608 0%, #4A2410 100%)`,
-      backgroundImage: `url('https://www.photos-public-domain.com/wp-content/uploads/2011/01/parchment-paper-texture1.jpg'), linear-gradient(170deg, #2A1608 0%, #4A2410 100%)`,
-      backgroundBlendMode: "multiply",
-      backgroundSize: "cover",
+
       position: "relative", overflow: "hidden",
     }}>
       <div style={{
@@ -351,124 +354,174 @@ function HomePage({ setPage }) {
 
   return (
     <div>
-      {/* Hero with background image */}
+      {/* ── SCRAPBOOK HERO ─────────────────────────────────────────────── */}
       <div style={{
-        minHeight: "100vh", display: "flex", flexDirection: "column",
-        justifyContent: "center", alignItems: "center",
-        position: "relative", overflow: "hidden", padding: "120px 32px 80px",
+        minHeight: "100vh", position: "relative", overflow: "hidden",
+        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+        padding: "100px 40px 80px",
+        /* CSS parchment — no tiling artifacts */
+        background: `
+          radial-gradient(ellipse at 18% 25%, rgba(160,110,50,0.55) 0%, transparent 45%),
+          radial-gradient(ellipse at 82% 72%, rgba(145,100,40,0.5) 0%, transparent 45%),
+          radial-gradient(ellipse at 55% 10%, rgba(190,150,80,0.4) 0%, transparent 40%),
+          radial-gradient(ellipse at 12% 85%, rgba(130,90,35,0.4) 0%, transparent 38%),
+          radial-gradient(ellipse at 88% 15%, rgba(175,135,70,0.45) 0%, transparent 42%),
+          radial-gradient(ellipse at 50% 55%, rgba(200,165,90,0.25) 0%, transparent 55%),
+          #C4A46B
+        `,
       }}>
-        {/* Background image */}
+        {/* Subtle noise overlay for paper grain */}
         <div style={{
-          position: "absolute", inset: 0,
-          backgroundImage: `url(${HERO_BG})`,
-          backgroundSize: "cover", backgroundPosition: "center 40%",
-          animation: "pan 20s ease-in-out infinite alternate",
-        }} />
-        {/* Sepia overlay */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(180deg, rgba(42,26,14,0.55) 0%, rgba(42,26,14,0.75) 55%, rgba(42,26,14,0.92) 100%)",
-        }} />
-        {/* Parchment sepia tint */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "rgba(180,130,70,0.18)",
-          mixBlendMode: "multiply",
-        }} />
-        {/* Grain texture */}
-        <div style={{
-          position: "absolute", inset: 0, opacity: 0.04,
-          backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
-          backgroundSize: "40px 40px",
-        }} />
-        {/* Decorative rings */}
-        <div style={{
-          position: "absolute", width: 700, height: 700, borderRadius: "50%",
-          border: "1px solid rgba(139,94,60,0.12)",
-          top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-        }} />
-        <div style={{
-          position: "absolute", width: 450, height: 450, borderRadius: "50%",
-          border: "1px solid rgba(139,94,60,0.08)",
-          top: "50%", left: "50%", transform: "translate(-50%, -50%)",
+          position: "absolute", inset: 0, opacity: 0.06, zIndex: 0,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
+          backgroundSize: "150px 150px",
         }} />
 
-        <div style={{ position: "relative", zIndex: 1, textAlign: "center", maxWidth: 800 }}>
-          <div style={{
-            fontSize: "0.68rem", letterSpacing: "0.26em", textTransform: "uppercase",
-            color: "rgba(212,184,150,0.9)", fontWeight: 600, marginBottom: 20,
-            animation: "fadeUp 0.7s ease",
-            fontFamily: "'Playfair Display', serif",
-          }}>✦ A Community Story · Des Moines, Iowa · Est. 1843 ✦</div>
-
-          <h1 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "clamp(3.2rem, 7.5vw, 6rem)", fontWeight: 800,
-            color: "#F0E6CE", lineHeight: 1.0, letterSpacing: "-0.01em",
-            marginBottom: 10, animation: "fadeUp 0.7s ease 0.1s both",
-            textShadow: "2px 3px 8px rgba(0,0,0,0.5)",
-          }}>
-            Echoes of
-          </h1>
-          <h1 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: "clamp(3.8rem, 9vw, 7.5rem)", fontWeight: 800,
-            color: "#F0E6CE", lineHeight: 1.0, letterSpacing: "0.02em",
-            marginBottom: 28, animation: "fadeUp 0.7s ease 0.1s both",
-            textShadow: "2px 3px 8px rgba(0,0,0,0.5)",
-            fontStyle: "italic",
-          }}>
-            The Fort
-          </h1>
-
-          <p style={{
-            color: "rgba(240,230,206,0.75)", fontSize: "1.1rem",
-            lineHeight: 1.75, maxWidth: 520, margin: "0 auto 12px",
-            animation: "fadeUp 0.7s ease 0.2s both",
-            fontFamily: "'Playfair Display', serif", fontStyle: "italic",
-          }}>
-            From a frontier garrison at the confluence of two rivers to the
-            beating heart of Iowa — uncover the voices, landmarks, and turning
-            points that echo through Des Moines's history.
-          </p>
-
-          <div style={{
-            fontSize: "0.68rem", letterSpacing: "0.18em", textTransform: "uppercase",
-            color: "rgba(242,232,213,0.45)", fontWeight: 600, marginBottom: 28,
-            animation: "fadeUp 0.7s ease 0.25s both",
-            fontFamily: "'Playfair Display', serif", fontStyle: "italic",
-          }}>Presented by Johnston MS TSA</div>
-
-          <button onClick={() => setPage("history")} style={{
-            background: "var(--peach-dark)", color: "#F2E8D5",
-            border: "2px solid rgba(242,232,213,0.3)", padding: "15px 40px", borderRadius: 8,
-            fontSize: "0.95rem", fontWeight: 700, cursor: "pointer",
-            fontFamily: "'Playfair Display', serif", fontStyle: "italic",
-            transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
-            boxShadow: "0 4px 30px rgba(107,63,31,0.4)",
-            animation: "fadeUp 0.7s ease 0.3s both",
-            letterSpacing: "0.03em",
-          }}
-          onMouseEnter={e => { e.target.style.transform = "translateY(-3px) scale(1.02)"; e.target.style.boxShadow = "0 12px 40px rgba(107,63,31,0.5)"; e.target.style.background = "#8B5E3C"; }}
-          onMouseLeave={e => { e.target.style.transform = ""; e.target.style.boxShadow = "0 4px 30px rgba(107,63,31,0.4)"; e.target.style.background = "var(--peach-dark)"; }}
-          >Hear the Echoes →</button>
+        {/* ── PANORAMIC BANNER (top) ─── */}
+        <div style={{
+          position: "absolute", top: 72, left: "50%", transform: "translateX(-50%)",
+          width: "min(820px, 90vw)", zIndex: 2,
+          boxShadow: "0 4px 20px rgba(42,20,8,0.45)",
+          border: "6px solid #F5EDD8",
+          outline: "1px solid rgba(120,80,30,0.3)",
+        }}>
+          <img src="/img-panorama.avif" alt="Des Moines panorama c.1910"
+            style={{ display: "block", width: "100%", filter: "sepia(30%) contrast(1.05)" }} />
         </div>
 
-        {/* Scroll indicator */}
+        {/* ── UPPER LEFT — street corner ─── */}
         <div style={{
-          position: "absolute", bottom: 32, left: "50%", transform: "translateX(-50%)",
-          animation: "float 2.5s ease-in-out infinite", zIndex: 1,
+          position: "absolute", top: "22%", left: "3%",
+          width: "clamp(160px, 17vw, 240px)", zIndex: 3,
+          transform: "rotate(-6deg)",
+          boxShadow: "3px 5px 18px rgba(42,20,8,0.5)",
+          border: "7px solid #F5EDD8",
+          outline: "1px solid rgba(120,80,30,0.25)",
+        }}>
+          <img src="/img-streetcar.avif" alt="Des Moines street 1900s"
+            style={{ display: "block", width: "100%", filter: "sepia(20%) contrast(1.05)" }} />
+        </div>
+
+        {/* ── LOWER LEFT — arch ─── */}
+        <div style={{
+          position: "absolute", bottom: "12%", left: "2%",
+          width: "clamp(155px, 16vw, 220px)", zIndex: 3,
+          transform: "rotate(5deg)",
+          boxShadow: "3px 5px 18px rgba(42,20,8,0.5)",
+          border: "7px solid #F5EDD8",
+          outline: "1px solid rgba(120,80,30,0.25)",
+        }}>
+          <img src="/img-arch.avif" alt="Declaration arch Des Moines"
+            style={{ display: "block", width: "100%", filter: "sepia(15%) contrast(1.08)" }} />
+        </div>
+
+        {/* ── UPPER RIGHT — colorized postcard ─── */}
+        <div style={{
+          position: "absolute", top: "20%", right: "2%",
+          width: "clamp(160px, 17vw, 240px)", zIndex: 3,
+          transform: "rotate(5deg)",
+          boxShadow: "3px 5px 18px rgba(42,20,8,0.5)",
+          border: "7px solid #F5EDD8",
+          outline: "1px solid rgba(120,80,30,0.25)",
+        }}>
+          <img src="/img-locust.avif" alt="East Locust St postcard"
+            style={{ display: "block", width: "100%", filter: "sepia(10%) saturate(0.85)" }} />
+        </div>
+
+        {/* ── LOWER RIGHT — courthouse ─── */}
+        <div style={{
+          position: "absolute", bottom: "10%", right: "2%",
+          width: "clamp(155px, 16vw, 230px)", zIndex: 3,
+          transform: "rotate(-4deg)",
+          boxShadow: "3px 5px 18px rgba(42,20,8,0.5)",
+          border: "7px solid #F5EDD8",
+          outline: "1px solid rgba(120,80,30,0.25)",
+        }}>
+          <img src="/img-courthouse.avif" alt="Old courthouse Des Moines"
+            style={{ display: "block", width: "100%", filter: "sepia(20%) contrast(1.05)" }} />
+        </div>
+
+        {/* ── CENTER — large bg courthouse ghost ─── */}
+        <div style={{
+          position: "absolute", top: "50%", left: "50%",
+          transform: "translate(-50%, -42%)",
+          width: "clamp(260px, 28vw, 400px)", zIndex: 1, opacity: 0.18,
+          filter: "sepia(40%) contrast(1.1)",
+        }}>
+          <img src="/img-courthouse.avif" alt="" style={{ display: "block", width: "100%" }} />
+        </div>
+
+        {/* ── CENTRAL TITLE ─── */}
+        <div style={{
+          position: "relative", zIndex: 10, textAlign: "center",
+          padding: "28px 40px 32px",
+          background: "rgba(196,164,107,0.55)",
+          backdropFilter: "blur(2px)",
+          borderRadius: 4,
+          boxShadow: "0 2px 40px rgba(42,20,8,0.25), inset 0 0 0 1px rgba(120,80,30,0.2)",
         }}>
           <div style={{
-            width: 24, height: 40, border: "2px solid rgba(255,255,255,0.2)",
-            borderRadius: 12, display: "flex", justifyContent: "center", paddingTop: 8,
+            fontSize: "0.62rem", letterSpacing: "0.3em", textTransform: "uppercase",
+            color: "#3D1F0A", fontWeight: 700, marginBottom: 6,
+            fontFamily: "'Playfair Display', serif",
+          }}>✦ Des Moines · Iowa ✦</div>
+
+          <h1 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "clamp(2.8rem, 6.5vw, 5.2rem)", fontWeight: 800,
+            color: "#2A1608", lineHeight: 1.0, letterSpacing: "0.01em",
+            marginBottom: 0,
+            textShadow: "1px 2px 0 rgba(255,240,200,0.4)",
+          }}>Echoes Of</h1>
+          <h1 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "clamp(3.4rem, 8vw, 6.6rem)", fontWeight: 800,
+            color: "#2A1608", lineHeight: 1.0, letterSpacing: "0.02em",
+            marginBottom: 16,
+            fontStyle: "italic",
+            textShadow: "1px 2px 0 rgba(255,240,200,0.4)",
+          }}>The Fort</h1>
+
+          <div style={{
+            width: 60, height: 2, background: "#7A4F2C", margin: "0 auto 14px", borderRadius: 1,
+          }} />
+
+          <p style={{
+            color: "#4A2E14", fontSize: "0.88rem",
+            maxWidth: 320, margin: "0 auto 20px", lineHeight: 1.6,
+            fontFamily: "'Playfair Display', serif", fontStyle: "italic",
           }}>
-            <div style={{
-              width: 3, height: 8, background: "var(--peach)", borderRadius: 2,
-              animation: "fadeUp 1.5s ease infinite",
-            }} />
-          </div>
+            A community story — the voices, landmarks &amp; turning points of Des Moines, Iowa.
+          </p>
+
+          <button onClick={() => setPage("history")} style={{
+            background: "linear-gradient(180deg, #7A4F2C 0%, #5C3318 100%)",
+            color: "#F5EDD8", border: "2px solid rgba(42,20,8,0.4)",
+            padding: "12px 34px", borderRadius: 3,
+            fontSize: "0.88rem", fontWeight: 700, cursor: "pointer",
+            fontFamily: "'Playfair Display', serif", fontStyle: "italic",
+            letterSpacing: "0.06em", textTransform: "uppercase",
+            boxShadow: "0 4px 12px rgba(42,20,8,0.35), inset 0 1px 0 rgba(255,230,180,0.15)",
+            transition: "all 0.25s ease",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(180deg, #8B5E3C 0%, #6B3F1F 100%)"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 20px rgba(42,20,8,0.45)"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "linear-gradient(180deg, #7A4F2C 0%, #5C3318 100%)"; e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 12px rgba(42,20,8,0.35), inset 0 1px 0 rgba(255,230,180,0.15)"; }}
+          >Enter the Fort</button>
         </div>
+
+        {/* ── BOTTOM LEFT attribution ─── */}
+        <div style={{
+          position: "absolute", bottom: 20, left: 24, zIndex: 10,
+          fontFamily: "'Playfair Display', serif", fontStyle: "italic",
+          color: "#3D1F0A", fontSize: "clamp(0.75rem, 1.5vw, 0.95rem)", fontWeight: 600,
+          textShadow: "0 1px 3px rgba(255,240,200,0.5)",
+        }}>Presented by Johnston MS TSA</div>
+
+        <style>{`
+          @media (max-width: 640px) {
+            .scrapbook-side { display: none !important; }
+          }
+        `}</style>
       </div>
 
       {/* Features */}
