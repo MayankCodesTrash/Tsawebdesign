@@ -9,17 +9,17 @@ const HERO_BG = "data:image/webp;base64,UklGRgaBAQBXRUJQVlA4IPqAAQBQZAOdASpYAsMB
 // ─── GLOBAL STYLES ──────────────────────────────────────────────────────────
 const GlobalStyles = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700&family=Unna:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
     :root {
-      --warm: #F7F3EE;
-      --cream: #FFF9F4;
-      --peach: #FFBFA3;
-      --peach-dark: #E8976E;
-      --copper: #C67A52;
-      --charcoal: #1E2328;
-      --slate: #3A3F47;
-      --mist: #8B9199;
+      --warm: #F2E8D5;
+      --cream: #EDE0C4;
+      --peach: #8B5E3C;
+      --peach-dark: #6B3F1F;
+      --copper: #A0522D;
+      --charcoal: #2C1810;
+      --slate: #4A2E1A;
+      --mist: #7A6548;
       --success: #5CB87A;
       --river: #4A8FBA;
       --danger: #D9534F;
@@ -29,13 +29,28 @@ const GlobalStyles = () => (
     html { scroll-behavior: smooth; }
     body {
       font-family: 'DM Sans', sans-serif;
-      background: var(--warm);
+      background: #C8A96E;
+      background-image:
+        repeating-linear-gradient(
+          45deg,
+          rgba(139, 94, 60, 0.04) 0px,
+          rgba(139, 94, 60, 0.04) 1px,
+          transparent 1px,
+          transparent 12px
+        ),
+        repeating-linear-gradient(
+          -45deg,
+          rgba(107, 63, 31, 0.03) 0px,
+          rgba(107, 63, 31, 0.03) 1px,
+          transparent 1px,
+          transparent 12px
+        );
       color: var(--charcoal);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
-    ::selection { background: var(--peach); color: var(--charcoal); }
+    ::selection { background: var(--peach); color: #F2E8D5; }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(30px); }
@@ -62,8 +77,8 @@ const GlobalStyles = () => (
       to { opacity: 1; transform: scale(1); }
     }
     @keyframes glow {
-      0%, 100% { box-shadow: 0 0 20px rgba(255,191,163,0.2); }
-      50% { box-shadow: 0 0 40px rgba(255,191,163,0.4); }
+      0%, 100% { box-shadow: 0 0 20px rgba(139,94,60,0.25); }
+      50% { box-shadow: 0 0 40px rgba(139,94,60,0.4); }
     }
     @keyframes float {
       0%, 100% { transform: translateY(0); }
@@ -124,10 +139,8 @@ const NAV_ITEMS = [
   { id: "history", label: "History" },
   { id: "heroes", label: "Heroes" },
   { id: "voices", label: "Voices" },
-  { id: "play", label: "City Builder" },
   { id: "map", label: "Historical Map" },
   { id: "then-now", label: "Then & Now" },
-  { id: "neighborhoods", label: "Neighborhoods" },
   { id: "sources", label: "Sources" },
 ];
 
@@ -144,9 +157,9 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
   return (
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 999,
-      background: scrolled ? "rgba(30,35,40,0.97)" : "rgba(30,35,40,0.7)",
+      background: scrolled ? "rgba(61,31,13,0.97)" : "rgba(61,31,13,0.88)",
       backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-      borderBottom: scrolled ? "1px solid rgba(255,191,163,0.12)" : "1px solid transparent",
+      borderBottom: scrolled ? "1px solid rgba(139,94,60,0.35)" : "1px solid rgba(139,94,60,0.15)",
       transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
     }}>
       <div style={{
@@ -163,7 +176,7 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
             fontWeight: 700, color: "#fff", letterSpacing: "-0.02em",
           }}>Echoes of the Fort</span>
           <span style={{
-            background: "var(--peach)", color: "var(--charcoal)",
+            background: "var(--peach)", color: "#F2E8D5",
             fontSize: "0.55rem", fontWeight: 700, letterSpacing: "0.14em",
             textTransform: "uppercase", padding: "3px 8px", borderRadius: 4,
           }}>Des Moines, Iowa</span>
@@ -172,7 +185,7 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
         <div style={{ display: "flex", gap: 4, alignItems: "center" }} className="desktop-nav">
           {NAV_ITEMS.map(item => (
             <button key={item.id} onClick={() => setPage(item.id)} style={{
-              background: activePage === item.id ? "rgba(255,191,163,0.15)" : "transparent",
+              background: activePage === item.id ? "rgba(139,94,60,0.25)" : "transparent",
               border: "none", color: activePage === item.id ? "var(--peach)" : "rgba(255,255,255,0.6)",
               padding: "8px 16px", borderRadius: 8, cursor: "pointer",
               fontSize: "0.85rem", fontWeight: 500, fontFamily: "'DM Sans', sans-serif",
@@ -191,7 +204,7 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
             cursor: "pointer", fontSize: "0.82rem", display: "flex", alignItems: "center", gap: 6,
             fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s ease",
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,191,163,0.15)"; e.currentTarget.style.color = "var(--peach)"; }}
+          onMouseEnter={e => { e.currentTarget.style.background = "rgba(139,94,60,0.25)"; e.currentTarget.style.color = "var(--warm)"; }}
           onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "rgba(255,255,255,0.6)"; }}
         >
           <span aria-hidden="true">🔍</span>
@@ -206,7 +219,7 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
 
       {mobileOpen && (
         <div style={{
-          background: "rgba(30,35,40,0.98)", padding: "8px 24px 16px",
+          background: "rgba(61,31,13,0.98)", padding: "8px 24px 16px",
           animation: "slideDown 0.25s ease",
         }}>
           {NAV_ITEMS.map(item => (
@@ -234,7 +247,7 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
 function Footer({ setPage }) {
   return (
     <footer style={{
-      background: "var(--charcoal)", color: "rgba(255,255,255,0.45)",
+      background: "#3D1F0D", color: "rgba(242,232,213,0.5)",
       padding: "56px 32px 36px", textAlign: "center", fontSize: "0.85rem",
       position: "relative", overflow: "hidden",
     }}>
@@ -255,7 +268,7 @@ function Footer({ setPage }) {
             onClick={() => setPage("sources")}
             style={{
               background: "none",
-              border: "1px solid rgba(255,191,163,0.4)",
+              border: "1px solid rgba(139,94,60,0.5)",
               color: "var(--peach)",
               padding: "8px 16px",
               borderRadius: 8,
@@ -265,7 +278,7 @@ function Footer({ setPage }) {
               transition: "all 0.2s ease",
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.background = "rgba(255,191,163,0.12)";
+              e.currentTarget.style.background = "rgba(139,94,60,0.15)";
             }}
             onMouseLeave={e => {
               e.currentTarget.style.background = "none";
@@ -275,7 +288,10 @@ function Footer({ setPage }) {
           </button>
         </p>
       )}
-      <p style={{ fontSize: "0.72rem", opacity: 0.4, marginTop: 20 }}>
+      <p style={{ marginTop: 16, fontSize: "0.8rem", color: "rgba(242,232,213,0.6)", fontStyle: "italic", fontFamily: "'Playfair Display', serif" }}>
+        Presented by Johnston MS TSA
+      </p>
+      <p style={{ fontSize: "0.72rem", opacity: 0.4, marginTop: 8 }}>
         TSA Website Design 2026 · Iowa's Capital City
       </p>
     </footer>
@@ -287,7 +303,7 @@ function PageHero({ title, subtitle }) {
   return (
     <div style={{
       padding: "140px 32px 80px", textAlign: "center",
-      background: `linear-gradient(170deg, var(--charcoal) 0%, var(--slate) 100%)`,
+      background: `linear-gradient(170deg, #3D1F0D 0%, #5C3317 100%)`,
       position: "relative", overflow: "hidden",
     }}>
       <div style={{
@@ -297,7 +313,7 @@ function PageHero({ title, subtitle }) {
       }} />
       <div style={{
         position: "absolute", width: 500, height: 500, borderRadius: "50%",
-        border: "1px solid rgba(255,191,163,0.05)", top: "50%", left: "50%",
+        border: "1px solid rgba(139,94,60,0.08)", top: "50%", left: "50%",
         transform: "translate(-50%,-50%)",
       }} />
       <div style={{
@@ -338,7 +354,7 @@ function HomePage({ setPage }) {
     { icon: "📜", title: "Interactive Timeline", desc: "Trace the echoes of 180+ years — from frontier fort to modern metropolis.", page: "history" },
     { icon: "🏅", title: "Heroes Archive", desc: "The voices that still resonate — pioneers, activists, and visionaries of Des Moines.", page: "heroes" },
     { icon: "🎤", title: "Voices", desc: "Stories from the community — oral histories, hidden history, and a dynamic timeline of diverse voices.", page: "voices" },
-    { icon: "🏗️", title: "City Builder", desc: "Build Des Moines yourself — an interactive game from frontier fort to 215,000 residents.", page: "play" },
+    { icon: "🗺️", title: "Historical Map", desc: "Explore the city's geography — from the frontier fort to modern landmarks across Des Moines.", page: "map" },
   ];
 
   return (
@@ -359,7 +375,7 @@ function HomePage({ setPage }) {
         {/* Dark overlay */}
         <div style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(180deg, rgba(30,35,40,0.75) 0%, rgba(30,35,40,0.85) 50%, rgba(30,35,40,0.95) 100%)",
+          background: "linear-gradient(180deg, rgba(61,31,13,0.72) 0%, rgba(44,24,16,0.82) 50%, rgba(44,24,16,0.94) 100%)",
         }} />
         {/* Grain texture */}
         <div style={{
@@ -370,12 +386,12 @@ function HomePage({ setPage }) {
         {/* Decorative rings */}
         <div style={{
           position: "absolute", width: 700, height: 700, borderRadius: "50%",
-          border: "1px solid rgba(255,191,163,0.06)",
+          border: "1px solid rgba(139,94,60,0.12)",
           top: "50%", left: "50%", transform: "translate(-50%, -50%)",
         }} />
         <div style={{
           position: "absolute", width: 450, height: 450, borderRadius: "50%",
-          border: "1px solid rgba(255,191,163,0.04)",
+          border: "1px solid rgba(139,94,60,0.08)",
           top: "50%", left: "50%", transform: "translate(-50%, -50%)",
         }} />
 
@@ -394,8 +410,9 @@ function HomePage({ setPage }) {
           }}>
             Echoes of<br />
             <span style={{
-              color: "var(--peach)",
-              textShadow: "0 0 60px rgba(255,191,163,0.3)",
+              color: "#F2E8D5",
+              fontStyle: "italic",
+              textShadow: "0 0 60px rgba(242,232,213,0.25)",
             }}>the Fort</span>
           </h1>
 
@@ -409,17 +426,25 @@ function HomePage({ setPage }) {
             points that echo through Des Moines's history.
           </p>
 
+          <div style={{
+            fontSize: "0.68rem", letterSpacing: "0.18em", textTransform: "uppercase",
+            color: "rgba(242,232,213,0.45)", fontWeight: 600, marginBottom: 28,
+            animation: "fadeUp 0.7s ease 0.25s both",
+            fontFamily: "'Playfair Display', serif", fontStyle: "italic",
+          }}>Presented by Johnston MS TSA</div>
+
           <button onClick={() => setPage("history")} style={{
-            background: "var(--peach)", color: "var(--charcoal)",
-            border: "none", padding: "15px 40px", borderRadius: 12,
+            background: "var(--peach-dark)", color: "#F2E8D5",
+            border: "2px solid rgba(242,232,213,0.3)", padding: "15px 40px", borderRadius: 8,
             fontSize: "0.95rem", fontWeight: 700, cursor: "pointer",
-            fontFamily: "'DM Sans', sans-serif",
+            fontFamily: "'Playfair Display', serif", fontStyle: "italic",
             transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
-            boxShadow: "0 4px 30px rgba(255,191,163,0.3)",
+            boxShadow: "0 4px 30px rgba(107,63,31,0.4)",
             animation: "fadeUp 0.7s ease 0.3s both",
+            letterSpacing: "0.03em",
           }}
-          onMouseEnter={e => { e.target.style.transform = "translateY(-3px) scale(1.02)"; e.target.style.boxShadow = "0 12px 40px rgba(255,191,163,0.4)"; }}
-          onMouseLeave={e => { e.target.style.transform = ""; e.target.style.boxShadow = "0 4px 30px rgba(255,191,163,0.3)"; }}
+          onMouseEnter={e => { e.target.style.transform = "translateY(-3px) scale(1.02)"; e.target.style.boxShadow = "0 12px 40px rgba(107,63,31,0.5)"; e.target.style.background = "#8B5E3C"; }}
+          onMouseLeave={e => { e.target.style.transform = ""; e.target.style.boxShadow = "0 4px 30px rgba(107,63,31,0.4)"; e.target.style.background = "var(--peach-dark)"; }}
           >Hear the Echoes →</button>
         </div>
 
@@ -451,10 +476,10 @@ function HomePage({ setPage }) {
           {features.map((f, i) => (
             <FadeSection key={i} delay={i * 0.1}>
               <button onClick={() => setPage(f.page)} style={{
-                background: "var(--cream)", border: "1px solid rgba(0,0,0,0.04)",
-                borderRadius: 16, padding: "36px 24px", textAlign: "left", width: "100%",
+                background: "#EDE0C4", border: "2px solid #8B5E3C",
+                borderRadius: 8, padding: "36px 24px", textAlign: "left", width: "100%",
                 cursor: "pointer", transition: "all 0.35s cubic-bezier(0.16,1,0.3,1)",
-                boxShadow: "0 2px 12px rgba(0,0,0,0.03)", fontFamily: "'DM Sans', sans-serif",
+                boxShadow: "0 2px 16px rgba(44,24,16,0.1)", fontFamily: "'DM Sans', sans-serif",
                 position: "relative", overflow: "hidden",
               }}
               onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-6px)"; e.currentTarget.style.boxShadow = "0 20px 40px rgba(0,0,0,0.1)"; }}
@@ -462,7 +487,7 @@ function HomePage({ setPage }) {
               >
                 <div style={{
                   position: "absolute", top: -20, right: -20, width: 80, height: 80,
-                  borderRadius: "50%", background: "rgba(255,191,163,0.08)",
+                  borderRadius: "50%", background: "rgba(139,94,60,0.1)",
                 }} />
                 <div style={{ fontSize: "2.2rem", marginBottom: 16 }}>{f.icon}</div>
                 <div style={{ fontWeight: 700, fontSize: "1.1rem", marginBottom: 8, color: "var(--charcoal)" }}>{f.title}</div>
@@ -482,7 +507,7 @@ function HomePage({ setPage }) {
         }}>
           <div style={{
             position: "absolute", top: 0, left: 0, right: 0, height: 1,
-            background: "linear-gradient(90deg, transparent, var(--peach), transparent)", opacity: 0.2,
+            background: "linear-gradient(90deg, transparent, var(--copper), transparent)", opacity: 0.35,
           }} />
           {[
             { val: "1843", label: "Year Founded" },
@@ -627,20 +652,20 @@ function HistoryPage() {
           {timelineData.map((e, i) => (
             <button key={i} id={`tl-b-${i}`} onClick={() => go(i)} style={{
               flexShrink: 0, minWidth: 52, height: 36, borderRadius: 18,
-              background: i === idx ? "var(--peach)" : "rgba(255,255,255,0.07)",
+              background: i === idx ? "var(--peach)" : "rgba(139,94,60,0.15)",
               color: i === idx ? "var(--charcoal)" : "rgba(255,255,255,0.5)",
               border: "none", fontSize: "0.72rem", fontWeight: i === idx ? 700 : 500,
               cursor: "pointer", transition: "all 0.3s cubic-bezier(0.16,1,0.3,1)",
               fontFamily: "'DM Sans', sans-serif", padding: "0 12px",
               transform: i === idx ? "scale(1.08)" : "scale(1)",
-              boxShadow: i === idx ? "0 0 16px rgba(255,191,163,0.3)" : "none",
+              boxShadow: i === idx ? "0 0 16px rgba(139,94,60,0.35)" : "none",
             }}>{e.year}</button>
           ))}
         </div>
 
         {/* Content card */}
         <div key={animKey} style={{
-          display: "flex", background: "var(--cream)", borderRadius: 18,
+          display: "flex", background: "#EDE0C4", borderRadius: 8, border: "1px solid #8B5E3C",
           overflow: "hidden", boxShadow: "0 12px 48px rgba(0,0,0,0.08)",
           minHeight: 400, animation: "scaleIn 0.35s cubic-bezier(0.16,1,0.3,1)",
           flexWrap: "wrap",
@@ -703,9 +728,9 @@ function HistoryPage() {
                 transition: "all 0.2s ease",
               }}>+10 Years →→</button>
               <button onClick={() => setPlaying(p => !p)} style={{
-                padding: "11px 24px", borderRadius: 10, border: "2px solid var(--peach)",
+                padding: "11px 24px", borderRadius: 6, border: "2px solid var(--peach)",
                 background: playing ? "var(--peach)" : "transparent",
-                color: playing ? "var(--charcoal)" : "var(--peach)", fontWeight: 600,
+                color: playing ? "#F2E8D5" : "var(--peach)", fontWeight: 600,
                 cursor: "pointer", fontSize: "0.88rem",
                 fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s ease",
               }} aria-pressed={playing}>{playing ? "⏸ Pause" : "▶ Play"}</button>
@@ -787,9 +812,9 @@ function HeroesPage() {
           {heroesData.map((hero, i) => (
             <FadeSection key={i} delay={i * 0.06}>
               <div onClick={() => setModal(i)} style={{
-                background: "var(--cream)", borderRadius: 16, overflow: "hidden",
+                background: "#EDE0C4", borderRadius: 8, overflow: "hidden", border: "1px solid #8B5E3C",
                 cursor: "pointer", transition: "all 0.35s cubic-bezier(0.16,1,0.3,1)",
-                boxShadow: "0 2px 12px rgba(0,0,0,0.04)", border: "1px solid rgba(0,0,0,0.03)",
+                boxShadow: "0 2px 12px rgba(44,24,16,0.1)",
               }}
               onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-8px)"; e.currentTarget.style.boxShadow = "0 20px 48px rgba(0,0,0,0.12)"; }}
               onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.04)"; }}
@@ -810,10 +835,10 @@ function HeroesPage() {
 
         <FadeSection><SectionLabel text="Test Your Knowledge" /></FadeSection>
         <FadeSection delay={0.1}>
-          <div style={{ background: "var(--cream)", borderRadius: 18, padding: "36px 32px", boxShadow: "0 4px 20px rgba(0,0,0,0.04)", borderTop: "4px solid var(--peach)" }}>
+          <div style={{ background: "#EDE0C4", borderRadius: 8, padding: "36px 32px", boxShadow: "0 4px 20px rgba(44,24,16,0.1)", borderTop: "4px solid var(--peach)" }}>
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.6rem", marginBottom: 24, textAlign: "center" }}>Did You Know?</h2>
             {quizData.map((q, qi) => (
-              <div key={qi} style={{ background: "var(--warm)", borderRadius: 12, padding: 20, marginBottom: 14, border: "1px solid rgba(0,0,0,0.04)" }}>
+              <div key={qi} style={{ background: "#F2E8D5", borderRadius: 6, padding: 20, marginBottom: 14, border: "1px solid #8B5E3C" }}>
                 <div style={{ fontWeight: 700, marginBottom: 12, fontSize: "0.95rem" }}>{qi + 1}. {q.question}</div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                   {q.options.map((opt, oi) => {
@@ -845,12 +870,12 @@ function HeroesPage() {
 
       {modal !== null && (
         <div onClick={() => setModal(null)} style={{
-          position: "fixed", inset: 0, background: "rgba(30,35,40,0.75)",
+          position: "fixed", inset: 0, background: "rgba(44,24,16,0.8)",
           backdropFilter: "blur(8px)", display: "flex", alignItems: "center",
           justifyContent: "center", zIndex: 1000, padding: 16, animation: "fadeIn 0.25s ease",
         }}>
           <div onClick={e => e.stopPropagation()} style={{
-            background: "#fff", borderRadius: 18, maxWidth: 700, width: "100%",
+            background: "#EDE0C4", borderRadius: 8, maxWidth: 700, width: "100%",
             display: "flex", overflow: "hidden", maxHeight: "85vh",
             boxShadow: "0 24px 72px rgba(0,0,0,0.35)", flexWrap: "wrap",
             animation: "scaleIn 0.3s cubic-bezier(0.16,1,0.3,1)",
@@ -989,6 +1014,7 @@ const VOICES_TIMELINE = [
 
 function VoicesPage() {
   const [expandedHidden, setExpandedHidden] = useState(null);
+  const [voicesSection, setVoicesSection] = useState("oral");
   const tlRefs = useRef([]);
 
   useEffect(() => {
@@ -1011,8 +1037,36 @@ function VoicesPage() {
     <div>
       <PageHero title="Voices" subtitle="Oral histories, hidden history, and the diverse stories that complete the full picture of Des Moines." />
 
+      {/* Newspaper archive section - shown prominently at top */}
+      <NewspaperSection />
+
+      {/* Tab navigation */}
+      <div style={{ background: "#3D1F0D", borderBottom: "3px solid #8B5E3C", position: "sticky", top: 60, zIndex: 90 }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 32px", display: "flex", gap: 4, overflowX: "auto" }}>
+          {[
+            { id: "oral", label: "Oral Histories" },
+            { id: "hidden", label: "Hidden History" },
+            { id: "timeline", label: "Voices Timeline" },
+          ].map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setVoicesSection(tab.id)}
+              style={{
+                padding: "14px 22px", background: "none", border: "none",
+                cursor: "pointer", fontFamily: "'Playfair Display', serif",
+                fontWeight: 700, fontSize: "0.9rem", letterSpacing: "0.04em",
+                color: voicesSection === tab.id ? "#F2E8D5" : "rgba(242,232,213,0.5)",
+                borderBottom: voicesSection === tab.id ? "3px solid #8B5E3C" : "3px solid transparent",
+                marginBottom: "-3px", transition: "all 0.2s", whiteSpace: "nowrap",
+              }}
+            >{tab.label}</button>
+          ))}
+        </div>
+      </div>
+
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 32px 80px" }}>
 
+        {voicesSection === "oral" && <>
         <FadeSection>
           <SectionLabel text="Oral Histories" />
           <p style={{ color: "var(--mist)", fontSize: "0.95rem", marginBottom: 32, maxWidth: 680 }}>
@@ -1024,8 +1078,8 @@ function VoicesPage() {
           {ORAL_HISTORIES.map((h, i) => (
             <FadeSection key={i} delay={i * 0.07}>
               <div style={{
-                background: "var(--cream)", borderRadius: 16, padding: "28px 26px",
-                borderLeft: "4px solid var(--peach)", boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+                background: "#EDE0C4", borderRadius: 8, padding: "28px 26px",
+                borderLeft: "4px solid var(--peach)", boxShadow: "0 2px 12px rgba(44,24,16,0.08)",
                 transition: "all 0.3s ease", height: "100%",
               }}
               onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 36px rgba(0,0,0,0.09)"; }}
@@ -1043,7 +1097,9 @@ function VoicesPage() {
             </FadeSection>
           ))}
         </div>
+        </>}
 
+        {voicesSection === "hidden" && <>
         <FadeSection>
           <SectionLabel text="Hidden History" />
           <p style={{ color: "var(--mist)", fontSize: "0.95rem", marginBottom: 32, maxWidth: 680 }}>
@@ -1055,8 +1111,8 @@ function VoicesPage() {
           {HIDDEN_HISTORY.map((h, i) => (
             <FadeSection key={i} delay={i * 0.06}>
               <div style={{
-                background: "var(--cream)", borderRadius: 16,
-                boxShadow: "0 2px 12px rgba(0,0,0,0.04)",
+                background: "#EDE0C4", borderRadius: 8,
+                boxShadow: "0 2px 12px rgba(44,24,16,0.08)",
                 overflow: "hidden", transition: "all 0.3s ease",
               }}>
                 <button
@@ -1085,7 +1141,9 @@ function VoicesPage() {
             </FadeSection>
           ))}
         </div>
+        </>}
 
+        {voicesSection === "timeline" && <>
         <FadeSection>
           <SectionLabel text="Dynamic Timeline" />
           <p style={{ color: "var(--mist)", fontSize: "0.95rem", marginBottom: 48, maxWidth: 680 }}>
@@ -1116,8 +1174,8 @@ function VoicesPage() {
                 flexShrink: 0, marginTop: 4,
               }} />
               <div style={{
-                background: "var(--cream)", borderRadius: 14, padding: "20px 24px",
-                boxShadow: "0 2px 12px rgba(0,0,0,0.04)", flex: 1,
+                background: "#EDE0C4", borderRadius: 8, padding: "20px 24px",
+                boxShadow: "0 2px 12px rgba(44,24,16,0.08)", flex: 1,
                 borderLeft: `3px solid ${t.color}`,
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 8, marginBottom: 8 }}>
@@ -1137,10 +1195,9 @@ function VoicesPage() {
             </div>
           ))}
         </div>
+        </>}
       </div>
 
-      {/* Newspaper archive section */}
-      <NewspaperSection />
     </div>
   );
 }
@@ -1165,9 +1222,10 @@ function AgriculturePage() {
         <div style={{
           display: "flex",
           flexDirection: "column",
-          background: "var(--cream)",
-          borderRadius: 16,
-          boxShadow: "0 10px 35px rgba(0,0,0,0.06)",
+          background: "#EDE0C4",
+          borderRadius: 8,
+          boxShadow: "0 10px 35px rgba(44,24,16,0.12)",
+          border: "1px solid #8B5E3C",
           overflow: "hidden",
           minHeight: 480,
         }}
@@ -1177,13 +1235,13 @@ function AgriculturePage() {
             @media (min-width: 901px) {
               .ag-layout-wrap { flex-direction: row !important; }
               .ag-sidebar-wrap { flex-direction: column !important; border-right: 1px solid #eee; border-bottom: none !important; }
-              .ag-tab-btn.active { border-left: 5px solid var(--peach) !important; border-bottom: none !important; }
+              .ag-tab-btn.active { border-left: 5px solid var(--copper) !important; border-bottom: none !important; }
             }
             @media (max-width: 900px) {
               .ag-layout-wrap { flex-direction: column !important; }
               .ag-sidebar-wrap { flex-direction: row !important; overflow-x: auto; border-right: none !important; border-bottom: 1px solid #eee !important; white-space: nowrap; }
               .ag-tab-btn { border-left: none !important; border-bottom: 4px solid transparent !important; min-width: max-content; }
-              .ag-tab-btn.active { border-left: none !important; border-bottom-color: var(--peach) !important; }
+              .ag-tab-btn.active { border-left: none !important; border-bottom-color: var(--copper) !important; }
             }
           `}</style>
           <div style={{
@@ -1231,7 +1289,7 @@ function AgriculturePage() {
               </button>
             ))}
           </div>
-          <div style={{ flex: 1, padding: 40, display: "flex", flexDirection: "column", background: "var(--cream)" }}>
+          <div style={{ flex: 1, padding: 40, display: "flex", flexDirection: "column", background: "#EDE0C4" }}>
             <div style={{
               width: "100%",
               height: 320,
@@ -1303,7 +1361,7 @@ function SourcesPage() {
                   alignItems: "center",
                   gap: 20,
                   padding: "24px 28px",
-                  background: "var(--cream)",
+                  background: "#EDE0C4",
                   borderRadius: 16,
                   borderTop: "4px solid var(--peach)",
                   textDecoration: "none",
@@ -2209,8 +2267,8 @@ function HistoricalMapPage() {
       const icon = L.divIcon({
         html: `<div style="
           width:${size}px;height:${size}px;
-          background:${isSel ? '#E8976E' : '#FFBFA3'};
-          border:3px solid ${isSel ? '#C67A52' : '#E8976E'};
+          background:${isSel ? '#8B5E3C' : '#A0522D'};
+          border:3px solid ${isSel ? '#6B3F1F' : '#8B5E3C'};
           border-radius:50%;
           box-shadow:0 4px 14px rgba(0,0,0,${isSel ? '0.3' : '0.18'});
           display:flex;align-items:center;justify-content:center;
@@ -2236,7 +2294,7 @@ function HistoricalMapPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--warm)" }}>
+    <div style={{ minHeight: "100vh", background: "#F2E8D5" }}>
       <PageHero
         title="Interactive Historical Map"
         subtitle="Explore 180+ years of Des Moines history — click any marker to uncover the stories, people, and events that shaped Iowa's capital."
@@ -2298,7 +2356,7 @@ function HistoricalMapPage() {
                 <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.45rem", fontWeight: 700, color: "var(--charcoal)", marginBottom: 4, lineHeight: 1.25 }}>{selected.name}</h2>
                 <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.78rem", color: "var(--copper)", marginBottom: 14 }}>Est. {selected.year}</div>
                 <p style={{ fontSize: "0.93rem", lineHeight: 1.7, color: "var(--slate)", marginBottom: 16 }}>{selected.desc}</p>
-                <div style={{ background: "var(--warm)", borderRadius: 10, padding: "14px 16px", borderLeft: "3px solid var(--peach-dark)" }}>
+                <div style={{ background: "#F2E8D5", borderRadius: 10, padding: "14px 16px", borderLeft: "3px solid var(--peach-dark)" }}>
                   <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.66rem", color: "var(--copper)", letterSpacing: "0.1em", marginBottom: 6 }}>DID YOU KNOW</div>
                   <p style={{ fontSize: "0.86rem", color: "var(--slate)", lineHeight: 1.6 }}>{selected.fact}</p>
                 </div>
@@ -2322,7 +2380,7 @@ function HistoricalMapPage() {
                     <button
                       key={loc.id}
                       onClick={() => setSelected(loc)}
-                      style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "10px 12px", background: "var(--warm)", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 8, cursor: "pointer", textAlign: "left", transition: "all 0.15s" }}
+                      style={{ display: "flex", alignItems: "center", gap: 10, width: "100%", padding: "10px 12px", background: "#F2E8D5", border: "1px solid rgba(0,0,0,0.06)", borderRadius: 8, cursor: "pointer", textAlign: "left", transition: "all 0.15s" }}
                       onMouseEnter={e => { e.currentTarget.style.background = "var(--cream)"; e.currentTarget.style.borderColor = "var(--peach)"; }}
                       onMouseLeave={e => { e.currentTarget.style.background = "var(--warm)"; e.currentTarget.style.borderColor = "rgba(0,0,0,0.06)"; }}
                     >
@@ -2384,7 +2442,7 @@ export default function App() {
         href="#main-content"
         style={{
           position: "absolute", top: -60, left: 16, zIndex: 10000,
-          background: "var(--peach)", color: "var(--charcoal)", padding: "10px 18px",
+          background: "var(--peach)", color: "#F2E8D5", padding: "10px 18px",
           borderRadius: 8, fontWeight: 700, textDecoration: "none", fontSize: "0.88rem",
           transition: "top 0.2s ease",
         }}

@@ -26,7 +26,7 @@ export function SplashScreen({ onDone }) {
       aria-modal="true"
       style={{
         position: "fixed", inset: 0, zIndex: 9999,
-        background: "#1E2328",
+        background: "#3D1F0D",
         display: "flex", flexDirection: "column",
         alignItems: "center", justifyContent: "center",
         cursor: "pointer",
@@ -44,19 +44,19 @@ export function SplashScreen({ onDone }) {
       {/* concentric rings */}
       <div style={{
         position: "absolute", width: 680, height: 680, borderRadius: "50%",
-        border: "1px solid rgba(255,191,163,0.08)",
+        border: "1px solid rgba(139,94,60,0.08)",
         top: "50%", left: "50%", transform: "translate(-50%,-50%)",
         animation: "scaleIn 1.4s ease",
       }} />
       <div style={{
         position: "absolute", width: 440, height: 440, borderRadius: "50%",
-        border: "1px solid rgba(255,191,163,0.05)",
+        border: "1px solid rgba(139,94,60,0.05)",
         top: "50%", left: "50%", transform: "translate(-50%,-50%)",
         animation: "scaleIn 1.2s ease 0.2s both",
       }} />
       <div style={{
         position: "absolute", width: 240, height: 240, borderRadius: "50%",
-        border: "1px solid rgba(255,191,163,0.04)",
+        border: "1px solid rgba(139,94,60,0.04)",
         top: "50%", left: "50%", transform: "translate(-50%,-50%)",
         animation: "scaleIn 1s ease 0.35s both",
       }} />
@@ -79,7 +79,7 @@ export function SplashScreen({ onDone }) {
           margin: 0,
         }}>
           Echoes of<br />
-          <span style={{ color: "var(--peach)", textShadow: "0 0 70px rgba(255,191,163,0.35)" }}>
+          <span style={{ color: "var(--peach)", textShadow: "0 0 70px rgba(139,94,60,0.35)" }}>
             the Fort
           </span>
         </h1>
@@ -266,7 +266,7 @@ export function ThenNowPage() {
                 cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
                 transition: "all 0.25s ease",
                 transform: active === i ? "translateY(-2px)" : "",
-                boxShadow: active === i ? "0 6px 20px rgba(255,191,163,0.3)" : "none",
+                boxShadow: active === i ? "0 6px 20px rgba(139,94,60,0.3)" : "none",
               }}
             >{p.location}</button>
           ))}
@@ -286,7 +286,7 @@ export function ThenNowPage() {
             cursor: dragging ? "ew-resize" : "col-resize",
             boxShadow: "0 24px 72px rgba(0,0,0,0.18)",
             userSelect: "none", aspectRatio: "16/9",
-            background: "#1E2328",
+            background: "#3D1F0D",
           }}
         >
           {/* NOW image (right side / background) */}
@@ -345,7 +345,7 @@ export function ThenNowPage() {
 
           <div style={{
             position: "absolute", top: 14, right: 14,
-            background: "rgba(255,191,163,0.92)", backdropFilter: "blur(8px)",
+            background: "rgba(139,94,60,0.92)", backdropFilter: "blur(8px)",
             color: "var(--charcoal)", padding: "6px 14px", borderRadius: 8,
             fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em",
             fontFamily: "'JetBrains Mono', monospace",
@@ -974,7 +974,7 @@ export function SearchModal({ isOpen, onClose, timelineData, heroesData, mapLoca
       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       style={{
         position: "fixed", inset: 0, zIndex: 9998,
-        background: "rgba(30,35,40,0.72)", backdropFilter: "blur(10px)",
+        background: "rgba(61,31,13,0.72)", backdropFilter: "blur(10px)",
         display: "flex", alignItems: "flex-start", justifyContent: "center",
         paddingTop: "11vh", animation: "fadeIn 0.15s ease",
       }}
@@ -1043,7 +1043,7 @@ export function SearchModal({ isOpen, onClose, timelineData, heroesData, mapLoca
                   borderBottom: "1px solid rgba(0,0,0,0.04)",
                   transition: "background 0.15s ease", fontFamily: "'DM Sans', sans-serif",
                 }}
-                onMouseEnter={e => e.currentTarget.style.background = "rgba(255,191,163,0.1)"}
+                onMouseEnter={e => e.currentTarget.style.background = "rgba(139,94,60,0.1)"}
                 onMouseLeave={e => e.currentTarget.style.background = "transparent"}
               >
                 <span style={{ fontSize: "1.2rem", flexShrink: 0 }} aria-hidden="true">{r.icon}</span>
