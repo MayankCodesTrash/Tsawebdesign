@@ -12,39 +12,28 @@ const GlobalStyles = () => (
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700&family=Unna:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
     :root {
-      --warm: #F2E8D5;
-      --cream: #EDE0C4;
-      --peach: #8B5E3C;
-      --peach-dark: #6B3F1F;
-      --copper: #A0522D;
-      --charcoal: #2C1810;
-      --slate: #4A2E1A;
-      --mist: #7A6548;
-      --success: #5CB87A;
-      --river: #4A8FBA;
-      --danger: #D9534F;
+      --warm: #F0E6CE;
+      --cream: #E8D5B0;
+      --peach: #7A4F2C;
+      --peach-dark: #5C3318;
+      --copper: #8B4513;
+      --charcoal: #2A1A0E;
+      --slate: #3D2410;
+      --mist: #6B5035;
+      --success: #4A8C5C;
+      --river: #3A6F8A;
+      --danger: #C0392B;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       font-family: 'DM Sans', sans-serif;
-      background: #C8A96E;
+      background-color: #D4B896;
       background-image:
-        repeating-linear-gradient(
-          45deg,
-          rgba(139, 94, 60, 0.04) 0px,
-          rgba(139, 94, 60, 0.04) 1px,
-          transparent 1px,
-          transparent 12px
-        ),
-        repeating-linear-gradient(
-          -45deg,
-          rgba(107, 63, 31, 0.03) 0px,
-          rgba(107, 63, 31, 0.03) 1px,
-          transparent 1px,
-          transparent 12px
-        );
+        url('https://www.photos-public-domain.com/wp-content/uploads/2011/03/golden-parchment-paper-texture.jpg');
+      background-size: 900px auto;
+      background-repeat: repeat;
       color: var(--charcoal);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
@@ -157,7 +146,7 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
   return (
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 999,
-      background: scrolled ? "rgba(61,31,13,0.97)" : "rgba(61,31,13,0.88)",
+      background: scrolled ? "rgba(42,22,8,0.97)" : "rgba(42,22,8,0.92)",
       backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
       borderBottom: scrolled ? "1px solid rgba(139,94,60,0.35)" : "1px solid rgba(139,94,60,0.15)",
       transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
@@ -247,7 +236,7 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
 function Footer({ setPage }) {
   return (
     <footer style={{
-      background: "#3D1F0D", color: "rgba(242,232,213,0.5)",
+      background: "#2A1608", color: "rgba(242,232,213,0.5)",
       padding: "56px 32px 36px", textAlign: "center", fontSize: "0.85rem",
       position: "relative", overflow: "hidden",
     }}>
@@ -303,7 +292,10 @@ function PageHero({ title, subtitle }) {
   return (
     <div style={{
       padding: "140px 32px 80px", textAlign: "center",
-      background: `linear-gradient(170deg, #3D1F0D 0%, #5C3317 100%)`,
+      background: `linear-gradient(170deg, #2A1608 0%, #4A2410 100%)`,
+      backgroundImage: `url('https://www.photos-public-domain.com/wp-content/uploads/2011/01/parchment-paper-texture1.jpg'), linear-gradient(170deg, #2A1608 0%, #4A2410 100%)`,
+      backgroundBlendMode: "multiply",
+      backgroundSize: "cover",
       position: "relative", overflow: "hidden",
     }}>
       <div style={{
@@ -372,10 +364,16 @@ function HomePage({ setPage }) {
           backgroundSize: "cover", backgroundPosition: "center 40%",
           animation: "pan 20s ease-in-out infinite alternate",
         }} />
-        {/* Dark overlay */}
+        {/* Sepia overlay */}
         <div style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(180deg, rgba(61,31,13,0.72) 0%, rgba(44,24,16,0.82) 50%, rgba(44,24,16,0.94) 100%)",
+          background: "linear-gradient(180deg, rgba(42,26,14,0.55) 0%, rgba(42,26,14,0.75) 55%, rgba(42,26,14,0.92) 100%)",
+        }} />
+        {/* Parchment sepia tint */}
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "rgba(180,130,70,0.18)",
+          mixBlendMode: "multiply",
         }} />
         {/* Grain texture */}
         <div style={{
@@ -397,29 +395,37 @@ function HomePage({ setPage }) {
 
         <div style={{ position: "relative", zIndex: 1, textAlign: "center", maxWidth: 800 }}>
           <div style={{
-            fontSize: "0.7rem", letterSpacing: "0.22em", textTransform: "uppercase",
-            color: "var(--peach)", fontWeight: 600, marginBottom: 28,
+            fontSize: "0.68rem", letterSpacing: "0.26em", textTransform: "uppercase",
+            color: "rgba(212,184,150,0.9)", fontWeight: 600, marginBottom: 20,
             animation: "fadeUp 0.7s ease",
-          }}>A Community Story · Des Moines, Iowa · Est. 1843</div>
+            fontFamily: "'Playfair Display', serif",
+          }}>✦ A Community Story · Des Moines, Iowa · Est. 1843 ✦</div>
 
           <h1 style={{
             fontFamily: "'Playfair Display', serif",
-            fontSize: "clamp(3rem, 7vw, 5.5rem)", fontWeight: 800,
-            color: "#fff", lineHeight: 1.05, letterSpacing: "-0.03em",
-            marginBottom: 28, animation: "fadeUp 0.7s ease 0.1s both",
+            fontSize: "clamp(3.2rem, 7.5vw, 6rem)", fontWeight: 800,
+            color: "#F0E6CE", lineHeight: 1.0, letterSpacing: "-0.01em",
+            marginBottom: 10, animation: "fadeUp 0.7s ease 0.1s both",
+            textShadow: "2px 3px 8px rgba(0,0,0,0.5)",
           }}>
-            Echoes of<br />
-            <span style={{
-              color: "#F2E8D5",
-              fontStyle: "italic",
-              textShadow: "0 0 60px rgba(242,232,213,0.25)",
-            }}>the Fort</span>
+            Echoes of
+          </h1>
+          <h1 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: "clamp(3.8rem, 9vw, 7.5rem)", fontWeight: 800,
+            color: "#F0E6CE", lineHeight: 1.0, letterSpacing: "0.02em",
+            marginBottom: 28, animation: "fadeUp 0.7s ease 0.1s both",
+            textShadow: "2px 3px 8px rgba(0,0,0,0.5)",
+            fontStyle: "italic",
+          }}>
+            The Fort
           </h1>
 
           <p style={{
-            color: "rgba(255,255,255,0.5)", fontSize: "1.15rem",
-            lineHeight: 1.7, maxWidth: 560, margin: "0 auto 44px",
+            color: "rgba(240,230,206,0.75)", fontSize: "1.1rem",
+            lineHeight: 1.75, maxWidth: 520, margin: "0 auto 12px",
             animation: "fadeUp 0.7s ease 0.2s both",
+            fontFamily: "'Playfair Display', serif", fontStyle: "italic",
           }}>
             From a frontier garrison at the confluence of two rivers to the
             beating heart of Iowa — uncover the voices, landmarks, and turning
@@ -468,7 +474,7 @@ function HomePage({ setPage }) {
       {/* Features */}
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "80px 32px" }}>
         <FadeSection>
-          <SectionLabel text="Listen Closer" />
+          <SectionLabel text="Explore the Story" />
         </FadeSection>
         <div style={{
           display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20,
@@ -476,7 +482,7 @@ function HomePage({ setPage }) {
           {features.map((f, i) => (
             <FadeSection key={i} delay={i * 0.1}>
               <button onClick={() => setPage(f.page)} style={{
-                background: "#EDE0C4", border: "2px solid #8B5E3C",
+                background: "var(--cream)", border: "2px solid #8B5E3C",
                 borderRadius: 8, padding: "36px 24px", textAlign: "left", width: "100%",
                 cursor: "pointer", transition: "all 0.35s cubic-bezier(0.16,1,0.3,1)",
                 boxShadow: "0 2px 16px rgba(44,24,16,0.1)", fontFamily: "'DM Sans', sans-serif",
@@ -501,7 +507,7 @@ function HomePage({ setPage }) {
       {/* Stats */}
       <FadeSection>
         <div style={{
-          background: "var(--charcoal)", padding: "56px 32px",
+          background: "#2A1A0E", padding: "56px 32px",
           display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 56,
           position: "relative", overflow: "hidden",
         }}>
@@ -665,7 +671,7 @@ function HistoryPage() {
 
         {/* Content card */}
         <div key={animKey} style={{
-          display: "flex", background: "#EDE0C4", borderRadius: 8, border: "1px solid #8B5E3C",
+          display: "flex", background: "var(--cream)", borderRadius: 8, border: "1px solid #8B5E3C",
           overflow: "hidden", boxShadow: "0 12px 48px rgba(0,0,0,0.08)",
           minHeight: 400, animation: "scaleIn 0.35s cubic-bezier(0.16,1,0.3,1)",
           flexWrap: "wrap",
@@ -812,7 +818,7 @@ function HeroesPage() {
           {heroesData.map((hero, i) => (
             <FadeSection key={i} delay={i * 0.06}>
               <div onClick={() => setModal(i)} style={{
-                background: "#EDE0C4", borderRadius: 8, overflow: "hidden", border: "1px solid #8B5E3C",
+                background: "var(--cream)", borderRadius: 8, overflow: "hidden", border: "1px solid #8B5E3C",
                 cursor: "pointer", transition: "all 0.35s cubic-bezier(0.16,1,0.3,1)",
                 boxShadow: "0 2px 12px rgba(44,24,16,0.1)",
               }}
@@ -835,7 +841,7 @@ function HeroesPage() {
 
         <FadeSection><SectionLabel text="Test Your Knowledge" /></FadeSection>
         <FadeSection delay={0.1}>
-          <div style={{ background: "#EDE0C4", borderRadius: 8, padding: "36px 32px", boxShadow: "0 4px 20px rgba(44,24,16,0.1)", borderTop: "4px solid var(--peach)" }}>
+          <div style={{ background: "var(--cream)", borderRadius: 8, padding: "36px 32px", boxShadow: "0 4px 20px rgba(44,24,16,0.1)", borderTop: "4px solid var(--peach)" }}>
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.6rem", marginBottom: 24, textAlign: "center" }}>Did You Know?</h2>
             {quizData.map((q, qi) => (
               <div key={qi} style={{ background: "#F2E8D5", borderRadius: 6, padding: 20, marginBottom: 14, border: "1px solid #8B5E3C" }}>
@@ -875,7 +881,7 @@ function HeroesPage() {
           justifyContent: "center", zIndex: 1000, padding: 16, animation: "fadeIn 0.25s ease",
         }}>
           <div onClick={e => e.stopPropagation()} style={{
-            background: "#EDE0C4", borderRadius: 8, maxWidth: 700, width: "100%",
+            background: "var(--cream)", borderRadius: 8, maxWidth: 700, width: "100%",
             display: "flex", overflow: "hidden", maxHeight: "85vh",
             boxShadow: "0 24px 72px rgba(0,0,0,0.35)", flexWrap: "wrap",
             animation: "scaleIn 0.3s cubic-bezier(0.16,1,0.3,1)",
@@ -1014,36 +1020,39 @@ const VOICES_TIMELINE = [
 
 function VoicesPage() {
   const [expandedHidden, setExpandedHidden] = useState(null);
-  const [voicesSection, setVoicesSection] = useState("oral");
+  const [voicesSection, setVoicesSection] = useState("newspapers");
   const tlRefs = useRef([]);
 
   useEffect(() => {
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.style.opacity = "1";
-            e.target.style.transform = "translateY(0)";
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-    tlRefs.current.forEach(r => { if (r) obs.observe(r); });
-    return () => obs.disconnect();
-  }, []);
+    if (voicesSection !== "timeline") return;
+    // Small timeout lets React flush the DOM before observing
+    const timer = setTimeout(() => {
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              e.target.style.opacity = "1";
+              e.target.style.transform = "translateY(0)";
+            }
+          });
+        },
+        { threshold: 0.08 }
+      );
+      tlRefs.current.forEach(r => { if (r) obs.observe(r); });
+      return () => obs.disconnect();
+    }, 80);
+    return () => clearTimeout(timer);
+  }, [voicesSection]);
 
   return (
     <div>
       <PageHero title="Voices" subtitle="Oral histories, hidden history, and the diverse stories that complete the full picture of Des Moines." />
 
-      {/* Newspaper archive section - shown prominently at top */}
-      <NewspaperSection />
-
-      {/* Tab navigation */}
+      {/* Tab navigation — right below page hero */}
       <div style={{ background: "#3D1F0D", borderBottom: "3px solid #8B5E3C", position: "sticky", top: 60, zIndex: 90 }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 32px", display: "flex", gap: 4, overflowX: "auto" }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 32px", display: "flex", gap: 0, overflowX: "auto" }}>
           {[
+            { id: "newspapers", label: "📰 From the Archives" },
             { id: "oral", label: "Oral Histories" },
             { id: "hidden", label: "Hidden History" },
             { id: "timeline", label: "Voices Timeline" },
@@ -1052,11 +1061,11 @@ function VoicesPage() {
               key={tab.id}
               onClick={() => setVoicesSection(tab.id)}
               style={{
-                padding: "14px 22px", background: "none", border: "none",
-                cursor: "pointer", fontFamily: "'Playfair Display', serif",
-                fontWeight: 700, fontSize: "0.9rem", letterSpacing: "0.04em",
-                color: voicesSection === tab.id ? "#F2E8D5" : "rgba(242,232,213,0.5)",
-                borderBottom: voicesSection === tab.id ? "3px solid #8B5E3C" : "3px solid transparent",
+                padding: "15px 20px", background: voicesSection === tab.id ? "rgba(139,94,60,0.2)" : "none",
+                border: "none", cursor: "pointer", fontFamily: "'Playfair Display', serif",
+                fontWeight: 700, fontSize: "0.88rem", letterSpacing: "0.04em",
+                color: voicesSection === tab.id ? "#F2E8D5" : "rgba(242,232,213,0.45)",
+                borderBottom: voicesSection === tab.id ? "3px solid #A0522D" : "3px solid transparent",
                 marginBottom: "-3px", transition: "all 0.2s", whiteSpace: "nowrap",
               }}
             >{tab.label}</button>
@@ -1065,6 +1074,10 @@ function VoicesPage() {
       </div>
 
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 32px 80px" }}>
+
+        {voicesSection === "newspapers" && <>
+          <NewspaperSection />
+        </>}
 
         {voicesSection === "oral" && <>
         <FadeSection>
@@ -1078,7 +1091,7 @@ function VoicesPage() {
           {ORAL_HISTORIES.map((h, i) => (
             <FadeSection key={i} delay={i * 0.07}>
               <div style={{
-                background: "#EDE0C4", borderRadius: 8, padding: "28px 26px",
+                background: "var(--cream)", borderRadius: 8, padding: "28px 26px",
                 borderLeft: "4px solid var(--peach)", boxShadow: "0 2px 12px rgba(44,24,16,0.08)",
                 transition: "all 0.3s ease", height: "100%",
               }}
@@ -1111,7 +1124,7 @@ function VoicesPage() {
           {HIDDEN_HISTORY.map((h, i) => (
             <FadeSection key={i} delay={i * 0.06}>
               <div style={{
-                background: "#EDE0C4", borderRadius: 8,
+                background: "var(--cream)", borderRadius: 8,
                 boxShadow: "0 2px 12px rgba(44,24,16,0.08)",
                 overflow: "hidden", transition: "all 0.3s ease",
               }}>
@@ -1174,7 +1187,7 @@ function VoicesPage() {
                 flexShrink: 0, marginTop: 4,
               }} />
               <div style={{
-                background: "#EDE0C4", borderRadius: 8, padding: "20px 24px",
+                background: "var(--cream)", borderRadius: 8, padding: "20px 24px",
                 boxShadow: "0 2px 12px rgba(44,24,16,0.08)", flex: 1,
                 borderLeft: `3px solid ${t.color}`,
               }}>
@@ -1222,7 +1235,7 @@ function AgriculturePage() {
         <div style={{
           display: "flex",
           flexDirection: "column",
-          background: "#EDE0C4",
+          background: "var(--cream)",
           borderRadius: 8,
           boxShadow: "0 10px 35px rgba(44,24,16,0.12)",
           border: "1px solid #8B5E3C",
@@ -1289,7 +1302,7 @@ function AgriculturePage() {
               </button>
             ))}
           </div>
-          <div style={{ flex: 1, padding: 40, display: "flex", flexDirection: "column", background: "#EDE0C4" }}>
+          <div style={{ flex: 1, padding: 40, display: "flex", flexDirection: "column", background: "var(--cream)" }}>
             <div style={{
               width: "100%",
               height: 320,
@@ -1361,7 +1374,7 @@ function SourcesPage() {
                   alignItems: "center",
                   gap: 20,
                   padding: "24px 28px",
-                  background: "#EDE0C4",
+                  background: "var(--cream)",
                   borderRadius: 16,
                   borderTop: "4px solid var(--peach)",
                   textDecoration: "none",
