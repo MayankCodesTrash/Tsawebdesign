@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import L from 'leaflet';
-import { SplashScreen, ThenNowPage, NeighborhoodPage, PopulationChart, SearchModal, NewspaperSection } from './NewFeatures.jsx';
+import { ThenNowPage, NeighborhoodPage, PopulationChart, SearchModal, NewspaperSection } from './NewFeatures.jsx';
 import 'leaflet/dist/leaflet.css';
 
 // ─── IMAGE (will be replaced with data URI via build script) ────────────────
@@ -12,17 +12,17 @@ const GlobalStyles = () => (
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700&family=Unna:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
     :root {
-      --warm: #FAF0DC;
-      --cream: #F2E4C0;
-      --peach: #C4813A;
-      --peach-dark: #8B5A20;
-      --copper: #B8722A;
-      --charcoal: #2A1A0E;
-      --slate: #3D2410;
-      --mist: #7A5C38;
-      --success: #4A8C5C;
-      --river: #3A6F8A;
-      --danger: #C0392B;
+      --warm: #FBF4E8;
+      --cream: #F7EDD4;
+      --peach: #C98A2A;
+      --peach-dark: #9A6518;
+      --copper: #B87820;
+      --charcoal: #1C1008;
+      --slate: #3A2010;
+      --mist: #6B4E32;
+      --success: #3D7A4A;
+      --river: #2E6080;
+      --danger: #B03020;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -33,6 +33,29 @@ const GlobalStyles = () => (
       color: var(--charcoal);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+    }
+    /* Lightweight cream veil — lifts parchment for readability */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(251, 244, 232, 0.28);
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* Every direct page child stacks above the veil */
+    body > * { position: relative; z-index: 1; }
+    /* ---- Shared card style ---- */
+    .ec-card {
+      background: var(--cream);
+      border-radius: 10px;
+      border: 1px solid rgba(120, 80, 30, 0.15);
+      box-shadow: 0 2px 16px rgba(28, 16, 8, 0.10);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .ec-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 32px rgba(28, 16, 8, 0.15);
     }
 
     ::selection { background: var(--peach); color: #F2E8D5; }
@@ -181,19 +204,18 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
 
         <button
           onClick={() => onSearchOpen && onSearchOpen()}
-          aria-label="Open search (Ctrl+K)"
-          title="Search (⌘K)"
+          aria-label="Search the site"
+          title="Search"
           style={{
-            background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)",
-            color: "rgba(255,255,255,0.6)", padding: "7px 14px", borderRadius: 8,
+            background: "rgba(255,255,255,0.09)", border: "1px solid rgba(255,255,255,0.14)",
+            color: "rgba(255,248,220,0.7)", padding: "7px 16px", borderRadius: 8,
             cursor: "pointer", fontSize: "0.82rem", display: "flex", alignItems: "center", gap: 6,
-            fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s ease",
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 500, transition: "all 0.2s ease",
           }}
-          onMouseEnter={e => { e.currentTarget.style.background = "rgba(139,94,60,0.25)"; e.currentTarget.style.color = "var(--warm)"; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.08)"; e.currentTarget.style.color = "rgba(255,255,255,0.6)"; }}
+          onMouseEnter={e => { e.currentTarget.style.background = "rgba(201,138,42,0.22)"; e.currentTarget.style.color = "#FFF8EE"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.09)"; e.currentTarget.style.color = "rgba(255,248,220,0.7)"; }}
         >
-          <span aria-hidden="true">🔍</span>
-          <kbd style={{ fontSize: "0.65rem", opacity: 0.6, fontFamily: "'JetBrains Mono', monospace" }}>⌘K</kbd>
+          <span aria-hidden="true">🔍</span> Search
         </button>
 
         <button onClick={() => setMobileOpen(!mobileOpen)} style={{
@@ -232,7 +254,7 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
 function Footer({ setPage }) {
   return (
     <footer style={{
-      background: "#2A1608", color: "rgba(242,232,213,0.5)",
+      background: "#331A08", color: "rgba(251, 244, 232, 0.55)",
       padding: "56px 32px 36px", textAlign: "center", fontSize: "0.85rem",
       position: "relative", overflow: "hidden",
     }}>
@@ -287,35 +309,22 @@ function Footer({ setPage }) {
 function PageHero({ title, subtitle }) {
   return (
     <div style={{
-      padding: "140px 32px 80px", textAlign: "center",
-      background: `linear-gradient(170deg, #2A1608 0%, #4A2410 100%)`,
-
+      padding: "130px 32px 72px", textAlign: "center",
+      background: "linear-gradient(160deg, #2A1608 0%, #4A2410 100%)",
       position: "relative", overflow: "hidden",
     }}>
       <div style={{
-        position: "absolute", inset: 0, opacity: 0.03,
-        backgroundImage: "radial-gradient(circle at 2px 2px, white 1px, transparent 0)",
-        backgroundSize: "32px 32px",
-      }} />
-      <div style={{
-        position: "absolute", width: 500, height: 500, borderRadius: "50%",
-        border: "1px solid rgba(139,94,60,0.08)", top: "50%", left: "50%",
-        transform: "translate(-50%,-50%)",
-      }} />
-      <div style={{
-        width: 48, height: 3, background: "var(--peach)",
-        margin: "0 auto 24px", borderRadius: 2, animation: "scaleIn 0.6s ease",
+        width: 40, height: 3, background: "var(--peach)",
+        margin: "0 auto 20px", borderRadius: 2,
       }} />
       <h1 style={{
-        fontFamily: "'Playfair Display', serif", fontSize: "clamp(2.2rem, 5vw, 3.6rem)",
-        color: "#fff", fontWeight: 700, letterSpacing: "-0.025em",
-        marginBottom: 14, animation: "fadeUp 0.7s ease",
+        fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 5vw, 3.4rem)",
+        color: "#FFF8EE", fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 14,
       }}>{title}</h1>
       {subtitle && (
         <p style={{
-          color: "rgba(255,255,255,0.55)", fontSize: "1.05rem",
-          maxWidth: 580, margin: "0 auto", lineHeight: 1.7,
-          animation: "fadeUp 0.7s ease 0.12s both",
+          color: "rgba(255, 245, 220, 0.82)", fontSize: "1.05rem",
+          maxWidth: 560, margin: "0 auto", lineHeight: 1.75, fontWeight: 400,
         }}>{subtitle}</p>
       )}
     </div>
@@ -328,7 +337,7 @@ function SectionLabel({ text }) {
       <div style={{ width: 32, height: 2, background: "var(--peach)", borderRadius: 1 }} />
       <span style={{
         fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.15em",
-        textTransform: "uppercase", color: "var(--copper)",
+        textTransform: "uppercase", color: "var(--peach-dark)",
       }}>{text}</span>
     </div>
   );
@@ -546,7 +555,7 @@ function HomePage({ setPage }) {
       {/* Stats */}
       <FadeSection>
         <div style={{
-          background: "#2A1A0E", padding: "56px 32px",
+          background: "#2C1A08", padding: "56px 32px",
           display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 56,
           position: "relative", overflow: "hidden",
         }}>
@@ -687,7 +696,7 @@ function HistoryPage() {
   return (
     <div>
       <PageHero title="History of Des Moines" subtitle="From a frontier fort to a modern metropolis — explore 180+ years of milestones that shaped Iowa's capital." />
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 32px 80px" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 32px 80px", background: "rgba(247, 237, 212, 0.4)", borderRadius: 0 }}>
         {/* Timeline bar */}
         <div className="tl-scroll" style={{
           display: "flex", gap: 6, overflowX: "auto", padding: "14px 20px",
@@ -1088,7 +1097,13 @@ function VoicesPage() {
       <PageHero title="Voices" subtitle="Oral histories, hidden history, and the diverse stories that complete the full picture of Des Moines." />
 
       {/* Tab navigation — right below page hero */}
-      <div style={{ background: "#3D1F0D", borderBottom: "3px solid #C4813A", position: "sticky", top: 60, zIndex: 90 }}>
+      <div style={{
+        background: "rgba(247, 237, 212, 0.92)",
+        backdropFilter: "blur(8px)",
+        borderBottom: "2px solid rgba(120, 80, 30, 0.2)",
+        position: "sticky", top: 60, zIndex: 90,
+        boxShadow: "0 2px 8px rgba(28, 16, 8, 0.08)",
+      }}>
         <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 32px", display: "flex", gap: 0, overflowX: "auto" }}>
           {[
             { id: "newspapers", label: "📰 From the Archives" },
@@ -1100,12 +1115,14 @@ function VoicesPage() {
               key={tab.id}
               onClick={() => setVoicesSection(tab.id)}
               style={{
-                padding: "15px 20px", background: voicesSection === tab.id ? "rgba(139,94,60,0.2)" : "none",
-                border: "none", cursor: "pointer", fontFamily: "'Playfair Display', serif",
-                fontWeight: 700, fontSize: "0.88rem", letterSpacing: "0.04em",
-                color: voicesSection === tab.id ? "#F2E8D5" : "rgba(242,232,213,0.45)",
-                borderBottom: voicesSection === tab.id ? "3px solid #C4813A" : "3px solid transparent",
-                marginBottom: "-3px", transition: "all 0.2s", whiteSpace: "nowrap",
+                padding: "14px 20px", background: "none",
+                border: "none", cursor: "pointer",
+                fontFamily: "'Playfair Display', serif",
+                fontWeight: voicesSection === tab.id ? 700 : 500,
+                fontSize: "0.88rem", letterSpacing: "0.03em",
+                color: voicesSection === tab.id ? "var(--charcoal)" : "var(--mist)",
+                borderBottom: voicesSection === tab.id ? "3px solid var(--peach)" : "3px solid transparent",
+                marginBottom: "-2px", transition: "all 0.2s", whiteSpace: "nowrap",
               }}
             >{tab.label}</button>
           ))}
@@ -1121,10 +1138,10 @@ function VoicesPage() {
         {voicesSection === "oral" && <>
         <FadeSection>
           <SectionLabel text="Oral Histories" />
-          <p style={{ color: "var(--charcoal)", fontSize: "1rem", marginBottom: 8, maxWidth: 680, fontWeight: 700 }}>
+          <p style={{ color: "var(--charcoal)", fontSize: "1.05rem", marginBottom: 6, maxWidth: 680, fontWeight: 700 }}>
             Real voices. Real stories.
           </p>
-          <p style={{ color: "var(--mist)", fontSize: "0.95rem", marginBottom: 32, maxWidth: 680, lineHeight: 1.7 }}>
+          <p style={{ color: "var(--charcoal)", fontSize: "0.95rem", marginBottom: 32, maxWidth: 680, lineHeight: 1.7, opacity: 0.75 }}>
             Short, transcribed accounts from <strong>community members across decades of Des Moines history</strong> — 
             capturing the everyday experiences that shaped the city's identity.
           </p>
@@ -1134,12 +1151,14 @@ function VoicesPage() {
           {ORAL_HISTORIES.map((h, i) => (
             <FadeSection key={i} delay={i * 0.07}>
               <div style={{
-                background: "var(--cream)", borderRadius: 8, padding: "28px 26px",
-                borderLeft: "4px solid var(--peach)", boxShadow: "0 2px 12px rgba(44,24,16,0.08)",
-                transition: "all 0.3s ease", height: "100%",
+                background: "var(--cream)", borderRadius: 10, padding: "26px 24px",
+                border: "1px solid rgba(120,80,30,0.14)",
+                borderLeft: "3px solid var(--peach)",
+                boxShadow: "0 2px 14px rgba(28,16,8,0.09)",
+                transition: "all 0.25s ease", height: "100%",
               }}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 36px rgba(0,0,0,0.09)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.04)"; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 10px 28px rgba(28,16,8,0.14)"; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 14px rgba(28,16,8,0.09)"; }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
                   <div>
@@ -1158,10 +1177,10 @@ function VoicesPage() {
         {voicesSection === "hidden" && <>
         <FadeSection>
           <SectionLabel text="Hidden History" />
-          <p style={{ color: "var(--charcoal)", fontSize: "1rem", marginBottom: 8, maxWidth: 680, fontWeight: 700 }}>
+          <p style={{ color: "var(--charcoal)", fontSize: "1.05rem", marginBottom: 6, maxWidth: 680, fontWeight: 700 }}>
             The stories left out of the textbooks.
           </p>
-          <p style={{ color: "var(--mist)", fontSize: "0.95rem", marginBottom: 32, maxWidth: 680, lineHeight: 1.7 }}>
+          <p style={{ color: "var(--charcoal)", fontSize: "0.95rem", marginBottom: 32, maxWidth: 680, lineHeight: 1.7, opacity: 0.75 }}>
             <strong>Lesser-known events and diverse communities</strong> that shaped Des Moines but rarely appear in 
             standard histories — from the all-Black city of Buxton to the Latino community of the Near South Side.
           </p>
@@ -1206,10 +1225,10 @@ function VoicesPage() {
         {voicesSection === "timeline" && <>
         <FadeSection>
           <SectionLabel text="Dynamic Timeline" />
-          <p style={{ color: "var(--charcoal)", fontSize: "1rem", marginBottom: 8, maxWidth: 680, fontWeight: 700 }}>
+          <p style={{ color: "var(--charcoal)", fontSize: "1.05rem", marginBottom: 6, maxWidth: 680, fontWeight: 700 }}>
             A city built by many voices.
           </p>
-          <p style={{ color: "var(--mist)", fontSize: "0.95rem", marginBottom: 48, maxWidth: 680, lineHeight: 1.7 }}>
+          <p style={{ color: "var(--charcoal)", fontSize: "0.95rem", marginBottom: 48, maxWidth: 680, lineHeight: 1.7, opacity: 0.75 }}>
             Scroll through the <strong>voices and events that shaped the diverse story of Des Moines</strong> — 
             from indigenous homeland to modern metropolis, told through the communities who lived it.
           </p>
@@ -2469,7 +2488,6 @@ function HistoricalMapPage() {
 // ─── APP ─────────────────────────────────────────────────────────────────────
 export default function App() {
   const [page, setPage] = useState("home");
-  const [splashDone, setSplashDone] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
@@ -2500,7 +2518,6 @@ export default function App() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <GlobalStyles />
-      {!splashDone && <SplashScreen onDone={() => setSplashDone(true)} />}
       {/* Skip to main content — accessibility */}
       <a
         href="#main-content"
