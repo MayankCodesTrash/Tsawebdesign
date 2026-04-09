@@ -254,7 +254,7 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
 function Footer({ setPage }) {
   return (
     <footer style={{
-      background: "#5A3212", color: "rgba(251, 244, 232, 0.65)",
+      background: "#331A08", color: "rgba(251, 244, 232, 0.55)",
       padding: "56px 32px 36px", textAlign: "center", fontSize: "0.85rem",
       position: "relative", overflow: "hidden",
     }}>
@@ -310,7 +310,7 @@ function PageHero({ title, subtitle }) {
   return (
     <div style={{
       padding: "130px 32px 72px", textAlign: "center",
-      background: "linear-gradient(160deg, #5A3212 0%, #7A4A20 100%)",
+      background: "linear-gradient(160deg, #2A1608 0%, #4A2410 100%)",
       position: "relative", overflow: "hidden",
     }}>
       <div style={{
@@ -555,7 +555,7 @@ function HomePage({ setPage }) {
       {/* Stats */}
       <FadeSection>
         <div style={{
-          background: "#5A3212", padding: "56px 32px",
+          background: "#2C1A08", padding: "56px 32px",
           display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 56,
           position: "relative", overflow: "hidden",
         }}>
