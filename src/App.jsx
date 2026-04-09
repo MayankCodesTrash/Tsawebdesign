@@ -34,17 +34,6 @@ const GlobalStyles = () => (
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
-    /* Lightweight cream veil — lifts parchment for readability */
-    body::after {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: rgba(251, 244, 232, 0.28);
-      pointer-events: none;
-      z-index: 0;
-    }
-    /* Every direct page child stacks above the veil */
-    body > * { position: relative; z-index: 1; }
     /* ---- Shared card style ---- */
     .ec-card {
       background: var(--cream);
