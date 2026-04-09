@@ -103,32 +103,6 @@ const GlobalStyles = () => (
 
     .tl-scroll::-webkit-scrollbar { display: none; }
     .tl-scroll { scrollbar-width: none; }
-
-    /* ---- Crumpled paper photo wrapper ---- */
-    .photo-crumple {
-      position: relative;
-      filter: url('#crumple-filter');
-    }
-    .photo-crumple::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(ellipse at 28% 22%, rgba(255,255,255,0.13) 0%, transparent 48%),
-        radial-gradient(ellipse at 72% 78%, rgba(0,0,0,0.10) 0%, transparent 44%),
-        repeating-linear-gradient(
-          -38deg,
-          transparent, transparent 22px,
-          rgba(255,255,255,0.025) 22px, rgba(255,255,255,0.025) 23px
-        ),
-        repeating-linear-gradient(
-          52deg,
-          transparent, transparent 34px,
-          rgba(0,0,0,0.018) 34px, rgba(0,0,0,0.018) 35px
-        );
-      mix-blend-mode: overlay;
-    }
   `}</style>
 );
 
@@ -387,7 +361,7 @@ function HomePage({ setPage }) {
           display: "flex", justifyContent: "center",
           padding: "82px 60px 0", position: "relative", zIndex: 2,
         }}>
-          <div className="photo-crumple" style={{
+          <div style={{
             width: "min(840px, 85vw)",
             border: "9px solid #FFF8E8",
             boxShadow: "4px 6px 28px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.25)",
@@ -410,7 +384,7 @@ function HomePage({ setPage }) {
             width: "clamp(150px, 20vw, 270px)", flexShrink: 0,
             display: "flex", flexDirection: "column", gap: 28,
           }}>
-            <div className="photo-crumple" style={{
+            <div style={{
               transform: "rotate(-7deg)",
               border: "9px solid #FFF8E8",
               boxShadow: "4px 6px 22px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.2)",
@@ -419,7 +393,7 @@ function HomePage({ setPage }) {
               <img src="/img-streetcar.avif" alt="Des Moines streetcar 1900s"
                 style={{ display: "block", width: "100%", filter: "contrast(1.18) sepia(8%) brightness(1.08)" }} />
             </div>
-            <div className="photo-crumple" style={{
+            <div style={{
               transform: "rotate(6deg)", alignSelf: "flex-end",
               border: "9px solid #FFF8E8",
               boxShadow: "4px 6px 22px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.2)",
@@ -436,7 +410,7 @@ function HomePage({ setPage }) {
             position: "relative", minWidth: 0,
           }}>
             {/* Courthouse photo — clearly visible */}
-            <div className="photo-crumple" style={{
+            <div style={{
               width: "min(380px, 80%)",
               border: "9px solid #FFF8E8",
               boxShadow: "4px 6px 28px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.2)",
@@ -499,7 +473,7 @@ function HomePage({ setPage }) {
             width: "clamp(150px, 20vw, 270px)", flexShrink: 0,
             display: "flex", flexDirection: "column", gap: 28,
           }}>
-            <div className="photo-crumple" style={{
+            <div style={{
               transform: "rotate(6deg)",
               border: "9px solid #FFF8E8",
               boxShadow: "4px 6px 22px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.2)",
@@ -507,7 +481,7 @@ function HomePage({ setPage }) {
               <img src="/img-locust.avif" alt="East Locust Street postcard, Des Moines"
                 style={{ display: "block", width: "100%", filter: "saturate(1.3) contrast(1.1) brightness(1.05)" }} />
             </div>
-            <div className="photo-crumple" style={{
+            <div style={{
               transform: "rotate(-5deg)", alignSelf: "flex-end",
               border: "9px solid #FFF8E8",
               boxShadow: "4px 6px 22px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.2)",
@@ -2533,15 +2507,6 @@ export default function App() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <GlobalStyles />
-      {/* SVG filter for crumpled paper effect on photos */}
-      <svg style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }} aria-hidden="true">
-        <defs>
-          <filter id="crumple-filter" x="-5%" y="-5%" width="110%" height="110%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.65 0.72" numOctaves="4" seed="8" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" />
-          </filter>
-        </defs>
-      </svg>
       {/* Skip to main content — accessibility */}
       <a
         href="#main-content"
