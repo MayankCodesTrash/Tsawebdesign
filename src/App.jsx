@@ -165,9 +165,9 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
   return (
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 999,
-      background: scrolled ? "rgba(42,22,8,0.97)" : "rgba(42,22,8,0.92)",
+      background: scrolled ? "rgba(90,50,18,0.97)" : "rgba(90,50,18,0.92)",
       backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
-      borderBottom: scrolled ? "1px solid rgba(139,94,60,0.35)" : "1px solid rgba(139,94,60,0.15)",
+      borderBottom: scrolled ? "1px solid rgba(180,120,60,0.35)" : "1px solid rgba(180,120,60,0.15)",
       transition: "all 0.4s cubic-bezier(0.16,1,0.3,1)",
     }}>
       <div style={{
@@ -226,7 +226,7 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
 
       {mobileOpen && (
         <div style={{
-          background: "rgba(61,31,13,0.98)", padding: "8px 24px 16px",
+          background: "rgba(100,56,20,0.98)", padding: "8px 24px 16px",
           animation: "slideDown 0.25s ease",
         }}>
           {NAV_ITEMS.map(item => (
@@ -254,7 +254,7 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
 function Footer({ setPage }) {
   return (
     <footer style={{
-      background: "#331A08", color: "rgba(251, 244, 232, 0.55)",
+      background: "#5A3212", color: "rgba(251, 244, 232, 0.65)",
       padding: "56px 32px 36px", textAlign: "center", fontSize: "0.85rem",
       position: "relative", overflow: "hidden",
     }}>
@@ -310,7 +310,7 @@ function PageHero({ title, subtitle }) {
   return (
     <div style={{
       padding: "130px 32px 72px", textAlign: "center",
-      background: "linear-gradient(160deg, #2A1608 0%, #4A2410 100%)",
+      background: "linear-gradient(160deg, #5A3212 0%, #7A4A20 100%)",
       position: "relative", overflow: "hidden",
     }}>
       <div style={{
@@ -555,7 +555,7 @@ function HomePage({ setPage }) {
       {/* Stats */}
       <FadeSection>
         <div style={{
-          background: "#2C1A08", padding: "56px 32px",
+          background: "#5A3212", padding: "56px 32px",
           display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 56,
           position: "relative", overflow: "hidden",
         }}>
