@@ -501,76 +501,29 @@ function HomePage({ setPage }) {
           letterSpacing: "0.02em",
         }}>Presented by Johnston MS TSA</div>
 
+        {/* ── SCROLL DOWN indicator ─── */}
+        <div style={{
+          position: "absolute", bottom: 22, left: "50%", transform: "translateX(-50%)",
+          zIndex: 10, display: "flex", flexDirection: "column", alignItems: "center", gap: 6,
+        }}>
+          <span style={{
+            fontFamily: "'DM Sans', sans-serif", fontSize: "0.62rem",
+            letterSpacing: "0.2em", textTransform: "uppercase",
+            color: "rgba(61,32,16,0.55)", fontWeight: 600,
+          }}>Scroll Down</span>
+          <div style={{
+            width: 1, height: 36,
+            background: "linear-gradient(to bottom, rgba(92,48,16,0.5), transparent)",
+            animation: "float 1.8s ease-in-out infinite",
+          }} />
+        </div>
+
         <style>{`
           @media (max-width: 600px) {
             .scrapbook-side { display: none !important; }
           }
         `}</style>
       </div>
-
-      {/* Features */}
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "80px 32px" }}>
-        <FadeSection>
-          <SectionLabel text="Explore the Story" />
-        </FadeSection>
-        <div style={{
-          display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 20,
-        }}>
-          {features.map((f, i) => (
-            <FadeSection key={i} delay={i * 0.1}>
-              <button onClick={() => setPage(f.page)} style={{
-                background: "var(--cream)", border: "2px solid #C4813A",
-                borderRadius: 8, padding: "36px 24px", textAlign: "left", width: "100%",
-                cursor: "pointer", transition: "all 0.35s cubic-bezier(0.16,1,0.3,1)",
-                boxShadow: "0 2px 16px rgba(44,24,16,0.1)", fontFamily: "'DM Sans', sans-serif",
-                position: "relative", overflow: "hidden",
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-6px)"; e.currentTarget.style.boxShadow = "0 20px 40px rgba(0,0,0,0.1)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.03)"; }}
-              >
-                <div style={{
-                  position: "absolute", top: -20, right: -20, width: 80, height: 80,
-                  borderRadius: "50%", background: "rgba(139,94,60,0.1)",
-                }} />
-                <div style={{ fontSize: "2.2rem", marginBottom: 16 }}>{f.icon}</div>
-                <div style={{ fontWeight: 700, fontSize: "1.1rem", marginBottom: 8, color: "var(--charcoal)" }}>{f.title}</div>
-                <div style={{ color: "var(--mist)", fontSize: "0.88rem", lineHeight: 1.55 }}>{f.desc}</div>
-              </button>
-            </FadeSection>
-          ))}
-        </div>
-      </div>
-
-      {/* Stats */}
-      <FadeSection>
-        <div style={{
-          background: "#2C1A08", padding: "56px 32px",
-          display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 56,
-          position: "relative", overflow: "hidden",
-        }}>
-          <div style={{
-            position: "absolute", top: 0, left: 0, right: 0, height: 1,
-            background: "linear-gradient(90deg, transparent, var(--copper), transparent)", opacity: 0.35,
-          }} />
-          {[
-            { val: "1843", label: "Year Founded" },
-            { val: "215K+", label: "Residents" },
-            { val: "180+", label: "Years of History" },
-            { val: "#1", label: "Insurance Capital" },
-          ].map((s, i) => (
-            <div key={i} style={{ textAlign: "center", minWidth: 120 }}>
-              <div style={{
-                fontFamily: "'Playfair Display', serif", fontSize: "2.2rem",
-                color: "var(--peach)", fontWeight: 700,
-              }}>{s.val}</div>
-              <div style={{
-                fontSize: "0.7rem", color: "rgba(255,255,255,0.4)",
-                textTransform: "uppercase", letterSpacing: "0.12em", fontWeight: 600, marginTop: 6,
-              }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </FadeSection>
 
       {/* ── COMMUNITY IDENTITY HOOK ───────────────────────────────────────── */}
       <FadeSection>
@@ -612,17 +565,16 @@ function HomePage({ setPage }) {
         <div style={{ maxWidth: 900, margin: "0 auto", padding: "72px 32px" }}>
           <SectionLabel text="About This Project" />
           <div style={{
-            background: "var(--cream)",
+            background: "#3D1F0A",
             borderRadius: 12,
-            border: "1px solid rgba(120,80,30,0.18)",
-            boxShadow: "0 4px 24px rgba(28,16,8,0.1)",
+            boxShadow: "0 4px 24px rgba(28,16,8,0.3)",
             padding: "40px 44px",
           }}>
             <h3 style={{
               fontFamily: "'Playfair Display', serif",
-              fontSize: "1.5rem", fontWeight: 800, color: "var(--charcoal)", marginBottom: 14,
+              fontSize: "1.5rem", fontWeight: 800, color: "#F2E8D5", marginBottom: 14,
             }}>Echoes of the Fort</h3>
-            <p style={{ color: "var(--mist)", fontSize: "0.97rem", lineHeight: 1.8, marginBottom: 28 }}>
+            <p style={{ color: "rgba(242,232,213,0.7)", fontSize: "0.97rem", lineHeight: 1.8, marginBottom: 28 }}>
               <em>Echoes of the Fort</em> was created as a TSA Website Design entry by students at{" "}
               <strong>Johnston Middle School</strong> in Johnston, Iowa. Our goal was to bring Des Moines's
               180-year story to life — not just dates and landmarks, but the diverse communities,
@@ -638,9 +590,9 @@ function HomePage({ setPage }) {
                 <div key={i}>
                   <div style={{
                     fontSize: "0.65rem", letterSpacing: "0.16em", textTransform: "uppercase",
-                    color: "var(--copper)", fontWeight: 700, marginBottom: 4,
+                    color: "var(--peach)", fontWeight: 700, marginBottom: 4,
                   }}>{item.label}</div>
-                  <div style={{ color: "var(--charcoal)", fontWeight: 600, fontSize: "1rem" }}>{item.value}</div>
+                  <div style={{ color: "#F2E8D5", fontWeight: 600, fontSize: "1rem" }}>{item.value}</div>
                 </div>
               ))}
             </div>
