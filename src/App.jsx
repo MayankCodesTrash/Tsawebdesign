@@ -550,6 +550,7 @@ function HomePage({ setPage }) {
               fontSize: "1.05rem", color: "#3D2010", lineHeight: 1.8,
               maxWidth: 620, margin: "0 auto",
               fontFamily: "'Playfair Display', serif", fontStyle: "italic",
+              fontWeight: 700,
             }}>
               From the Meskwaki homeland at the Raccoon Fork, to the first Black Army officers trained on Iowa soil,
               to the Latino families who built the Near South Side, to the refugees Governor Ray welcomed from across
@@ -562,6 +563,7 @@ function HomePage({ setPage }) {
 
       {/* ── ABOUT THIS PROJECT ────────────────────────────────────────────── */}
       <FadeSection>
+        <div style={{ background: "#F5ECD8", padding: "0 0 8px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", padding: "72px 32px" }}>
           <SectionLabel text="About This Project" />
           <div style={{
@@ -597,6 +599,7 @@ function HomePage({ setPage }) {
               ))}
             </div>
           </div>
+        </div>
         </div>
       </FadeSection>
     </div>
