@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import L from 'leaflet';
 import { ThenNowPage, NeighborhoodPage, PopulationChart, SearchModal, NewspaperSection } from './NewFeatures.jsx';
 import 'leaflet/dist/leaflet.css';
