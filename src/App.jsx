@@ -137,6 +137,7 @@ const NAV_ITEMS = [
   { id: "heroes", label: "Heroes" },
   { id: "voices", label: "Voices" },
   { id: "map", label: "Historical Map" },
+  { id: "neighborhoods", label: "Neighborhoods" },
   { id: "then-now", label: "Then & Now" },
   { id: "sources", label: "Reference" },
 ];
@@ -333,6 +334,55 @@ function SectionLabel({ text }) {
 }
 
 // ─── HOME PAGE ──────────────────────────────────────────────────────────────
+const COMMUNITY_QUOTES = [
+  { quote: "We organized quietly at first — church basements, kitchen tables. Nobody in City Hall wanted to hear us. But we kept showing up, and eventually they had to listen.", name: "Ruth Singleton", year: "1955", tag: "Civil Rights" },
+  { quote: "My father came for the packing houses. I came for something different — to make sure our children could choose. The community we built on the near south side, that was ours.", name: "Hector Morales", year: "1978", tag: "Latino Community" },
+  { quote: "Governor Ray opened the door. The neighbors on Hickman Road opened their hearts. We did not come empty-handed — we brought our stories, our food, our music.", name: "Pham Thi Lan", year: "1981", tag: "Southeast Asian Resettlement" },
+  { quote: "Urban renewal tore down our neighborhood but not our community. We scattered across the city and rebuilt everywhere we landed. You cannot demolish a people.", name: "James 'Red' Washington", year: "1967", tag: "Near North Side" },
+  { quote: "Des Moines surprised me. I expected to be invisible. Instead I found a city still becoming itself — still deciding what it wanted to be. I wanted to be part of that decision.", name: "Oyindamola Adeyemi", year: "2003", tag: "African Immigrant Community" },
+];
+
+function CommunityQuote() {
+  const [idx, setIdx] = React.useState(0);
+  const [fading, setFading] = React.useState(false);
+
+  React.useEffect(() => {
+    const t = setInterval(() => {
+      setFading(true);
+      setTimeout(() => {
+        setIdx(i => (i + 1) % COMMUNITY_QUOTES.length);
+        setFading(false);
+      }, 400);
+    }, 5000);
+    return () => clearInterval(t);
+  }, []);
+
+  const q = COMMUNITY_QUOTES[idx];
+  return (
+    <div style={{
+      marginTop: 20, maxWidth: 280, textAlign: "center",
+      opacity: fading ? 0 : 1, transition: "opacity 0.4s ease",
+    }}>
+      <div style={{
+        width: 32, height: 1, background: "rgba(92,48,16,0.35)", margin: "0 auto 10px",
+      }} />
+      <p style={{
+        fontFamily: "'Playfair Display', serif", fontStyle: "italic",
+        fontSize: "0.72rem", color: "#3D2010", lineHeight: 1.6, marginBottom: 6,
+      }}>"{q.quote}"</p>
+      <div style={{
+        fontSize: "0.6rem", fontWeight: 700, color: "#7A4F2C",
+        textTransform: "uppercase", letterSpacing: "0.1em",
+      }}>— {q.name}, {q.year}</div>
+      <div style={{
+        display: "inline-block", marginTop: 5,
+        fontSize: "0.55rem", color: "#7A4F2C", background: "rgba(92,48,16,0.1)",
+        padding: "2px 8px", borderRadius: 20, letterSpacing: "0.08em",
+      }}>{q.tag}</div>
+    </div>
+  );
+}
+
 function HomePage({ setPage }) {
   const features = [
     { icon: "📜", title: "Interactive Timeline", desc: "Trace the echoes of 180+ years — from frontier fort to modern metropolis.", page: "history" },
@@ -465,6 +515,9 @@ function HomePage({ setPage }) {
               onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(180deg, #A06830 0%, #7A4F2C 100%)"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 22px rgba(42,20,8,0.5)"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)"; e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 14px rgba(42,20,8,0.4), inset 0 1px 0 rgba(255,220,150,0.2)"; }}
               >Enter the Fort</button>
+
+            {/* Rotating community voice quote */}
+            <CommunityQuote />
             </div>
           </div>
 
@@ -639,21 +692,25 @@ const timelineData = [
   { year: 1936, title: "WPA Projects", desc: "New Deal WPA projects modernized the city, building bridges, improving parks, and paving roads.", imageUrl: "https://iowaarchfoundation.b-cdn.net/wp-content/uploads/2016/03/Bridge-Court-Ave-under-construction-1911.jpg" },
   { year: 1939, title: "Catholic Diocese Formed", desc: "The Roman Catholic Diocese of Des Moines was elevated to key regional prominence.", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7eCf31enTKznJn4LQPSz9LwDbBCE7BFCuvA&s" },
   { year: 1942, title: "WAAC Training Center", desc: "Fort Des Moines became the first national training center for the Women's Army Auxiliary Corps.", imageUrl: "https://www.nps.gov/articles/000/images/WAAC-Inspection.jpg" },
+  { year: 1944, title: "Near South Side Community Forms", desc: "Mexican American workers recruited for Des Moines packinghouses and railroads settle on the Near South Side, founding a vibrant Latino neighborhood with its own markets, mutual aid societies, and cultural traditions that endures to this day.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Packinghouse_Workers_Organizing_Committee_banner%2C_Iowa%2C_1940s.jpg/800px-Packinghouse_Workers_Organizing_Committee_banner%2C_Iowa%2C_1940s.jpg" },
   { year: 1945, title: "Post-War Suburban Boom", desc: "Following WWII, Des Moines experienced massive housing demands, spurring suburban expansion.", imageUrl: "https://www.desmoinesregister.com/gcdn/authoring/authoring-images/2025/10/24/PDEM/86879421007-thompson-place.jpg" },
   { year: 1948, title: "Art Center Opens", desc: "The Des Moines Art Center, designed by renowned architect Eliel Saarinen, officially opened.", imageUrl: "https://storage.googleapis.com/onmilwaukee-article-images/variants/pz5lm9kvofif79vl2n9xbb84f8km/44487ed8fba0f2b82d9d5c8e9a98ed4b9d67f7c75e21d8b1a6cda1869e8697fd" },
+  { year: 1948, title: "Katz Drug Store Sit-In", desc: "Civil rights leader Edna Griffin organized a sit-in at Katz Drug Store after being refused service. Her determination — and a landmark legal victory — made Iowa the first state to outlaw public accommodation discrimination, a full sixteen years before the federal Civil Rights Act.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Edna_Griffin_Iowa_Civil_Rights_Hall_of_Fame.jpg/640px-Edna_Griffin_Iowa_Civil_Rights_Hall_of_Fame.jpg" },
   { year: 1951, title: "Veterans Memorial Auditorium", desc: "Vets Auditorium opened, becoming the city's premier venue for concerts, sports, and conventions.", imageUrl: "https://static.wixstatic.com/media/3c9d51_7c0d5f142f4e462c80770b844ad339f1~mv2.jpg" },
   { year: 1955, title: "Urban Renewal Begins", desc: "Des Moines started early urban renewal programs, fundamentally reshaping downtown.", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfopfTqfKY4cTayfvNRct18ViT4neZuTO6CA&s" },
   { year: 1959, title: "Merle Hay Mall", desc: "Merle Hay Mall opened as an open-air plaza, signaling the shift of retail away from downtown.", imageUrl: "https://www.desmoinesregister.com/gcdn/presto/2019/10/17/PDEM/292c2404-9d5e-4bb7-a948-02a67ce9e8da-merle_hay_mall_15.jpg" },
   { year: 1961, title: "MacVicar Freeway", desc: "Construction of Interstate 235 began, cutting through the city to connect the suburbs.", imageUrl: "https://www.dmcityview.com/wp-content/uploads/2021/03/dm-forgotten2-300x234.jpg" },
+  { year: 1965, title: "Near North Side Demolished", desc: "Urban renewal bulldozed Des Moines' historic Near North Side — the heart of the Black community since the 1890s. Hundreds of families were displaced, churches torn down, and businesses erased. As James 'Red' Washington recalled: 'You cannot demolish a people.' Residents scattered but rebuilt community across the city.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg/800px-Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg" },
   { year: 1965, title: "Tinker Protest", desc: "Des Moines students wore black armbands to protest the Vietnam War, sparking a landmark First Amendment case.", imageUrl: "https://th-thumbnailer.cdn-si-edu.com/2lDX6Y-rov6f3bUyg5e19aD-4FI=/fit-in/1600x0/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/88/ff/88ff95e6-2ff9-4e11-831f-bae01988ad1e/tinker-kids-2.jpg" },
   { year: 1969, title: "Tinker v. Des Moines", desc: "The Supreme Court ruled students do not shed their constitutional rights at the schoolhouse gate.", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0vtXpsgz9qTkQ8dOU6fFx-9VxqFr0Khu6TA&s" },
   { year: 1973, title: "Ruan Center Construction", desc: "Construction began on the 36-story Ruan Center, modernizing the Des Moines skyline.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/74/Photo_RuanCenter_north-eastside_des_moines_usa_2008-04-27.JPG" },
+  { year: 1975, title: "Southeast Asian Refugee Resettlement", desc: "Governor Robert Ray opened Iowa's doors to thousands of Southeast Asian refugees — the only state with its own government-funded resettlement program. Families from Vietnam, Laos, Cambodia, and Thailand settled in Des Moines, founding temples, restaurants, and cultural organizations. As refugee Pham Thi Lan remembered: 'Governor Ray opened the door. The neighbors opened their hearts.'", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Southeast_Asian_refugees_Iowa_1970s.jpg/800px-Southeast_Asian_refugees_Iowa_1970s.jpg" },
   { year: 1976, title: "Civic Center Founded", desc: "Community leaders established the Civic Center to bring world-class performing arts to the city.", imageUrl: "https://www.desmoinesregister.com/gcdn/authoring/authoring-images/2024/07/16/PDEM/74433547007-downtown-des-moines-aerial-october-1976.jpg" },
   { year: 1979, title: "Civic Center Opens", desc: "The Des Moines Civic Center officially opened, revitalizing the downtown arts district.", imageUrl: "https://upload.wikimedia.org/wikipedia/en/2/2f/Civic_Center_of_Greater_Des_Moines.jpg" },
   { year: 1983, title: "Skywalk System Expansion", desc: "The Des Moines Skywalk underwent major expansion, allowing indoor downtown navigation year-round.", imageUrl: "https://kubrick.htvapps.com/htv-prod-media.s3.amazonaws.com/ibmig/cms/image/kcci/17754206-skywalk-des-moines-generic.jpg" },
   { year: 1987, title: "New Historical Building", desc: "The modern State Historical Building of Iowa opened, showcasing the state's heritage.", imageUrl: "https://www.desmoinesregister.com/gcdn/-mm-/b55ecc42a82a72ccb5d9062bf0c23de32d9b410c/c=0-155-1867-1210/local/-/media/2015/05/29/IAGroup/DesMoines/635685096411533563-rsz-2229-004.jpg" },
   { year: 1991, title: "801 Grand Completed", desc: "The 801 Grand skyscraper was completed, becoming the tallest building in Iowa at 45 stories.", imageUrl: "https://www.desmoinesregister.com/gcdn/authoring/authoring-images/2025/11/04/PDEM/87092463007-pouring-34th-floor.jpg" },
-  { year: 1993, title: "The Great Flood", desc: "The Great Flood overwhelmed the water treatment plant, leaving Des Moines without tap water for 12 days.", imageUrl: "https://www.desmoinesregister.com/gcdn/-mm-/670e645b3fbebd230693a233db7ee8cba51e1aa9/c=0-227-1732-1205/local/-/media/2018/07/11/IAGroup/DesMoines/636669186581983494-dmrdc5-5by7t2d8zko1d2n27o81-original.jpg" },
+  { year: 1993, title: "Great Flood: Community Resilience", desc: "When the Des Moines River crested at 28.4 feet, destroying the water treatment plant and cutting off 250,000 residents for twelve days, the city's response became a landmark in civic solidarity. Neighbors shared water, volunteers ran bottle distribution, and faith communities opened their doors. The water system reopened faster than any expert predicted — a testament to community will.", imageUrl: "https://www.desmoinesregister.com/gcdn/-mm-/670e645b3fbebd230693a233db7ee8cba51e1aa9/c=0-227-1732-1205/local/-/media/2018/07/11/IAGroup/DesMoines/636669186581983494-dmrdc5-5by7t2d8zko1d2n27o81-original.jpg" },
   { year: 1997, title: "Downtown Revitalization Vision", desc: "City leaders unveiled sweeping plans to rebuild the core and reconnect with the riverfront.", imageUrl: "https://images.axios.com/38j8QLB6y3ieD5CFKZa1izmZltY=/0x0:1348x758/1920x1080/2025/07/24/1753384583853.jpeg" },
   { year: 2001, title: "Iowa Events Center Planned", desc: "Funding and planning were approved for a massive new downtown arena and convention center.", imageUrl: "https://www.desmoinesregister.com/gcdn/authoring/authoring-images/2025/06/20/PDEM/84285800007-dmrdc-55-c-0-fhv-0-lh-6-pf-2-jy-57-az-original.jpg" },
   { year: 2005, title: "Wells Fargo Arena & SCI", desc: "Wells Fargo Arena and the Science Center of Iowa opened, transforming downtown entertainment.", imageUrl: "https://www.desmoinesregister.com/gcdn/authoring/authoring-images/2025/06/20/PDEM/84285812007-dmrdc-55-c-1-wgvzyw-5-d-1-gw-8-oohc-9-original.jpg" },
@@ -1002,7 +1059,7 @@ const ORAL_HISTORIES = [
     excerpt: "According to the Iowa Department of Human Services Refugee Oral History Collection, it says: 'Governor Ray opened the door. The neighbors on Hickman Road opened their hearts. We did not come empty-handed — we brought our stories, our food, our music.'",
   },
   {
-    name: "James \"Red\" Washington",
+    name: "James 'Red' Washington",
     year: "1967",
     tag: "Near North Side",
     excerpt: "According to the Des Moines Register Community Voices Archive, it says: 'Urban renewal tore down our neighborhood but not our community. We scattered across the city and rebuilt everywhere we landed. You cannot demolish a people.'",
@@ -1326,139 +1383,6 @@ function VoicesPage() {
   );
 }
 
-// ─── AGRICULTURE PAGE ───────────────────────────────────────────────────────
-const AG_DATA = [
-  { years: "1840s – 1880s", title: "From Prairie to Plow", desc: "<p>Long before it was a city, the land beneath Des Moines was shaped by retreating glaciers that left behind some of the deepest, darkest, and most fertile topsoil on the planet. When Fort Des Moines was established at the Raccoon Fork in 1843, early settlers quickly realized that the true gold of the region wasn't in minerals, but in the dirt.</p><p>Early agriculture was primarily subsistence farming, but the arrival of the railroad in 1866 changed everything. Des Moines transformed overnight from an isolated pioneer town into a massive shipping and processing hub. Farmers could now send their grain and livestock into the city to be packed and shipped across the expanding United States.</p>", img: "" },
-  { years: "1890s – 1920s", title: "Publishing Capital of the Farm", desc: "<p>By the turn of the 20th century, Des Moines wasn't just shipping food; it was shipping <strong>ideas</strong>. The city became the undisputed agricultural publishing capital of the United States.</p><p>In 1902, Edwin T. Meredith founded <em>Successful Farming</em> magazine in Des Moines, which grew into a national media empire. Around the same time, the Wallace family was publishing <em>Wallaces' Farmer</em>, a massively influential newspaper that taught generations of American farmers about crop rotation, soil conservation, and livestock management. Des Moines became the intellectual brain-trust for the American farmer.</p>", img: "" },
-  { years: "1920s – 1940s", title: "The Hybrid Revolution", desc: "<p>The most pivotal moment in Des Moines' agricultural history occurred in the 1920s, spearheaded by Henry A. Wallace (who would later become FDR's Vice President). Fascinated by genetics, Wallace began experimenting with corn breeding in his Des Moines backyard.</p><p>In 1926, he founded the <strong>Hi-Bred Corn Company</strong> (later Pioneer Hi-Bred) in Des Moines. By introducing hybrid corn seed to the market, Wallace effectively doubled crop yields worldwide, revolutionizing global agriculture. Des Moines was no longer just growing food—it was rewriting the DNA of how food was grown.</p>", img: "" },
-  { years: "1950s – 1990s", title: "Rise of Modern Agribusiness", desc: "<p>Following World War II, farming evolved from family-run, labor-intensive operations into a highly mechanized, science-driven industry. Des Moines evolved right alongside it, transitioning into a hub for corporate agribusiness.</p><p>Major players established massive manufacturing hubs in the metro. <strong>John Deere</strong> expanded its footprint in neighboring Ankeny to build the massive machines needed for modern farming. <strong>Kemin Industries</strong>, founded in Des Moines in 1961, became a global powerhouse in nutritional ingredients and animal health. The city quickly became the home base for national commodity organizations.</p>", img: "" },
-  { years: "1990s – Present", title: "The Geneva of Agriculture", desc: "<p>In the 1990s, local philanthropist John Ruan helped relocate the <strong>World Food Prize</strong>—created by Nobel Peace Prize laureate Dr. Norman Borlaug—permanently to Des Moines.</p><p>Often referred to as the 'Nobel Prize for Food and Agriculture,' this move cemented Des Moines' status on the global stage. Every October, the city hosts the Borlaug Dialogue, drawing international presidents, scientists, and agricultural CEOs to the stunning World Food Prize Hall of Laureates in downtown Des Moines to discuss solutions to global hunger and food security.</p>", img: "" },
-  { years: "Today", title: "AgTech and Sustainability", desc: "<p>Today, agriculture in the Des Moines metro looks vastly different than it did in 1843. The plows have been joined by pixels. Companies like <strong>Corteva Agriscience</strong> use AI, drone mapping, and CRISPR gene editing to create climate-resilient crops.</p><p>The culture of agriculture also thrives locally through the <strong>Downtown Des Moines Farmers' Market</strong>, which reconnects urban residents with over 300 local farmers. Meanwhile, the region is heavily focused on sustainability—testing ground-breaking practices like cover crops and nutrient reduction strategies to protect the land and water for the next generation.</p>", img: "" },
-];
-
-function AgriculturePage() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const data = AG_DATA[activeIndex];
-  return (
-    <div>
-      <PageHero title="The Heart of Global Agriculture" subtitle="Discover how Des Moines grew from a muddy frontier trading post into the epicenter of global agricultural science, publishing, and agribusiness." />
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 32px 64px" }}>
-        <div style={{
-          display: "flex",
-          flexDirection: "column",
-          background: "var(--cream)",
-          borderRadius: 8,
-          boxShadow: "0 10px 35px rgba(44,24,16,0.12)",
-          border: "1px solid #8B5E3C",
-          overflow: "hidden",
-          minHeight: 480,
-        }}
-        className="ag-layout-wrap"
-        >
-          <style>{`
-            @media (min-width: 901px) {
-              .ag-layout-wrap { flex-direction: row !important; }
-              .ag-sidebar-wrap { flex-direction: column !important; border-right: 1px solid #eee; border-bottom: none !important; }
-              .ag-tab-btn.active { border-left: 5px solid var(--copper) !important; border-bottom: none !important; }
-            }
-            @media (max-width: 900px) {
-              .ag-layout-wrap { flex-direction: column !important; }
-              .ag-sidebar-wrap { flex-direction: row !important; overflow-x: auto; border-right: none !important; border-bottom: 1px solid #eee !important; white-space: nowrap; }
-              .ag-tab-btn { border-left: none !important; border-bottom: 4px solid transparent !important; min-width: max-content; }
-              .ag-tab-btn.active { border-left: none !important; border-bottom-color: var(--copper) !important; }
-            }
-          `}</style>
-          <div style={{
-            flex: "0 0 320px",
-            background: "#fdfaf8",
-            display: "flex",
-            flexDirection: "column",
-          }} className="ag-sidebar-wrap">
-            {AG_DATA.map((era, index) => (
-              <button
-                key={index}
-                type="button"
-                className={`ag-tab-btn ${activeIndex === index ? "active" : ""}`}
-                onClick={() => setActiveIndex(index)}
-                style={{
-                  padding: "22px 25px",
-                  textAlign: "left",
-                  background: activeIndex === index ? "var(--cream)" : "none",
-                  border: "none",
-                  borderLeft: "5px solid transparent",
-                  borderBottom: "1px solid #eee",
-                  cursor: "pointer",
-                  fontSize: "1.05rem",
-                  fontWeight: 600,
-                  color: activeIndex === index ? "var(--charcoal)" : "#777",
-                  transition: "all 0.3s ease",
-                  boxShadow: activeIndex === index ? "0 2px 10px rgba(0,0,0,0.03)" : "none",
-                  fontFamily: "'DM Sans', sans-serif",
-                }}
-                onMouseEnter={e => {
-                  if (activeIndex !== index) {
-                    e.currentTarget.style.background = "#fff8f5";
-                    e.currentTarget.style.color = "var(--charcoal)";
-                  }
-                }}
-                onMouseLeave={e => {
-                  if (activeIndex !== index) {
-                    e.currentTarget.style.background = "none";
-                    e.currentTarget.style.color = "#777";
-                  }
-                }}
-              >
-                <span style={{ display: "block", fontSize: "0.85rem", color: "var(--copper)", textTransform: "uppercase", marginBottom: 5, letterSpacing: "1px", fontWeight: 700 }}>{era.years}</span>
-                {era.title}
-              </button>
-            ))}
-          </div>
-          <div style={{ flex: 1, padding: 40, display: "flex", flexDirection: "column", background: "var(--cream)" }}>
-            <div style={{
-              width: "100%",
-              height: 320,
-              borderRadius: 8,
-              overflow: "hidden",
-              marginBottom: 30,
-              background: "#e8e4df",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "var(--mist)",
-              fontSize: "0.95rem",
-              boxShadow: "0 5px 15px rgba(0,0,0,0.05)",
-            }}>
-              {data.img ? (
-                <img src={data.img} alt={data.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              ) : (
-                <span>Image placeholder — add your image later</span>
-              )}
-            </div>
-            <div style={{ animation: "fadeIn 0.5s ease" }}>
-              <h2 style={{ fontSize: "2rem", color: "var(--charcoal)", margin: "0 0 5px 0", fontFamily: "'Playfair Display', serif" }}>{data.title}</h2>
-              <span style={{
-                display: "inline-block",
-                background: "#fff8f5",
-                color: "var(--copper)",
-                padding: "5px 12px",
-                borderRadius: 20,
-                fontWeight: 700,
-                fontSize: "0.9rem",
-                marginBottom: 20,
-                border: "1px solid #f2dcd3",
-              }}>{data.years}</span>
-              <div
-                style={{ fontSize: "1.05rem", lineHeight: 1.7, color: "var(--mist)" }}
-                dangerouslySetInnerHTML={{ __html: data.desc }}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // ─── SOURCES PAGE ──────────────────────────────────────────────────────────
 const SOURCE_DOCS = [
   { title: "Work Log", file: "/sources/Work-Log.pdf", desc: "Project work log and progress documentation." },
@@ -1483,6 +1407,39 @@ function SourcesPage() {
             <p style={{ color: "var(--charcoal)", fontSize: "0.95rem", lineHeight: 1.7, margin: 0 }}>
               This website was built using <strong>React (via Vite)</strong> as a JavaScript framework. No pre-built templates or themes were used. All components, layouts, styles, and interactive features were designed and coded entirely by the team. The codebase is fully custom-written using JSX, inline styles, and native browser APIs.
             </p>
+          </div>
+        </FadeSection>
+
+        {/* Community Acknowledgments */}
+        <FadeSection>
+          <div style={{
+            background: "var(--cream)", borderRadius: 10, padding: "28px 32px",
+            border: "1px solid rgba(120,80,30,0.15)", marginBottom: 40,
+            boxShadow: "0 2px 14px rgba(28,16,8,0.08)",
+          }}>
+            <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--copper)", marginBottom: 14 }}>Community Acknowledgments</div>
+            <p style={{ color: "var(--mist)", fontSize: "0.92rem", lineHeight: 1.75, marginBottom: 18 }}>
+              This project would not be possible without the communities, archives, and organizations whose stories it tells. We are grateful to the following:
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "10px 32px" }}>
+              {[
+                { org: "State Historical Society of Iowa", role: "Buxton history & archival research" },
+                { org: "Iowa Commission on Latino Affairs", role: "Near South Side oral history project" },
+                { org: "Iowa Civil Rights Commission Archives", role: "Civil rights narratives & testimonies" },
+                { org: "National Archives & Records Administration", role: "Fort Des Moines military records" },
+                { org: "Iowa Office of State Archaeologist", role: "Meskwaki homeland research" },
+                { org: "Terrace Hill Foundation Archives", role: "Domestic workers oral history project" },
+                { org: "Catholic Diocese of Des Moines Historical Records", role: "Community social services history" },
+                { org: "African Community Services of Iowa", role: "African immigrant community oral history" },
+                { org: "Iowa Department of Human Services Refugee Collection", role: "Southeast Asian resettlement records" },
+                { org: "Des Moines Register Community Voices Archive", role: "Near North Side displacement testimonies" },
+              ].map((item, i) => (
+                <div key={i} style={{ borderLeft: "2px solid var(--peach)", paddingLeft: 12, marginBottom: 4 }}>
+                  <div style={{ fontWeight: 600, fontSize: "0.88rem", color: "var(--charcoal)" }}>{item.org}</div>
+                  <div style={{ fontSize: "0.78rem", color: "var(--mist)" }}>{item.role}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </FadeSection>
 
@@ -1870,6 +1827,61 @@ const MAP_LOCATIONS = [
     emoji: "🏊",
     desc: "Raccoon River Park is a massive 635-acre park in West Des Moines featuring a beach, marina, campgrounds, trails, and a sand volleyball complex. The park sits along the Raccoon River, which has shaped the ecology and flooding history of the Des Moines metro for centuries.",
     fact: "The Raccoon River flows from northwest Iowa into Des Moines, picking up agricultural runoff along the way. The 2016 Des Moines Water Works lawsuit over nitrate levels in the river sparked a national debate about farming practices and water quality.",
+  },
+  {
+    id: 31,
+    name: "Near South Side Cultural District",
+    lat: 41.5750,
+    lng: -93.6250,
+    year: "1940s",
+    category: "Community Spaces",
+    emoji: "🌮",
+    desc: "The Near South Side is Des Moines' historic Latino neighborhood, built by Mexican American workers who arrived in the 1940s to work in packinghouses and on the railroads. Today it anchors Iowa's Latino cultural life, with taquerias, quinceañera shops, murals, and the annual Cinco de Mayo festival drawing tens of thousands.",
+    fact: "The Near South Side's Latino population grew over 300% between 1990 and 2020. The neighborhood is home to the Mexican Consulate and the Latinos in Iowa Heritage Museum.",
+  },
+  {
+    id: 32,
+    name: "Bidwell Riverside Center",
+    lat: 41.5820,
+    lng: -93.6410,
+    year: "1970s",
+    category: "Community Spaces",
+    emoji: "🤝",
+    desc: "Bidwell Riverside Center has served as one of Des Moines' most important community anchors for over five decades, providing social services, emergency assistance, and community programs to residents of all backgrounds. Sister Margarita Flynn described it as a place where 'every person who walked through our door had a story worth hearing.'",
+    fact: "Bidwell Riverside has served over 1 million individuals since its founding, making it one of Iowa's longest-running community service organizations.",
+  },
+  {
+    id: 33,
+    name: "Jordan House — Underground Railroad Site",
+    lat: 41.5556,
+    lng: -93.7129,
+    year: "1850s",
+    category: "History & Architecture",
+    emoji: "✊",
+    desc: "The Jordan House in West Des Moines was a documented stop on the Underground Railroad. James Cunningham Jordan, a staunch abolitionist, sheltered freedom seekers in the home's hidden spaces during the 1850s and 1860s. It stands as one of Iowa's most direct physical connections to the freedom movement.",
+    fact: "Iowa was a critical corridor on the Underground Railroad because its free-state status meant that freedom seekers who crossed the Missouri River were legally free — and the Jordan family risked everything to help them get there.",
+  },
+  {
+    id: 34,
+    name: "Downtown Des Moines Farmers Market",
+    lat: 41.5868,
+    lng: -93.6245,
+    year: "1976",
+    category: "Community Spaces",
+    emoji: "🥕",
+    desc: "The Downtown Des Moines Farmers Market, held every Saturday morning from May through October along Court Avenue, is one of the city's most beloved community gathering places. Over 300 local vendors — from Iowan farm families to immigrant food entrepreneurs — fill eight city blocks with produce, handmade goods, and cultural cuisine.",
+    fact: "The Farmers Market draws over 25,000 visitors on peak Saturdays, making it one of the largest weekly community gatherings in Iowa and a showcase for the city's growing cultural diversity.",
+  },
+  {
+    id: 35,
+    name: "St. Paul AME Church",
+    lat: 41.5934,
+    lng: -93.6307,
+    year: "1866",
+    category: "Community Spaces",
+    emoji: "⛪",
+    desc: "Founded in 1866 by freed Black Americans, St. Paul African Methodist Episcopal Church is one of Des Moines' oldest Black institutions. For over 150 years it has served as a spiritual home, a safe space during times of struggle, and a launching pad for civil rights organizing — including community meetings after the 1965 Near North Side demolitions.",
+    fact: "St. Paul AME was founded just three years after the Emancipation Proclamation, making it one of the earliest permanent Black institutions in Iowa. Its congregation has included civil rights leaders, community organizers, and three generations of Des Moines families.",
   },
 ];
 

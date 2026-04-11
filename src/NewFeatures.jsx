@@ -196,6 +196,21 @@ const THEN_NOW_PAIRS = [
     },
     fact: "The Iowa State Fair has been held every August since 1854 — except during WWII. It inspired the 1945 Rodgers & Hammerstein musical 'State Fair,' set in Des Moines.",
   },
+  {
+    id: 6,
+    location: "Near South Side",
+    then: {
+      year: "1950s",
+      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Des_Moines_Iowa_South_Side_1950s.jpg/1280px-Des_Moines_Iowa_South_Side_1950s.jpg",
+      caption: "The Near South Side in the 1950s — Mexican American families who arrived to work in packinghouses built a tight-knit neighborhood of taquerias, Spanish-language newspapers, mutual aid clubs, and Catholic churches that served as the cultural heart of Iowa's Latino community.",
+    },
+    now: {
+      year: "Today",
+      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Des_Moines_South_Side_mural.jpg/1280px-Des_Moines_South_Side_mural.jpg",
+      caption: "The Near South Side today — still Iowa's most vibrant Latino neighborhood, with murals, the Cinco de Mayo festival, the Mexican Consulate, and a new generation of entrepreneurs keeping the community's traditions alive while building its future.",
+    },
+    fact: "The Near South Side's Latino population grew over 300% between 1990 and 2020. It hosts Iowa's largest Cinco de Mayo celebration, drawing 20,000+ attendees each year to honor a community that has shaped Des Moines for over 80 years.",
+  },
 ];
 // ─── THEN & NOW PAGE ─────────────────────────────────────────────────────────
 export function ThenNowPage() {
