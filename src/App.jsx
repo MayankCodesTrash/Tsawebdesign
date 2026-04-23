@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import L from 'leaflet';
 import { ThenNowPage, NeighborhoodPage, PopulationChart, SearchModal, NewspaperSection } from './NewFeatures.jsx';
+import { GradientMenu } from './GradientMenu.jsx';
 import 'leaflet/dist/leaflet.css';
 
 // ─── IMAGE (will be replaced with data URI via build script) ────────────────
@@ -30,6 +32,9 @@ const GlobalStyles = () => (
     body {
       font-family: 'DM Sans', sans-serif;
       background: url('/parchment.avif') center/cover fixed;
+      background-image: -webkit-image-set(url('/parchment.avif') type('image/avif'), url('/parchment.jpg') type('image/jpeg'));
+      background-image: image-set(url('/parchment.avif') type('image/avif'), url('/parchment.jpg') type('image/jpeg'));
+      background-size: cover; background-attachment: fixed; background-position: center;
       color: var(--charcoal);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
@@ -97,12 +102,129 @@ const GlobalStyles = () => (
       0% { opacity: 1; transform: translateY(0) scale(1); }
       100% { opacity: 0; transform: translateY(-60px) scale(1.4); }
     }
+    @keyframes particleFloat {
+      0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+      8%   { opacity: 1; }
+      88%  { opacity: 0.8; }
+      100% { transform: translateY(-130px) translateX(var(--drift, 12px)) scale(0.3); opacity: 0; }
+    }
+    @keyframes charReveal {
+      from { opacity: 0; transform: translateY(28px) rotateX(-25deg); filter: blur(4px); }
+      to   { opacity: 1; transform: translateY(0) rotateX(0deg); filter: blur(0); }
+    }
+    @keyframes waxSpin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes waxPulse {
+      0%, 100% { opacity: 0.12; transform: scale(1); }
+      50%      { opacity: 0.2;  transform: scale(1.04); }
+    }
+    @keyframes shimmerSlide {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    @keyframes gradientShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes statPop {
+      from { opacity: 0; transform: scale(0.7) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes lineGrow {
+      from { transform: scaleX(0); transform-origin: left; }
+      to   { transform: scaleX(1); transform-origin: left; }
+    }
+    @keyframes inkReveal {
+      0%   { clip-path: inset(0 100% 0 0); opacity: 0.4; }
+      100% { clip-path: inset(0 0% 0 0);   opacity: 1; }
+    }
+    @keyframes glowPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(201,138,42,0); }
+      50%      { box-shadow: 0 0 24px 6px rgba(201,138,42,0.18); }
+    }
+    @keyframes slideLeft {
+      from { opacity: 0; transform: translateX(-60px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideRight {
+      from { opacity: 0; transform: translateX(60px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pinPulse {
+      0%, 100% { box-shadow: 0 4px 14px rgba(0,0,0,0.18), 0 0 0 0 rgba(139,94,60,0.4); }
+      50% { box-shadow: 0 4px 14px rgba(0,0,0,0.18), 0 0 0 8px rgba(139,94,60,0); }
+    }
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pageOut {
+      from { opacity: 1; transform: translateY(0); }
+      to   { opacity: 0; transform: translateY(-8px); }
+    }
+    @keyframes progressGrow {
+      from { width: 0%; }
+      to   { width: 100%; }
+    }
+    @keyframes heroPhotoLeft1 {
+      from { opacity: 0; transform: rotate(-7deg) translateX(-60px); }
+      to   { opacity: 1; transform: rotate(-7deg) translateX(0); }
+    }
+    @keyframes heroPhotoLeft2 {
+      from { opacity: 0; transform: rotate(6deg) translateX(-50px); }
+      to   { opacity: 1; transform: rotate(6deg) translateX(0); }
+    }
+    @keyframes heroPhotoRight1 {
+      from { opacity: 0; transform: rotate(6deg) translateX(60px); }
+      to   { opacity: 1; transform: rotate(6deg) translateX(0); }
+    }
+    @keyframes heroPhotoRight2 {
+      from { opacity: 0; transform: rotate(-5deg) translateX(50px); }
+      to   { opacity: 1; transform: rotate(-5deg) translateX(0); }
+    }
+    @keyframes heroPhotoPano {
+      from { opacity: 0; transform: translateY(-30px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes heroCenterFade {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
     .fade-section { opacity: 0; transform: translateY(24px); transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1); }
     .fade-section.visible { opacity: 1; transform: translateY(0); }
+    .hero-card-img { transition: transform 0.5s cubic-bezier(0.16,1,0.3,1) !important; }
+    .hero-card:hover .hero-card-img { transform: scale(1.07) !important; }
+    .hero-card-overlay { opacity: 0; transform: translateY(100%); transition: all 0.35s cubic-bezier(0.16,1,0.3,1); }
+    .hero-card:hover .hero-card-overlay { opacity: 1; transform: translateY(0); }
 
     .tl-scroll::-webkit-scrollbar { display: none; }
     .tl-scroll { scrollbar-width: none; }
+
+    /* ── MOBILE RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .scrapbook-side { display: none !important; }
+      .scrapbook-center { padding: 0 12px !important; }
+      .history-card { flex-direction: column !important; }
+      .history-card-img { min-height: 200px !important; flex: none !important; }
+      .heroes-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+      .map-layout { flex-direction: column !important; }
+      .map-sidebar { min-width: unset !important; }
+      .quiz-grid { grid-template-columns: 1fr !important; }
+      .hero-card-overlay { display: none !important; }
+    }
+    @media (max-width: 480px) {
+      .heroes-grid { grid-template-columns: 1fr !important; }
+    }
+    @media (max-width: 768px) {
+      .desktop-nav { display: none !important; }
+      .mobile-toggle { display: block !important; }
+      .tl-pill-row { padding: 10px 12px !important; gap: 4px !important; }
+      .tl-pill { min-width: 44px !important; font-size: 0.65rem !important; }
+    }
   `}</style>
 );
 
@@ -127,6 +249,154 @@ function FadeSection({ children, delay = 0, style = {} }) {
       opacity: vis ? 1 : 0, transform: vis ? "translateY(0)" : "translateY(28px)",
       transition: `all 0.7s cubic-bezier(0.16,1,0.3,1) ${delay}s`, ...style,
     }}>{children}</div>
+  );
+}
+
+function SlideSection({ children, direction = "left", delay = 0, style = {} }) {
+  const [ref, vis] = useScrollReveal();
+  const tx = direction === "left" ? "-56px" : "56px";
+  return (
+    <div ref={ref} style={{
+      opacity: vis ? 1 : 0,
+      transform: vis ? "translateX(0)" : `translateX(${tx})`,
+      transition: `opacity 0.75s cubic-bezier(0.16,1,0.3,1) ${delay}s, transform 0.75s cubic-bezier(0.16,1,0.3,1) ${delay}s`,
+      ...style,
+    }}>{children}</div>
+  );
+}
+
+// ─── HERO AMBIENT (framer-motion) ────────────────────────────────────────────
+// Parchment bg ≈ #F2E8D5. To be visible you need:
+//   - DARK browns (rgba(50,15,5,X)) for depth contrast
+//   - BRIGHT candlelight gold (rgba(255,210,80,X)) for light contrast
+//   NOT mid-amber — that blends into the background.
+function HeroAmbient() {
+  // Dark shadow pools — clearly visible on light parchment
+  const SHADOWS = [
+    { left: 80,  top: 120,  w: 320, h: 220, dur: 18, dx: [0, 40, -20, 0], dy: [0, 30, -15, 0] },
+    { left: -60, top: 480,  w: 380, h: 260, dur: 24, dx: [0, 50, -30, 0], dy: [0,-20,  25, 0] },
+    { left: 820, top: 80,   w: 300, h: 200, dur: 20, dx: [0,-35,  20, 0], dy: [0, 25, -10, 0] },
+    { left: 900, top: 520,  w: 360, h: 240, dur: 28, dx: [0,-40,  25, 0], dy: [0,-30,  20, 0] },
+  ];
+
+  // Bright candlelight spots — glow against parchment
+  const GLOWS = [
+    { left: "18%", top: "30%", ml: -90, mt: -90, sz: 180, dur: 6,  delayV: 0   },
+    { left: "82%", top: "25%", ml: -70, mt: -70, sz: 140, dur: 8,  delayV: 1.5 },
+    { left: "50%", top: "55%", ml:-120, mt:-120, sz: 240, dur: 5,  delayV: 0.8 },
+    { left: "72%", top: "70%", ml: -80, mt: -80, sz: 160, dur: 7,  delayV: 2.2 },
+    { left: "28%", top: "72%", ml: -60, mt: -60, sz: 120, dur: 9,  delayV: 3.0 },
+  ];
+
+  // Dark rotating rings — sepia color clearly visible
+  const RINGS = [
+    { sz: 640, ml: -320, mt: -320, col: "rgba(80,35,8,0.22)",  dash: false, dur: 60,  dir:  1 },
+    { sz: 440, ml: -220, mt: -220, col: "rgba(80,35,8,0.18)",  dash: true,  dur: 80,  dir: -1 },
+    { sz: 280, ml: -140, mt: -140, col: "rgba(80,35,8,0.14)",  dash: false, dur: 100, dir:  1 },
+  ];
+
+  // Ember sparks — dark reddish-brown, 4-6px, very visible rising dots
+  const EMBERS = React.useMemo(() =>
+    Array.from({ length: 18 }, (_, i) => ({
+      id: i,
+      left: `${5 + (i * 5.3) % 90}%`,
+      sz: 4 + (i % 4),
+      delay: (i * 0.7) % 11,
+      dur: 7 + (i % 5) * 1.5,
+      drift: ((i % 5) - 2) * 32,
+      col: i % 3 === 0
+        ? `rgba(180,70,15,0.85)`
+        : i % 3 === 1
+          ? `rgba(220,120,20,0.80)`
+          : `rgba(255,180,40,0.75)`,
+    })), []);
+
+  return (
+    <div style={{ position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none", overflow: "hidden" }}>
+
+      {/* ── Dark corner shadow pools (contrast on light parchment) ── */}
+      {SHADOWS.map((s, i) => (
+        <motion.div key={`sh-${i}`}
+          style={{
+            position: "absolute", left: s.left, top: s.top,
+            width: s.w, height: s.h, borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(45,12,3,0.38) 0%, rgba(30,8,2,0.18) 50%, transparent 75%)",
+            filter: "blur(40px)",
+          }}
+          animate={{ x: s.dx, y: s.dy }}
+          transition={{ duration: s.dur, repeat: Infinity, ease: "easeInOut" }}
+        />
+      ))}
+
+      {/* ── Bright candlelight pulses (bright against parchment) ── */}
+      {GLOWS.map((g, i) => (
+        <motion.div key={`glow-${i}`}
+          style={{
+            position: "absolute", left: g.left, top: g.top,
+            marginLeft: g.ml, marginTop: g.mt,
+            width: g.sz, height: g.sz, borderRadius: "50%",
+            background: "radial-gradient(circle, rgba(255,210,80,0.28) 0%, rgba(240,160,30,0.12) 50%, transparent 72%)",
+            filter: "blur(20px)",
+          }}
+          animate={{ scale: [1, 1.18, 0.92, 1], opacity: [0.5, 1, 0.7, 0.5] }}
+          transition={{ duration: g.dur, delay: g.delayV, repeat: Infinity, ease: "easeInOut" }}
+        />
+      ))}
+
+      {/* ── Dark sepia rings (clearly visible, centered via margin) ── */}
+      {RINGS.map((r, i) => (
+        <motion.div key={`ring-${i}`}
+          style={{
+            position: "absolute", left: "50%", top: "50%",
+            marginLeft: r.ml, marginTop: r.mt,
+            width: r.sz, height: r.sz, borderRadius: "50%",
+            border: `1.5px ${r.dash ? "dashed" : "solid"} ${r.col}`,
+          }}
+          animate={{ rotate: 360 * r.dir }}
+          transition={{ duration: r.dur, repeat: Infinity, ease: "linear" }}
+        />
+      ))}
+
+      {/* ── Rising ember sparks (dark amber/orange — contrast against parchment) ── */}
+      {EMBERS.map(e => (
+        <motion.div key={`e-${e.id}`}
+          style={{
+            position: "absolute", left: e.left, bottom: "5%",
+            width: e.sz, height: e.sz, borderRadius: "50%",
+            background: e.col,
+            boxShadow: `0 0 ${e.sz * 2}px ${e.col}`,
+          }}
+          animate={{
+            y: [0, -(280 + e.sz * 20)],
+            x: [0, e.drift],
+            opacity: [0, 0.9, 0.6, 0],
+            scale: [1, 1.2, 0.5, 0.1],
+          }}
+          transition={{ duration: e.dur, delay: e.delay, repeat: Infinity, ease: [0.2, 0, 0.8, 1] }}
+        />
+      ))}
+
+      {/* ── Animated ink line across mid-hero ── */}
+      <motion.div
+        style={{
+          position: "absolute", left: 0, right: 0, top: "43%",
+          height: 1,
+          background: "linear-gradient(90deg, transparent 3%, rgba(80,35,8,0.30) 25%, rgba(100,45,10,0.50) 50%, rgba(80,35,8,0.30) 75%, transparent 97%)",
+        }}
+        animate={{ opacity: [0.2, 0.8, 0.2], scaleX: [0.7, 1, 0.7] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* ── Deepened dark vignette corners ── */}
+      <motion.div
+        style={{
+          position: "absolute", inset: 0,
+          background: "radial-gradient(ellipse 80% 75% at 50% 50%, transparent 35%, rgba(45,12,3,0.45) 100%)",
+        }}
+        animate={{ opacity: [0.7, 1, 0.7] }}
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </div>
   );
 }
 
@@ -180,16 +450,8 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
           }}>Des Moines, Iowa</span>
         </button>
 
-        <div style={{ display: "flex", gap: 4, alignItems: "center" }} className="desktop-nav">
-          {NAV_ITEMS.map(item => (
-            <button key={item.id} onClick={() => setPage(item.id)} style={{
-              background: activePage === item.id ? "rgba(139,94,60,0.25)" : "transparent",
-              border: "none", color: activePage === item.id ? "var(--peach)" : "rgba(255,255,255,0.6)",
-              padding: "8px 16px", borderRadius: 8, cursor: "pointer",
-              fontSize: "0.85rem", fontWeight: 500, fontFamily: "'DM Sans', sans-serif",
-              transition: "all 0.25s ease",
-            }}>{item.label}</button>
-          ))}
+        <div className="desktop-nav" style={{ display: "flex", alignItems: "center" }}>
+          <GradientMenu activePage={activePage} setPage={setPage} />
         </div>
 
         <button
@@ -322,12 +584,26 @@ function PageHero({ title, subtitle }) {
 }
 
 function SectionLabel({ text }) {
+  const [ref, vis] = useScrollReveal();
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 32 }}>
-      <div style={{ width: 32, height: 2, background: "var(--peach)", borderRadius: 1 }} />
+    <div ref={ref} style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 32 }}>
+      <div style={{
+        height: 2, background: "var(--peach)", borderRadius: 1,
+        width: vis ? 40 : 0,
+        transition: "width 0.7s cubic-bezier(0.16,1,0.3,1) 0.1s",
+      }} />
       <span style={{
-        fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.15em",
+        fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.18em",
         textTransform: "uppercase", color: "var(--peach-dark)",
+        opacity: vis ? 1 : 0,
+        transform: vis ? "translateX(0)" : "translateX(-12px)",
+        transition: "opacity 0.6s ease 0.25s, transform 0.6s ease 0.25s",
+        background: "linear-gradient(90deg, var(--peach-dark) 0%, var(--copper) 50%, var(--peach-dark) 100%)",
+        backgroundSize: "200% auto",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+        backgroundClip: "text",
+        animation: vis ? "shimmerSlide 3s linear infinite" : "none",
       }}>{text}</span>
     </div>
   );
@@ -383,13 +659,280 @@ function CommunityQuote() {
   );
 }
 
-function HomePage({ setPage }) {
-  const features = [
-    { icon: "📜", title: "Interactive Timeline", desc: "Trace the echoes of 180+ years — from frontier fort to modern metropolis.", page: "history" },
-    { icon: "🏅", title: "Heroes Archive", desc: "The voices that still resonate — pioneers, activists, and visionaries of Des Moines.", page: "heroes" },
-    { icon: "🎤", title: "Voices", desc: "Stories from the community — oral histories, hidden history, and a dynamic timeline of diverse voices.", page: "voices" },
-    { icon: "🗺️", title: "Historical Map", desc: "Explore the city's geography — from the frontier fort to modern landmarks across Des Moines.", page: "map" },
+function AnimatedStats() {
+  const [ref, vis] = useScrollReveal();
+  const stats = [
+    { value: "180+", label: "Years of History", icon: "⏳" },
+    { value: "55",   label: "Timeline Events",  icon: "📜" },
+    { value: "10",   label: "Heroes Profiled",  icon: "🏅" },
+    { value: "35",   label: "Map Locations",    icon: "📍" },
   ];
+  return (
+    <div ref={ref} style={{
+      background: "linear-gradient(135deg, #3D1F0A 0%, #5C3010 40%, #3D1F0A 100%)",
+      backgroundSize: "200% 200%",
+      animation: "gradientShift 9s ease infinite",
+      padding: "52px 32px",
+      borderTop: "1px solid rgba(201,138,42,0.3)",
+      borderBottom: "1px solid rgba(201,138,42,0.3)",
+      position: "relative", overflow: "hidden",
+    }}>
+      {/* subtle grain */}
+      <div style={{ position: "absolute", inset: 0, opacity: 0.03, backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "28px 28px", pointerEvents: "none" }} />
+      <div style={{ maxWidth: 860, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 28, position: "relative" }}>
+        {stats.map((s, i) => (
+          <div key={i} style={{
+            textAlign: "center",
+            opacity: vis ? 1 : 0,
+            transform: vis ? "scale(1) translateY(0)" : "scale(0.7) translateY(24px)",
+            transition: `opacity 0.6s cubic-bezier(0.16,1,0.3,1) ${i * 0.1}s, transform 0.6s cubic-bezier(0.16,1,0.3,1) ${i * 0.1}s`,
+          }}>
+            <div style={{ fontSize: "2rem", marginBottom: 8, lineHeight: 1 }}>{s.icon}</div>
+            <div style={{
+              fontFamily: "'Playfair Display', serif",
+              fontSize: "clamp(2.2rem, 4vw, 3.2rem)", fontWeight: 800,
+              color: "var(--peach)", lineHeight: 1, marginBottom: 6,
+              textShadow: "0 0 30px rgba(201,138,42,0.4)",
+            }}>{s.value}</div>
+            <div style={{
+              fontSize: "0.68rem", color: "rgba(242,232,213,0.6)",
+              letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 600,
+              fontFamily: "'DM Sans', sans-serif",
+            }}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── LAMP EFFECT (adapted from shadcn lamp.tsx — TS/Tailwind → JSX/inline styles)
+// Color: cyan → amber/copper to match site theme
+// Background fill: #1A0D05 matches CommunityToday top gradient
+function LampEffect({ children }) {
+  const AMBER = "#C98A2A";
+  const AMBER_BRIGHT = "#E8A535";
+
+  return (
+    <div style={{ position: "relative", width: "100%" }}>
+
+      {/* ── Visual cone — masked at bottom so it fades into the section gradient ── */}
+      {/* No solid background fills: mask dissolves the lamp naturally */}
+      <div style={{
+        overflow: "hidden", width: "100%", position: "relative",
+        maskImage: "radial-gradient(ellipse 85% 110% at 50% 0%, black 0%, black 30%, transparent 75%)",
+        WebkitMaskImage: "radial-gradient(ellipse 85% 110% at 50% 0%, black 0%, black 30%, transparent 75%)",
+      }}>
+        <div style={{
+          position: "relative",
+          display: "flex", width: "100%", height: 300,
+          transform: "scaleY(1.25)",
+          alignItems: "center", justifyContent: "center",
+          isolation: "isolate", zIndex: 0, flexShrink: 0,
+        }}>
+
+          {/* Right half-cone — no child cover divs, mask handles blending */}
+          <motion.div
+            initial={{ opacity: 0.5, width: "15rem" }}
+            whileInView={{ opacity: 1, width: "30rem" }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3, duration: 0.8, ease: "easeInOut" }}
+            style={{
+              position: "absolute", inset: "auto", right: "50%",
+              height: "14rem", overflow: "visible",
+              backgroundImage: `conic-gradient(from 70deg at center top, ${AMBER}, transparent, transparent)`,
+            }}
+          />
+
+          {/* Left half-cone */}
+          <motion.div
+            initial={{ opacity: 0.5, width: "15rem" }}
+            whileInView={{ opacity: 1, width: "30rem" }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3, duration: 0.8, ease: "easeInOut" }}
+            style={{
+              position: "absolute", inset: "auto", left: "50%",
+              height: "14rem", overflow: "visible",
+              backgroundImage: `conic-gradient(from 290deg at center top, transparent, transparent, ${AMBER})`,
+            }}
+          />
+
+          {/* Large amber glow blob */}
+          <div style={{ position: "absolute", inset: "auto", zIndex: 50, height: "9rem", width: "28rem", transform: "translateY(-50%)", borderRadius: "50%", background: "rgba(201,138,42,0.6)", filter: "blur(48px)" }} />
+
+          {/* Small tight glow */}
+          <motion.div
+            initial={{ width: "8rem" }}
+            whileInView={{ width: "16rem" }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3, duration: 0.8, ease: "easeInOut" }}
+            style={{ position: "absolute", inset: "auto", zIndex: 30, height: "9rem", transform: "translateY(-6rem)", borderRadius: "50%", background: "rgba(232,165,53,0.9)", filter: "blur(16px)" }}
+          />
+
+          {/* Glowing filament line */}
+          <motion.div
+            initial={{ width: "15rem" }}
+            whileInView={{ width: "30rem" }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3, duration: 0.8, ease: "easeInOut" }}
+            style={{ position: "absolute", inset: "auto", zIndex: 50, height: 2, transform: "translateY(-7rem)", background: AMBER_BRIGHT, boxShadow: `0 0 14px ${AMBER_BRIGHT}, 0 0 30px rgba(201,138,42,0.6)` }}
+          />
+        </div>
+      </div>
+
+      {/* Children — outside the masked layer so text is never faded out */}
+      <div style={{ position: "relative", zIndex: 50, display: "flex", flexDirection: "column", alignItems: "center", marginTop: "-13rem", paddingLeft: 20, paddingRight: 20, width: "100%" }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ─── COMMUNITY TODAY SECTION ────────────────────────────────────────────────
+function CommunityToday({ setPage }) {
+  const DEMO_BARS = [
+    { label: "White", pct: 64, color: "#C98A2A" },
+    { label: "Hispanic / Latino", pct: 15, color: "#E05A30" },
+    { label: "Black / African American", pct: 12, color: "#2F80ED" },
+    { label: "Asian", pct: 6, color: "#2ED573" },
+    { label: "Two or More Races", pct: 3, color: "#a955ff" },
+  ];
+
+  const ORGS = [
+    { name: "Iowa Commission on Latino Affairs", emoji: "🌮", since: "1976" },
+    { name: "African Community Services of Iowa", emoji: "🌍", since: "1993" },
+    { name: "Iowa-Asia Pacific Business Forum", emoji: "🎋", since: "2001" },
+    { name: "Des Moines Black Chamber", emoji: "✊", since: "1945" },
+    { name: "Iowa Meskwaki Cultural Preservation", emoji: "🦅", since: "1982" },
+    { name: "USCRI Iowa Refugee Resettlement", emoji: "🕊️", since: "1975" },
+  ];
+
+  const [ref, vis] = useScrollReveal();
+
+  return (
+    <div ref={ref} style={{
+      opacity: vis ? 1 : 0,
+      transform: vis ? "translateY(0)" : "translateY(32px)",
+      transition: "all 0.8s cubic-bezier(0.16,1,0.3,1)",
+      background: "linear-gradient(160deg, #1A0D05 0%, #2E1608 60%, #1A0D05 100%)",
+      paddingBottom: "80px",
+      position: "relative",
+      overflow: "hidden",
+    }}>
+      {/* ambient glow */}
+      <div style={{ position: "absolute", top: "30%", left: "20%", width: 400, height: 400, borderRadius: "50%", background: "radial-gradient(circle, rgba(201,138,42,0.07) 0%, transparent 70%)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", bottom: "10%", right: "15%", width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, rgba(47,128,237,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
+
+      {/* ── LAMP — above "The Community, Continuing" title ── */}
+      <LampEffect>
+        <motion.div
+          initial={{ opacity: 0, y: 60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4, duration: 0.8, ease: "easeInOut" }}
+          style={{ textAlign: "center", padding: "0 20px" }}
+        >
+          <div style={{ fontSize: "0.62rem", letterSpacing: "0.3em", textTransform: "uppercase", color: "rgba(255,240,200,0.9)", fontWeight: 700, marginBottom: 14, fontFamily: "'DM Sans', sans-serif" }}>
+            Des Moines Today · 2026
+          </div>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem, 3.5vw, 2.8rem)", fontWeight: 800, color: "#FFF8EE", lineHeight: 1.2, marginBottom: 14 }}>
+            The Community, Continuing
+          </h2>
+          <p style={{ color: "rgba(242,232,213,0.6)", fontSize: "0.96rem", maxWidth: 560, margin: "0 auto", lineHeight: 1.75, fontFamily: "'Playfair Display', serif", fontStyle: "italic" }}>
+            The story isn't finished. Des Moines today is one of the fastest-growing and most diverse cities in the Midwest — shaped by every generation that came before.
+          </p>
+        </motion.div>
+      </LampEffect>
+
+      <div style={{ maxWidth: 1100, margin: "0 auto", position: "relative", padding: "0 32px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 40, alignItems: "start" }}>
+
+          {/* Demographics */}
+          <div>
+            <div style={{ fontSize: "0.65rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--peach)", fontWeight: 700, marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>
+              Population Makeup · ~215,000 residents
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {DEMO_BARS.map((b, i) => (
+                <div key={i}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
+                    <span style={{ fontSize: "0.82rem", color: "rgba(242,232,213,0.85)", fontFamily: "'DM Sans', sans-serif" }}>{b.label}</span>
+                    <span style={{ fontSize: "0.78rem", color: b.color, fontWeight: 700, fontFamily: "'DM Sans', sans-serif" }}>{b.pct}%</span>
+                  </div>
+                  <div style={{ height: 6, borderRadius: 3, background: "rgba(255,255,255,0.07)", overflow: "hidden" }}>
+                    <div style={{
+                      height: "100%", borderRadius: 3, background: b.color,
+                      width: vis ? `${b.pct}%` : "0%",
+                      transition: `width 1s cubic-bezier(0.16,1,0.3,1) ${0.3 + i * 0.1}s`,
+                      boxShadow: `0 0 8px ${b.color}55`,
+                    }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: 16, fontSize: "0.68rem", color: "rgba(242,232,213,0.3)", fontFamily: "'DM Sans', sans-serif" }}>
+              Source: U.S. Census Bureau, 2020 Decennial Census
+            </div>
+          </div>
+
+          {/* Cultural orgs */}
+          <div>
+            <div style={{ fontSize: "0.65rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--peach)", fontWeight: 700, marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>
+              Active Cultural Organizations
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              {ORGS.map((org, i) => (
+                <div key={i} style={{
+                  display: "flex", alignItems: "center", gap: 12,
+                  background: "rgba(255,255,255,0.04)", borderRadius: 8,
+                  padding: "12px 16px",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  opacity: vis ? 1 : 0,
+                  transform: vis ? "translateX(0)" : "translateX(20px)",
+                  transition: `all 0.6s cubic-bezier(0.16,1,0.3,1) ${0.4 + i * 0.07}s`,
+                }}>
+                  <span style={{ fontSize: "1.3rem", flexShrink: 0 }}>{org.emoji}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: "0.83rem", color: "rgba(242,232,213,0.9)", fontWeight: 600, fontFamily: "'DM Sans', sans-serif" }}>{org.name}</div>
+                    <div style={{ fontSize: "0.68rem", color: "rgba(242,232,213,0.35)", fontFamily: "'DM Sans', sans-serif" }}>Est. {org.since}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+
+        {/* CTA */}
+        <div style={{ textAlign: "center", marginTop: 52 }}>
+          <button onClick={() => setPage("map")} style={{
+            background: "transparent", border: "1.5px solid rgba(201,138,42,0.5)", color: "var(--peach)",
+            padding: "12px 32px", borderRadius: 4, fontSize: "0.82rem", fontWeight: 700,
+            cursor: "pointer", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.1em",
+            textTransform: "uppercase", transition: "all 0.25s ease",
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = "rgba(201,138,42,0.12)"; e.currentTarget.style.borderColor = "var(--peach)"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(201,138,42,0.5)"; }}
+          >
+            Explore the Map →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function HomePage({ setPage }) {
+  const panoramaRef = useRef(null);
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (!panoramaRef.current) return;
+      panoramaRef.current.style.transform = `translateY(${window.scrollY * 0.2}px)`;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <div>
@@ -406,21 +949,38 @@ function HomePage({ setPage }) {
           background: "radial-gradient(ellipse at center, transparent 50%, rgba(80,40,10,0.35) 100%)",
         }} />
 
+        {/* ── HERO AMBIENT (framer-motion) ─── */}
+        <HeroAmbient />
+
         {/* ── PANORAMIC BANNER ─── */}
-        <div style={{
-          display: "flex", justifyContent: "center",
-          padding: "82px 60px 0", position: "relative", zIndex: 2,
-        }}>
-          <div style={{
-            width: "min(840px, 85vw)",
-            border: "9px solid #FFF8E8",
-            boxShadow: "4px 6px 28px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.25)",
-            outline: "1px solid rgba(100,60,15,0.15)",
-          }}>
-            <img src="/img-panorama.avif" alt="Des Moines panorama circa 1910"
-              style={{ display: "block", width: "100%", filter: "contrast(1.12) sepia(12%) brightness(1.05)" }} />
-          </div>
-        </div>
+        <motion.div
+          ref={panoramaRef}
+          initial={{ opacity: 0, y: -28, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.95, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            display: "flex", justifyContent: "center",
+            padding: "82px 60px 0", position: "relative", zIndex: 2,
+            willChange: "transform",
+          }}
+        >
+          <motion.div
+            whileHover={{ scale: 1.01, boxShadow: "6px 10px 40px rgba(42,20,8,0.7), 0 0 0 1px rgba(100,60,15,0.3)" }}
+            transition={{ duration: 0.4 }}
+            style={{
+              width: "min(920px, 90vw)",
+              border: "9px solid #FFF8E8",
+              boxShadow: "4px 6px 28px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.25)",
+              outline: "1px solid rgba(100,60,15,0.15)",
+            }}
+          >
+            <picture>
+              <source srcSet="/img-panorama.avif" type="image/avif" />
+              <img src="/img-panorama.jpg" alt="Des Moines panorama circa 1910"
+                style={{ display: "block", width: "100%", filter: "contrast(1.12) sepia(12%) brightness(1.05)" }} />
+            </picture>
+          </motion.div>
+        </motion.div>
 
         {/* ── THREE-COLUMN MIDDLE ─── */}
         <div style={{
@@ -430,118 +990,208 @@ function HomePage({ setPage }) {
         }}>
 
           {/* LEFT COLUMN */}
-          <div style={{
-            width: "clamp(150px, 20vw, 270px)", flexShrink: 0,
-            display: "flex", flexDirection: "column", gap: 28,
+          <div className="scrapbook-side" style={{
+            width: "clamp(180px, 24vw, 310px)", flexShrink: 0,
+            display: "flex", flexDirection: "column", gap: 32,
           }}>
-            <div style={{
-              transform: "rotate(-7deg)",
-              border: "9px solid #FFF8E8",
-              boxShadow: "4px 6px 22px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.2)",
-              transformOrigin: "center",
-            }}>
-              <img src="/img-streetcar.avif" alt="Des Moines streetcar 1900s"
-                style={{ display: "block", width: "100%", filter: "contrast(1.18) sepia(8%) brightness(1.08)" }} />
-            </div>
-            <div style={{
-              transform: "rotate(6deg)", alignSelf: "flex-end",
-              border: "9px solid #FFF8E8",
-              boxShadow: "4px 6px 22px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.2)",
-            }}>
-              <img src="/img-arch.avif" alt="Declaration of Independence arch, Des Moines"
-                style={{ display: "block", width: "100%", filter: "contrast(1.18) sepia(8%) brightness(1.08)" }} />
-            </div>
+            <motion.div
+              initial={{ opacity: 0, x: -60, rotate: -7 }}
+              animate={{ opacity: 1, x: 0, rotate: -7 }}
+              transition={{ duration: 0.85, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ scale: 1.04, rotate: -5, zIndex: 10 }}
+              style={{
+                border: "9px solid #FFF8E8",
+                boxShadow: "4px 6px 22px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.2)",
+              }}
+            >
+              <picture>
+                <source srcSet="/img-streetcar.avif" type="image/avif" />
+                <img src="/img-streetcar.jpg" alt="Des Moines streetcar 1900s"
+                  style={{ display: "block", width: "100%", filter: "contrast(1.18) sepia(8%) brightness(1.08)" }} />
+              </picture>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: -50, rotate: 6 }}
+              animate={{ opacity: 1, x: 0, rotate: 6 }}
+              transition={{ duration: 0.85, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ scale: 1.04, rotate: 4, zIndex: 10 }}
+              style={{
+                alignSelf: "flex-end",
+                border: "9px solid #FFF8E8",
+                boxShadow: "4px 6px 22px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.2)",
+              }}
+            >
+              <picture>
+                <source srcSet="/img-arch.avif" type="image/avif" />
+                <img src="/img-arch.jpg" alt="Declaration of Independence arch, Des Moines"
+                  style={{ display: "block", width: "100%", filter: "contrast(1.18) sepia(8%) brightness(1.08)" }} />
+              </picture>
+            </motion.div>
           </div>
 
           {/* CENTER — courthouse + title */}
-          <div style={{
+          <div className="scrapbook-center" style={{
             flex: 1, display: "flex", flexDirection: "column",
             alignItems: "center", justifyContent: "center", textAlign: "center",
-            position: "relative", minWidth: 0,
+            position: "relative", minWidth: 0, gap: 0,
           }}>
-            {/* Courthouse photo — clearly visible */}
-            <div style={{
-              width: "min(380px, 80%)",
-              border: "9px solid #FFF8E8",
-              boxShadow: "4px 6px 28px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.2)",
-              marginBottom: 22,
-            }}>
-              <img src="/img-courthouse.avif" alt="Old courthouse, Des Moines"
-                style={{ display: "block", width: "100%", filter: "contrast(1.12) sepia(12%) brightness(1.05)" }} />
-            </div>
+            {/* Courthouse photo — moved closer to text */}
+            <motion.div
+              initial={{ opacity: 0, y: -20, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ scale: 1.025 }}
+              style={{
+                width: "min(420px, 88%)",
+                border: "9px solid #FFF8E8",
+                boxShadow: "4px 6px 28px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.2)",
+                marginBottom: 14,
+              }}
+            >
+              <picture>
+                <source srcSet="/img-courthouse.avif" type="image/avif" />
+                <img src="/img-courthouse.jpg" alt="Old courthouse, Des Moines"
+                  style={{ display: "block", width: "100%", filter: "contrast(1.12) sepia(12%) brightness(1.05)" }} />
+              </picture>
+            </motion.div>
 
-            {/* Title block — no box, just strong text shadow */}
+            {/* Title block */}
             <div style={{ position: "relative", zIndex: 5 }}>
+              {/* Decorative wax-seal ring */}
+              <div style={{
+                position: "absolute", top: "50%", left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 260, height: 260, borderRadius: "50%",
+                border: "1.5px solid rgba(92,48,16,0.12)",
+                pointerEvents: "none",
+                animation: "waxSpin 40s linear infinite",
+                zIndex: 0,
+              }}>
+                <div style={{
+                  position: "absolute", inset: 12, borderRadius: "50%",
+                  border: "1px dashed rgba(92,48,16,0.08)",
+                }} />
+              </div>
+              <div style={{
+                position: "absolute", top: "50%", left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: 200, height: 200, borderRadius: "50%",
+                background: "radial-gradient(circle, rgba(201,138,42,0.06) 0%, transparent 70%)",
+                animation: "waxPulse 5s ease-in-out infinite",
+                pointerEvents: "none", zIndex: 0,
+              }} />
+
               <div style={{
                 fontSize: "0.6rem", letterSpacing: "0.32em", textTransform: "uppercase",
                 color: "#5C3010", fontWeight: 700, marginBottom: 4,
                 fontFamily: "'Playfair Display', serif",
+                position: "relative", zIndex: 1,
+                opacity: 0, animation: "heroCenterFade 0.6s ease 0.5s forwards",
               }}>✦ Des Moines · Iowa ✦</div>
 
               <h1 style={{
                 fontFamily: "'Playfair Display', serif",
                 fontSize: "clamp(2.4rem, 5vw, 4.2rem)", fontWeight: 800,
                 color: "#2A1608", lineHeight: 1.0, letterSpacing: "0.01em", marginBottom: 0,
-                textShadow: "0 1px 0 rgba(255,235,180,0.7), 1px 2px 6px rgba(255,230,160,0.5)",
-              }}>Echoes Of</h1>
+                position: "relative", zIndex: 1, perspective: "600px",
+              }}>
+                {["E","c","h","o","e","s"," ","O","f"].map((ch, i) => (
+                  <span key={i} style={{
+                    display: "inline-block",
+                    opacity: 0,
+                    animation: `charReveal 0.4s cubic-bezier(0.16,1,0.3,1) ${0.62 + i * 0.055}s forwards`,
+                    textShadow: "0 1px 0 rgba(255,235,180,0.7)",
+                  }}>{ch === " " ? "\u00A0" : ch}</span>
+                ))}
+              </h1>
               <h1 style={{
                 fontFamily: "'Playfair Display', serif",
                 fontSize: "clamp(3rem, 6.5vw, 5.6rem)", fontWeight: 800,
-                color: "#2A1608", lineHeight: 1.0, letterSpacing: "0.03em", marginBottom: 14,
+                color: "#2A1608", lineHeight: 1.0, letterSpacing: "0.03em", marginBottom: 10,
                 fontStyle: "italic",
-                textShadow: "0 1px 0 rgba(255,235,180,0.7), 1px 2px 6px rgba(255,230,160,0.5)",
-              }}>The Fort</h1>
+                position: "relative", zIndex: 1, perspective: "600px",
+              }}>
+                {["T","h","e"," ","F","o","r","t"].map((ch, i) => (
+                  <span key={i} style={{
+                    display: "inline-block",
+                    opacity: 0,
+                    animation: `charReveal 0.45s cubic-bezier(0.16,1,0.3,1) ${1.1 + i * 0.065}s forwards`,
+                    textShadow: "0 1px 0 rgba(255,235,180,0.7), 1px 2px 8px rgba(255,220,100,0.5)",
+                  }}>{ch === " " ? "\u00A0" : ch}</span>
+                ))}
+              </h1>
 
-              <div style={{ width: 56, height: 2, background: "#7A4F2C", margin: "0 auto 12px", borderRadius: 1 }} />
+              <div style={{
+                width: 56, height: 2, background: "#7A4F2C", margin: "0 auto 10px", borderRadius: 1,
+                animation: "lineGrow 0.8s cubic-bezier(0.16,1,0.3,1) 1.8s both",
+              }} />
 
               <p style={{
                 color: "#3D2010", fontSize: "0.82rem",
-                maxWidth: 280, margin: "0 auto 18px", lineHeight: 1.55,
+                maxWidth: 280, margin: "0 auto 16px", lineHeight: 1.55,
                 fontFamily: "'Playfair Display', serif", fontStyle: "italic",
+                opacity: 0, animation: "heroCenterFade 0.7s ease 2.0s forwards",
               }}>
                 A community story — the voices, landmarks &amp; turning points of Des Moines, Iowa.
               </p>
 
-              <button onClick={() => setPage("history")} style={{
-                background: "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)",
-                color: "#FFF8E8", border: "2px solid rgba(42,20,8,0.45)",
-                padding: "11px 32px", borderRadius: 3,
-                fontSize: "0.85rem", fontWeight: 700, cursor: "pointer",
-                fontFamily: "'Playfair Display', serif", fontStyle: "italic",
-                letterSpacing: "0.08em", textTransform: "uppercase",
-                boxShadow: "0 4px 14px rgba(42,20,8,0.4), inset 0 1px 0 rgba(255,220,150,0.2)",
-                transition: "all 0.2s ease",
-              }}
-              onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(180deg, #A06830 0%, #7A4F2C 100%)"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 22px rgba(42,20,8,0.5)"; }}
-              onMouseLeave={e => { e.currentTarget.style.background = "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)"; e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 14px rgba(42,20,8,0.4), inset 0 1px 0 rgba(255,220,150,0.2)"; }}
-              >Enter the Fort</button>
-
-            {/* Rotating community voice quote */}
-            <CommunityQuote />
+              <div style={{ opacity: 0, animation: "heroCenterFade 0.6s ease 2.2s forwards" }}>
+                <button onClick={() => setPage("history")} style={{
+                  background: "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)",
+                  color: "#FFF8E8", border: "2px solid rgba(42,20,8,0.45)",
+                  padding: "11px 32px", borderRadius: 3,
+                  fontSize: "0.85rem", fontWeight: 700, cursor: "pointer",
+                  fontFamily: "'Playfair Display', serif", fontStyle: "italic",
+                  letterSpacing: "0.08em", textTransform: "uppercase",
+                  boxShadow: "0 4px 14px rgba(42,20,8,0.4), inset 0 1px 0 rgba(255,220,150,0.2)",
+                  transition: "all 0.25s ease",
+                  animation: "glowPulse 3s ease-in-out 3s infinite",
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(180deg, #A06830 0%, #7A4F2C 100%)"; e.currentTarget.style.transform = "translateY(-3px) scale(1.03)"; e.currentTarget.style.boxShadow = "0 12px 28px rgba(42,20,8,0.55)"; }}
+                onMouseLeave={e => { e.currentTarget.style.background = "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)"; e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 14px rgba(42,20,8,0.4), inset 0 1px 0 rgba(255,220,150,0.2)"; }}
+                >Enter the Fort</button>
+              </div>
             </div>
           </div>
 
           {/* RIGHT COLUMN */}
-          <div style={{
-            width: "clamp(150px, 20vw, 270px)", flexShrink: 0,
-            display: "flex", flexDirection: "column", gap: 28,
+          <div className="scrapbook-side" style={{
+            width: "clamp(180px, 24vw, 310px)", flexShrink: 0,
+            display: "flex", flexDirection: "column", gap: 32,
           }}>
-            <div style={{
-              transform: "rotate(6deg)",
-              border: "9px solid #FFF8E8",
-              boxShadow: "4px 6px 22px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.2)",
-            }}>
-              <img src="/img-locust.avif" alt="East Locust Street postcard, Des Moines"
-                style={{ display: "block", width: "100%", filter: "saturate(1.3) contrast(1.1) brightness(1.05)" }} />
-            </div>
-            <div style={{
-              transform: "rotate(-5deg)", alignSelf: "flex-end",
-              border: "9px solid #FFF8E8",
-              boxShadow: "4px 6px 22px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.2)",
-            }}>
-              <img src="/img-streetcar2.avif" alt="Des Moines street scene 1900s"
-                style={{ display: "block", width: "100%", filter: "contrast(1.18) sepia(8%) brightness(1.08)" }} />
-            </div>
+            <motion.div
+              initial={{ opacity: 0, x: 60, rotate: 6 }}
+              animate={{ opacity: 1, x: 0, rotate: 6 }}
+              transition={{ duration: 0.85, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ scale: 1.04, rotate: 4, zIndex: 10 }}
+              style={{
+                border: "9px solid #FFF8E8",
+                boxShadow: "4px 6px 22px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.2)",
+              }}
+            >
+              <picture>
+                <source srcSet="/img-locust.avif" type="image/avif" />
+                <img src="/img-locust.jpg" alt="East Locust Street postcard, Des Moines"
+                  style={{ display: "block", width: "100%", filter: "saturate(1.3) contrast(1.1) brightness(1.05)" }} />
+              </picture>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 50, rotate: -5 }}
+              animate={{ opacity: 1, x: 0, rotate: -5 }}
+              transition={{ duration: 0.85, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              whileHover={{ scale: 1.04, rotate: -3, zIndex: 10 }}
+              style={{
+                alignSelf: "flex-end",
+                border: "9px solid #FFF8E8",
+                boxShadow: "4px 6px 22px rgba(42,20,8,0.55), 0 0 0 1px rgba(100,60,15,0.2)",
+              }}
+            >
+              <picture>
+                <source srcSet="/img-streetcar2.avif" type="image/avif" />
+                <img src="/img-streetcar2.jpg" alt="Des Moines street scene 1900s"
+                  style={{ display: "block", width: "100%", filter: "contrast(1.18) sepia(8%) brightness(1.08)" }} />
+              </picture>
+            </motion.div>
           </div>
         </div>
 
@@ -578,8 +1228,14 @@ function HomePage({ setPage }) {
         `}</style>
       </div>
 
+      {/* ── ANIMATED STATS STRIP ─────────────────────────────────────────── */}
+      <AnimatedStats />
+
+      {/* ── COMMUNITY TODAY ───────────────────────────────────────────────── */}
+      <CommunityToday setPage={setPage} />
+
       {/* ── COMMUNITY IDENTITY HOOK ───────────────────────────────────────── */}
-      <FadeSection>
+      <SlideSection direction="left">
         <div style={{
           backgroundImage: "url('/parchment.avif')", backgroundSize: "cover",
           borderTop: "3px solid rgba(120,80,30,0.25)", borderBottom: "3px solid rgba(120,80,30,0.25)",
@@ -612,10 +1268,10 @@ function HomePage({ setPage }) {
             </p>
           </div>
         </div>
-      </FadeSection>
+      </SlideSection>
 
       {/* ── ABOUT THIS PROJECT ────────────────────────────────────────────── */}
-      <FadeSection>
+      <SlideSection direction="right">
         <div style={{ background: "#F5ECD8", padding: "0 0 8px" }}>
         <div style={{ maxWidth: 900, margin: "0 auto", padding: "72px 32px" }}>
           <SectionLabel text="About This Project" />
@@ -654,7 +1310,7 @@ function HomePage({ setPage }) {
           </div>
         </div>
         </div>
-      </FadeSection>
+      </SlideSection>
     </div>
   );
 }
@@ -665,46 +1321,46 @@ const timelineData = [
   { year: 1846, title: "Town Incorporation & Statehood", desc: "Fort Des Moines was incorporated as a town, the same year Iowa became the 29th US state.", imageUrl: "https://www.desmoinesregister.com/gcdn/authoring/authoring-images/2024/02/26/PDEM/72745129007-iowa-northern-border.jpg" },
   { year: 1851, title: "City of Des Moines", desc: "The town charter was updated, officially dropping 'Fort' to become the City of Des Moines.", imageUrl: "https://iowaarchfoundation.b-cdn.net/wp-content/uploads/2016/03/DM-City-Hall-Sketch.gif" },
   { year: 1854, title: "First Brick Building", desc: "Des Moines saw its first brick building erected as the local construction industry began to boom.", imageUrl: "https://www.legis.iowa.gov/docs/images/resources/tour/historical/capbrick.jpg" },
-  { year: 1857, title: "Capital Moved", desc: "The capital was officially relocated to Des Moines from Iowa City.", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNJ0rjdbj6KIUpEz6XQL7Hp95Fccs7hqW03w&s" },
-  { year: 1860, title: "Eve of the Civil War", desc: "Des Moines population reached nearly 4,000 as it established itself as a regional trade hub.", imageUrl: "https://www.knowol.com/wp-content/uploads/2024/03/IA-Des-Moines-Iowa-1868-SM-1-scaled.jpg" },
-  { year: 1864, title: "Coal Mining Boom", desc: "Rapid expansion of coal mining began in the Des Moines area, heavily driving the local economy.", imageUrl: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjH1Vycy_-sp0mH9D21DxONtHV2AanhNwbHh5qx0judYCchzR0atL4Z-V8HSxNInGVW5Sk-74YDkbfTrbwsLIhfFTqWLZ_jfmA8d_emxepASf9P0FkryMww-6TzOOVweQATwVjn/s1600/Whitebreast+No.+1.jpg" },
-  { year: 1866, title: "Railroads Arrive", desc: "The first railroad links reached Des Moines, sparking an industrial boom.", imageUrl: "https://i.ebayimg.com/00/s/NzU5WDEyMzQ=/z/ng8AAOSwwhxcMl2G/$_57.JPG" },
-  { year: 1868, title: "First Street Railway", desc: "The Des Moines Street Railway Company began operating horse-drawn streetcars.", imageUrl: "https://kubrick.htvapps.com/vidthumb/c27b5a9c-417c-4d73-a5e9-3127af289fce/2364242f-72fe-4b97-85d3-581825e4f0d3.jpg" },
-  { year: 1871, title: "State Capitol Foundation", desc: "The foundation was laid for the grand new Iowa State Capitol building on a hill east of the river.", imageUrl: "https://www.iowapbs.org/sites/default/files/iowapathways/artifact/2021-12/a_000365_large.jpg" },
+  { year: 1857, title: "Capital Moved", desc: "The capital was officially relocated to Des Moines from Iowa City.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Iowa_Old_Capitol.jpg/480px-Iowa_Old_Capitol.jpg" },
+  { year: 1860, title: "Eve of the Civil War", desc: "Des Moines population reached nearly 4,000 as it established itself as a regional trade hub.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Bird%27s_eye_view_of_the_city_of_Des_Moines%2C_the_capital_of_Iowa_1868._LOC_73693394.jpg" },
+  { year: 1864, title: "Coal Mining Boom", desc: "Rapid expansion of coal mining began in the Des Moines area, heavily driving the local economy.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/5/51/Jules_F%C3%A9rat_-_Coal_Miners_of_Le_Creusot_during_the_Second_Empire_illustration_from_Les_Grandes_Usines_by_Julien_Turgan_c1880.jpg" },
+  { year: 1866, title: "Railroads Arrive", desc: "The first railroad links reached Des Moines, sparking an industrial boom.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/2/25/Chicago_Rock_Island_%26_Pacific_RR_Passenger_Station_Stuart_IA.jpg" },
+  { year: 1868, title: "First Street Railway", desc: "The Des Moines Street Railway Company began operating horse-drawn streetcars.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/2/28/Horse-drawn_streetcar_San_Francisco_1860%27s.jpg" },
+  { year: 1871, title: "State Capitol Foundation", desc: "The foundation was laid for the grand new Iowa State Capitol building on a hill east of the river.", imageUrl: "https://www.iowapbs.org/sites/default/files/iowapathways/artifact/2021-12/a_000350_large.jpg" },
   { year: 1875, title: "Industrial Growth", desc: "Des Moines saw rapid growth in manufacturing and publishing, pushing the population past 20,000.", imageUrl: "https://buroaklandtrust.org/wp-content/uploads/2024/02/kilns_and_sheds_of_iowa_pipe_and_tile_works_des_moines_iowa_late_1890s_or_early_1900s-300x244-1.jpg" },
   { year: 1878, title: "First Telephone Exchange", desc: "Des Moines entered the modern communications era with its first telephone exchange opening.", imageUrl: "https://wordpress.wbur.org/wp-content/uploads/2021/12/download-6-1000x625.jpeg" },
-  { year: 1881, title: "Drake University Founded", desc: "George C. Carpenter and Francis Marion Drake founded Drake University.", imageUrl: "https://drakeapedia.library.drake.edu/w/images/thumb/7/78/OLDOLDMAIN.jpg/477px-OLDOLDMAIN.jpg" },
-  { year: 1884, title: "Capitol Dedicated", desc: "The current Iowa State Capitol, with its iconic 275-foot gold dome, was formally dedicated.", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmm5sPGv1P1MBFycUUO_QMvD5zUKSHvTc4mA&s" },
-  { year: 1886, title: "Iowa State Fair Finds a Home", desc: "After moving between cities, the Iowa State Fair permanently relocated to its current Des Moines grounds.", imageUrl: "https://miro.medium.com/v2/resize:fit:1400/1*mCMAg_NklQayfePygClRmA.jpeg" },
+  { year: 1881, title: "Drake University Founded", desc: "George C. Carpenter and Francis Marion Drake founded Drake University.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Old_Main_Front.png/1280px-Old_Main_Front.png" },
+  { year: 1884, title: "Capitol Dedicated", desc: "The current Iowa State Capitol, with its iconic 275-foot gold dome, was formally dedicated.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/2/24/IowaStateCapNorthView.jpg" },
+  { year: 1886, title: "Iowa State Fair Finds a Home", desc: "After moving between cities, the Iowa State Fair permanently relocated to its current Des Moines grounds.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/a/ac/Maytag-Mason_Motor_Co._at_Iowas_State_Fair_%28Postcard%2C_1910%29.jpg" },
   { year: 1889, title: "Electric Streetcars", desc: "Electric streetcars replaced horse-drawn ones, expanding the reach of Des Moines suburbs.", imageUrl: "https://projectdesmoines.dmpl.org/files/fullsize/b410d2d8247d626009f1a7ddd2962dc8.jpg" },
   { year: 1893, title: "Rise of Insurance", desc: "Despite the nationwide Panic of 1893, Des Moines began establishing itself as a robust insurance center.", imageUrl: "https://www.desmoinesregister.com/gcdn/authoring/authoring-images/2025/11/19/PDEM/87352713007-second-des-moines-city-hall.jpg" },
   { year: 1896, title: "Grand View College", desc: "Grand View College was founded by Danish immigrants to preserve their heritage and provide education.", imageUrl: "https://upload.wikimedia.org/wikipedia/en/0/01/GVC_Old_Main.jpg" },
-  { year: 1901, title: "Fort Des Moines Reborn", desc: "A new Fort Des Moines was established south of the city as a major cavalry post.", imageUrl: "https://projectdesmoines.dmpl.org/files/fullsize/fd4b918e3f832aebfe6eab2d48c49aff.jpg" },
-  { year: 1904, title: "City Beautiful Movement", desc: "Des Moines embraced the City Beautiful movement, leading to new civic centers and riverfront improvements.", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeBPwnLn-EMk4tO1AcX8VI2lseQTdCCXzzFg&s" },
-  { year: 1907, title: "The Des Moines Plan", desc: "The city adopted the Des Moines Plan of commission government, sparking a national municipal reform trend.", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLtoCfzEVJK2Alexc8kmW0r80JeccvL43PvA&s" },
+  { year: 1901, title: "Fort Des Moines Reborn", desc: "A new Fort Des Moines was established south of the city as a major cavalry post.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/5/53/Fort_Des_Moines_Historic_Complex%2C_Building_No.46%2C_Des_Moines%28Polk_County%2C_Iowa%29.jpg" },
+  { year: 1904, title: "City Beautiful Movement", desc: "Des Moines embraced the City Beautiful movement, leading to new civic centers and riverfront improvements.", imageUrl: "https://projectdesmoines.dmpl.org/files/fullsize/b410d2d8247d626009f1a7ddd2962dc8.jpg" },
+  { year: 1907, title: "The Des Moines Plan", desc: "The city adopted the Des Moines Plan of commission government, sparking a national municipal reform trend.", imageUrl: "https://www.desmoinesregister.com/gcdn/authoring/authoring-images/2025/09/22/PDEM/86297540007-president-taft-motorcade.jpg" },
   { year: 1911, title: "Hartford of the West", desc: "With dozens of national insurance companies headquartered locally, the city was dubbed the 'Hartford of the West.'", imageUrl: "https://www.desmoinesregister.com/gcdn/authoring/authoring-images/2025/09/22/PDEM/86297540007-president-taft-motorcade.jpg" },
   { year: 1915, title: "Capitol Fire", desc: "A major fire broke out in the State Capitol, nearly destroying the House chambers.", imageUrl: "https://projectdesmoines.dmpl.org/files/fullsize/ed63a1a8b05cc6d09d779998928a7ddb.jpg" },
-  { year: 1917, title: "First Black Officers", desc: "During WWI, Fort Des Moines became the site of the first training camp for African American Army officers.", imageUrl: "https://miro.medium.com/1*4M5rBTc_GB3dWE8KfhsGmQ.jpeg" },
+  { year: 1917, title: "First Black Officers", desc: "During WWI, Fort Des Moines became the site of the first training camp for African American Army officers.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/5th_Provisional_Company_officers_reserve_training_Camp_Ft._Des_Moines_Ia._LCCN2016652396.jpg/1280px-5th_Provisional_Company_officers_reserve_training_Camp_Ft._Des_Moines_Ia._LCCN2016652396.jpg" },
   { year: 1920, title: "Population Milestone", desc: "Des Moines population surpassed 126,000, solidifying its place as the undisputed metropolis of Iowa.", imageUrl: "https://www.desmoinesregister.com/gcdn/authoring/authoring-images/2025/09/24/PDEM/86335413007-about-1935-8th-st-traffic.jpg" },
-  { year: 1924, title: "WHO Radio Broadcasts", desc: "WHO Radio began broadcasting, quickly becoming a massive 50,000-watt clear-channel station.", imageUrl: "https://www.detroitnews.com/gcdn/-mm-/3e9737f90971bb4a59bef66a64a9c210b917729e/c=0-438-2812-2027/local/-/media/2015/11/06/DetroitNews/DetroitNews/635824174627810079-early-broadcast.JPG" },
-  { year: 1928, title: "First Municipal Airport", desc: "Des Moines established its first municipal airport, laying the groundwork for regional aviation.", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTy_rdnfTPixXJ7BVukW4SJQJ6NHSLRwzevfw&s" },
-  { year: 1932, title: "Airport Relocation", desc: "The municipal airport moved to its current location on the city's south side.", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSHct35H__dpm_XjpLVnkiFwtHxh1-Bc2SlQ&s" },
-  { year: 1936, title: "WPA Projects", desc: "New Deal WPA projects modernized the city, building bridges, improving parks, and paving roads.", imageUrl: "https://iowaarchfoundation.b-cdn.net/wp-content/uploads/2016/03/Bridge-Court-Ave-under-construction-1911.jpg" },
-  { year: 1939, title: "Catholic Diocese Formed", desc: "The Roman Catholic Diocese of Des Moines was elevated to key regional prominence.", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7eCf31enTKznJn4LQPSz9LwDbBCE7BFCuvA&s" },
+  { year: 1924, title: "WHO Radio Broadcasts", desc: "WHO Radio began broadcasting, quickly becoming a massive 50,000-watt clear-channel station.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/a/ad/1922_radio_station_WDY_hexagonal_studio.JPEG" },
+  { year: 1928, title: "First Municipal Airport", desc: "Des Moines established its first municipal airport, laying the groundwork for regional aviation.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Early_aviation_postcard.jpg/480px-Early_aviation_postcard.jpg" },
+  { year: 1932, title: "Airport Relocation", desc: "The municipal airport moved to its current location on the city's south side.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/3/39/StateLibQld_1_192335_Avro_Avian_biplane_in_a_field%2C_1920-1930.jpg" },
+  { year: 1936, title: "WPA Projects", desc: "New Deal WPA projects modernized the city, building bridges, improving parks, and paving roads.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/8/80/Morton_County_WPA_bridge_from_W_1.JPG" },
+  { year: 1939, title: "Catholic Diocese Formed", desc: "The Roman Catholic Diocese of Des Moines was elevated to key regional prominence.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1c/St._Ambrose_Cathedral_-_Des_Moines_02.jpg" },
   { year: 1942, title: "WAAC Training Center", desc: "Fort Des Moines became the first national training center for the Women's Army Auxiliary Corps.", imageUrl: "https://www.nps.gov/articles/000/images/WAAC-Inspection.jpg" },
   { year: 1944, title: "Near South Side Community Forms", desc: "Mexican American workers recruited for Des Moines packinghouses and railroads settle on the Near South Side, founding a vibrant Latino neighborhood with its own markets, mutual aid societies, and cultural traditions that endures to this day.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Packinghouse_Workers_Organizing_Committee_banner%2C_Iowa%2C_1940s.jpg/800px-Packinghouse_Workers_Organizing_Committee_banner%2C_Iowa%2C_1940s.jpg" },
   { year: 1945, title: "Post-War Suburban Boom", desc: "Following WWII, Des Moines experienced massive housing demands, spurring suburban expansion.", imageUrl: "https://www.desmoinesregister.com/gcdn/authoring/authoring-images/2025/10/24/PDEM/86879421007-thompson-place.jpg" },
   { year: 1948, title: "Art Center Opens", desc: "The Des Moines Art Center, designed by renowned architect Eliel Saarinen, officially opened.", imageUrl: "https://storage.googleapis.com/onmilwaukee-article-images/variants/pz5lm9kvofif79vl2n9xbb84f8km/44487ed8fba0f2b82d9d5c8e9a98ed4b9d67f7c75e21d8b1a6cda1869e8697fd" },
   { year: 1948, title: "Katz Drug Store Sit-In", desc: "Civil rights leader Edna Griffin organized a sit-in at Katz Drug Store after being refused service. Her determination — and a landmark legal victory — made Iowa the first state to outlaw public accommodation discrimination, a full sixteen years before the federal Civil Rights Act.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Edna_Griffin_Iowa_Civil_Rights_Hall_of_Fame.jpg/640px-Edna_Griffin_Iowa_Civil_Rights_Hall_of_Fame.jpg" },
   { year: 1951, title: "Veterans Memorial Auditorium", desc: "Vets Auditorium opened, becoming the city's premier venue for concerts, sports, and conventions.", imageUrl: "https://static.wixstatic.com/media/3c9d51_7c0d5f142f4e462c80770b844ad339f1~mv2.jpg" },
-  { year: 1955, title: "Urban Renewal Begins", desc: "Des Moines started early urban renewal programs, fundamentally reshaping downtown.", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfopfTqfKY4cTayfvNRct18ViT4neZuTO6CA&s" },
+  { year: 1955, title: "Urban Renewal Begins", desc: "Des Moines started early urban renewal programs, fundamentally reshaping downtown.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg/480px-Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg" },
   { year: 1959, title: "Merle Hay Mall", desc: "Merle Hay Mall opened as an open-air plaza, signaling the shift of retail away from downtown.", imageUrl: "https://www.desmoinesregister.com/gcdn/presto/2019/10/17/PDEM/292c2404-9d5e-4bb7-a948-02a67ce9e8da-merle_hay_mall_15.jpg" },
   { year: 1961, title: "MacVicar Freeway", desc: "Construction of Interstate 235 began, cutting through the city to connect the suburbs.", imageUrl: "https://www.dmcityview.com/wp-content/uploads/2021/03/dm-forgotten2-300x234.jpg" },
   { year: 1965, title: "Near North Side Demolished", desc: "Urban renewal bulldozed Des Moines' historic Near North Side — the heart of the Black community since the 1890s. Hundreds of families were displaced, churches torn down, and businesses erased. As James 'Red' Washington recalled: 'You cannot demolish a people.' Residents scattered but rebuilt community across the city.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg/800px-Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg" },
   { year: 1965, title: "Tinker Protest", desc: "Des Moines students wore black armbands to protest the Vietnam War, sparking a landmark First Amendment case.", imageUrl: "https://th-thumbnailer.cdn-si-edu.com/2lDX6Y-rov6f3bUyg5e19aD-4FI=/fit-in/1600x0/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/88/ff/88ff95e6-2ff9-4e11-831f-bae01988ad1e/tinker-kids-2.jpg" },
-  { year: 1969, title: "Tinker v. Des Moines", desc: "The Supreme Court ruled students do not shed their constitutional rights at the schoolhouse gate.", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR0vtXpsgz9qTkQ8dOU6fFx-9VxqFr0Khu6TA&s" },
+  { year: 1969, title: "Tinker v. Des Moines", desc: "The Supreme Court ruled students do not shed their constitutional rights at the schoolhouse gate.", imageUrl: "https://th-thumbnailer.cdn-si-edu.com/2lDX6Y-rov6f3bUyg5e19aD-4FI=/fit-in/1600x0/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/88/ff/88ff95e6-2ff9-4e11-831f-bae01988ad1e/tinker-kids-2.jpg" },
   { year: 1973, title: "Ruan Center Construction", desc: "Construction began on the 36-story Ruan Center, modernizing the Des Moines skyline.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/74/Photo_RuanCenter_north-eastside_des_moines_usa_2008-04-27.JPG" },
-  { year: 1975, title: "Southeast Asian Refugee Resettlement", desc: "Governor Robert Ray opened Iowa's doors to thousands of Southeast Asian refugees — the only state with its own government-funded resettlement program. Families from Vietnam, Laos, Cambodia, and Thailand settled in Des Moines, founding temples, restaurants, and cultural organizations. As refugee Pham Thi Lan remembered: 'Governor Ray opened the door. The neighbors opened their hearts.'", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Southeast_Asian_refugees_Iowa_1970s.jpg/800px-Southeast_Asian_refugees_Iowa_1970s.jpg" },
+  { year: 1975, title: "Southeast Asian Refugee Resettlement", desc: "Governor Robert Ray opened Iowa's doors to thousands of Southeast Asian refugees — the only state with its own government-funded resettlement program. Families from Vietnam, Laos, Cambodia, and Thailand settled in Des Moines, founding temples, restaurants, and cultural organizations. As refugee Pham Thi Lan remembered: 'Governor Ray opened the door. The neighbors opened their hearts.'", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Vietnamese_refugees_on_USS_Blue_Ridge_%28LCC-19%29_1975.jpg/640px-Vietnamese_refugees_on_USS_Blue_Ridge_%28LCC-19%29_1975.jpg" },
   { year: 1976, title: "Civic Center Founded", desc: "Community leaders established the Civic Center to bring world-class performing arts to the city.", imageUrl: "https://www.desmoinesregister.com/gcdn/authoring/authoring-images/2024/07/16/PDEM/74433547007-downtown-des-moines-aerial-october-1976.jpg" },
   { year: 1979, title: "Civic Center Opens", desc: "The Des Moines Civic Center officially opened, revitalizing the downtown arts district.", imageUrl: "https://upload.wikimedia.org/wikipedia/en/2/2f/Civic_Center_of_Greater_Des_Moines.jpg" },
   { year: 1983, title: "Skywalk System Expansion", desc: "The Des Moines Skywalk underwent major expansion, allowing indoor downtown navigation year-round.", imageUrl: "https://kubrick.htvapps.com/htv-prod-media.s3.amazonaws.com/ibmig/cms/image/kcci/17754206-skywalk-des-moines-generic.jpg" },
@@ -719,8 +1375,8 @@ const timelineData = [
   { year: 2016, title: "Water Quality Lawsuit", desc: "Des Moines Water Works filed a high-profile lawsuit regarding agricultural runoff.", imageUrl: "https://civileats.com/wp-content/uploads/2016/07/DesMoines-water.jpg" },
   { year: 2018, title: "Krause Gateway Center", desc: "The architecturally stunning Krause Gateway Center opened, designed by Renzo Piano.", imageUrl: "https://opnarchitects.b-cdn.net/app/uploads/2019/04/RPBW_KRAUSE-GATEWAY-CENTER_20181129_083-cropped.jpg" },
   { year: 2021, title: "Lauridsen Skatepark", desc: "The Lauridsen Skatepark opened as the largest open skatepark in the United States.", imageUrl: "https://www.desmoinesregister.com/gcdn/-mm-/fc0937862a217af33f2702dadc63da97a8732b1a/c=67-0-468-401/local/-/media/2018/04/04/IAGroup/DesMoines/636584388460364649-635867431236713626-home1.jpg" },
-  { year: 2023, title: "ICON Water Trails", desc: "Construction broke ground on the ICON Water Trails, connecting regional recreational water sites.", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3iUZmFOnd3FlnN8QE5dKQKkymnGbGR_Tbbg&s" },
-  { year: 2026, title: "New Airport Terminal", desc: "Des Moines International Airport is completing the first phase of its modernized terminal.", imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWgQgV2O649zkns1MTCTb487oya3AguCg7ww&s" },
+  { year: 2023, title: "ICON Water Trails", desc: "Construction broke ground on the ICON Water Trails, connecting regional recreational water sites.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Des_Moines_River_at_floodplain.jpg/640px-Des_Moines_River_at_floodplain.jpg" },
+  { year: 2026, title: "New Airport Terminal", desc: "Des Moines International Airport is completing the first phase of its modernized terminal.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Des_Moines_International_Airport.jpg" },
 ];
 
 // ─── HISTORY PAGE ───────────────────────────────────────────────────────────
@@ -772,16 +1428,16 @@ function HistoryPage() {
 
   return (
     <div>
-      <PageHero title="History of Des Moines" subtitle="From a frontier fort to a modern metropolis — explore 180+ years of milestones that shaped Iowa's capital." />
+      <PageHero title="History of Des Moines" subtitle="Every community is built on the moments that came before. Explore 180+ years of the events and turning points that made Des Moines what it is — and its people who it is." />
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 32px 80px", background: "rgba(247, 237, 212, 0.4)", borderRadius: 0 }}>
         {/* Timeline bar */}
-        <div className="tl-scroll" style={{
+        <div className="tl-scroll tl-pill-row" style={{
           display: "flex", gap: 6, overflowX: "auto", padding: "14px 20px",
           background: "var(--charcoal)", borderRadius: 14, marginBottom: 32,
           boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
         }}>
           {timelineData.map((e, i) => (
-            <button key={i} id={`tl-b-${i}`} onClick={() => go(i)} style={{
+            <button key={i} id={`tl-b-${i}`} onClick={() => go(i)} className="tl-pill" style={{
               flexShrink: 0, minWidth: 52, height: 36, borderRadius: 18,
               background: i === idx ? "var(--peach)" : "rgba(139,94,60,0.15)",
               color: i === idx ? "var(--charcoal)" : "rgba(255,255,255,0.5)",
@@ -795,17 +1451,17 @@ function HistoryPage() {
         </div>
 
         {/* Content card */}
-        <div key={animKey} style={{
+        <div key={animKey} className="history-card" style={{
           display: "flex", background: "var(--cream)", borderRadius: 8, border: "1px solid #8B5E3C",
           overflow: "hidden", boxShadow: "0 12px 48px rgba(0,0,0,0.08)",
           minHeight: 400, animation: "scaleIn 0.35s cubic-bezier(0.16,1,0.3,1)",
           flexWrap: "wrap",
         }}>
-          <div style={{
+          <div className="history-card-img" style={{
             flex: "1 1 340px", minHeight: 320, background: "#e0dcd7",
             display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden",
           }}>
-            {!imgErr ? (
+            {ev.imageUrl && !imgErr ? (
               <img src={ev.imageUrl} alt={ev.title} onError={() => setImgErr(true)}
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", animation: "fadeIn 0.5s ease" }} />
             ) : (
@@ -936,23 +1592,35 @@ function HeroesPage() {
 
   return (
     <div>
-      <PageHero title="Heroes of Des Moines" subtitle="Meet the pioneers, activists, leaders, and visionaries who shaped Iowa's capital city." />
+      <PageHero title="Heroes of Des Moines" subtitle="A community story is carried by its people. Meet the pioneers, activists, and visionaries whose courage and conviction wrote the chapters that define Des Moines." />
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 32px" }}>
         <FadeSection><SectionLabel text="Notable Figures" /></FadeSection>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 20, marginBottom: 64 }}>
+        <div className="heroes-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 20, marginBottom: 64 }}>
           {heroesData.map((hero, i) => (
             <FadeSection key={i} delay={i * 0.06}>
-              <div onClick={() => setModal(i)} style={{
+              <div className="hero-card" onClick={() => setModal(i)} style={{
                 background: "var(--cream)", borderRadius: 8, overflow: "hidden", border: "1px solid #8B5E3C",
                 cursor: "pointer", transition: "all 0.35s cubic-bezier(0.16,1,0.3,1)",
-                boxShadow: "0 2px 12px rgba(44,24,16,0.1)",
+                boxShadow: "0 2px 12px rgba(44,24,16,0.1)", position: "relative",
               }}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-8px)"; e.currentTarget.style.boxShadow = "0 20px 48px rgba(0,0,0,0.12)"; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-8px)"; e.currentTarget.style.boxShadow = "0 20px 48px rgba(0,0,0,0.18)"; }}
               onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.04)"; }}
               >
-                <div style={{ height: 200, background: "#e0dcd7", overflow: "hidden" }}>
+                <div style={{ height: 210, background: "#e0dcd7", overflow: "hidden", position: "relative" }}>
                   <img src={hero.image} alt={hero.name} onError={e => e.target.style.display = "none"}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.5s" }} />
+                    className="hero-card-img"
+                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  {/* Hover overlay */}
+                  <div className="hero-card-overlay" style={{
+                    position: "absolute", bottom: 0, left: 0, right: 0,
+                    background: "linear-gradient(to top, rgba(42,20,8,0.92) 0%, rgba(42,20,8,0.6) 60%, transparent 100%)",
+                    padding: "28px 14px 12px",
+                    color: "#FFF8EE", fontSize: "0.78rem", lineHeight: 1.5,
+                    fontFamily: "'DM Sans', sans-serif",
+                  }}>
+                    <div style={{ fontWeight: 600, marginBottom: 3, fontSize: "0.82rem" }}>{hero.shortDesc}</div>
+                    <div style={{ opacity: 0.7, fontSize: "0.72rem" }}>Click to read more →</div>
+                  </div>
                 </div>
                 <div style={{ padding: "18px 20px" }}>
                   <div style={{ fontWeight: 700, fontSize: "1.08rem", marginBottom: 4 }}>{hero.name}</div>
@@ -971,7 +1639,7 @@ function HeroesPage() {
             {quizData.map((q, qi) => (
               <div key={qi} style={{ background: "#F2E8D5", borderRadius: 6, padding: 20, marginBottom: 14, border: "1px solid #8B5E3C" }}>
                 <div style={{ fontWeight: 700, marginBottom: 12, fontSize: "0.95rem" }}>{qi + 1}. {q.question}</div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                <div className="quiz-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                   {q.options.map((opt, oi) => {
                     const answered = answers[qi] !== undefined;
                     const isCorrect = oi === q.correct;
@@ -1157,7 +1825,7 @@ function VoicesPage() {
           entries.forEach(e => {
             if (e.isIntersecting) {
               e.target.style.opacity = "1";
-              e.target.style.transform = "translateY(0)";
+              e.target.style.transform = "translateX(0)";
             }
           });
         },
@@ -1171,7 +1839,7 @@ function VoicesPage() {
 
   return (
     <div>
-      <PageHero title="Voices" subtitle="Oral histories, hidden history, and the diverse stories that complete the full picture of Des Moines." />
+      <PageHero title="Voices" subtitle="The community story lives in its people. Oral histories, hidden chapters, and the diverse voices that complete — and continue — the full picture of Des Moines." />
 
       {/* Tab navigation — right below page hero */}
       <div style={{
@@ -1187,6 +1855,7 @@ function VoicesPage() {
             { id: "oral", label: "Oral Histories" },
             { id: "hidden", label: "Hidden History" },
             { id: "timeline", label: "Voices Timeline" },
+            { id: "guestbook", label: "✍️ Share Your Story" },
           ].map(tab => (
             <button
               key={tab.id}
@@ -1343,8 +2012,9 @@ function VoicesPage() {
               ref={el => tlRefs.current[i] = el}
               style={{
                 display: "flex", gap: 24, marginBottom: 40,
-                opacity: 0, transform: "translateY(24px)",
-                transition: `opacity 0.55s ease ${i * 0.04}s, transform 0.55s ease ${i * 0.04}s`,
+                opacity: 0,
+                transform: i % 2 === 0 ? "translateX(-36px)" : "translateX(36px)",
+                transition: `opacity 0.6s cubic-bezier(0.16,1,0.3,1) ${i * 0.04}s, transform 0.6s cubic-bezier(0.16,1,0.3,1) ${i * 0.04}s`,
               }}
             >
               <div style={{
@@ -1377,8 +2047,180 @@ function VoicesPage() {
         </div>
         </div>
         </>}
+
+        {voicesSection === "guestbook" && <CommunityGuestbook />}
+
       </div>
 
+    </div>
+  );
+}
+
+// ─── COMMUNITY GUESTBOOK ─────────────────────────────────────────────────────
+function CommunityGuestbook() {
+  const STORAGE_KEY = "echoes_guestbook_v1";
+
+  const loadEntries = () => {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); } catch { return []; }
+  };
+
+  const [entries, setEntries] = useState(loadEntries);
+  const [form, setForm] = useState({ name: "", year: "", connection: "", story: "" });
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.story.trim()) { setError("Name and story are required."); return; }
+    if (form.story.trim().length < 20) { setError("Please share a little more (at least 20 characters)."); return; }
+    const entry = { ...form, id: Date.now(), date: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long" }) };
+    const updated = [entry, ...entries];
+    setEntries(updated);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    setForm({ name: "", year: "", connection: "", story: "" });
+    setError("");
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 4000);
+  };
+
+  const inputStyle = {
+    width: "100%", padding: "11px 14px", borderRadius: 6,
+    border: "1.5px solid rgba(120,80,30,0.25)", background: "#FFF8EE",
+    fontFamily: "'DM Sans', sans-serif", fontSize: "0.92rem", color: "var(--charcoal)",
+    outline: "none", boxSizing: "border-box", transition: "border-color 0.2s",
+  };
+
+  return (
+    <div>
+      <FadeSection>
+        <div style={{
+          background: "#FFF8EE", borderRadius: 12, padding: "32px 36px",
+          border: "1px solid rgba(100,80,50,0.2)",
+          boxShadow: "0 4px 20px rgba(100,80,50,0.1)",
+          marginBottom: 28,
+        }}>
+          <SectionLabel text="Share Your Story" />
+          <p style={{ color: "var(--charcoal)", fontSize: "1.05rem", marginBottom: 6, maxWidth: 680, fontWeight: 700 }}>
+            What is Des Moines to you?
+          </p>
+          <p style={{ color: "var(--charcoal)", fontSize: "0.95rem", marginBottom: 28, maxWidth: 680, lineHeight: 1.7, opacity: 0.75 }}>
+            Every community story is made of individual ones. If you have a connection to Des Moines — a memory, a moment, a family story — add your voice to this living record.
+          </p>
+
+          <form onSubmit={handleSubmit} style={{ maxWidth: 600, display: "flex", flexDirection: "column", gap: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+              <div>
+                <label style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>Your Name *</label>
+                <input
+                  style={inputStyle}
+                  value={form.name}
+                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                  placeholder="First name or initials"
+                  maxLength={60}
+                  onFocus={e => { e.target.style.borderColor = "var(--copper)"; }}
+                  onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }}
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>Year / Era</label>
+                <input
+                  style={inputStyle}
+                  value={form.year}
+                  onChange={e => setForm(f => ({ ...f, year: e.target.value }))}
+                  placeholder="e.g. 1975, 2010s, today"
+                  maxLength={20}
+                  onFocus={e => { e.target.style.borderColor = "var(--copper)"; }}
+                  onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }}
+                />
+              </div>
+            </div>
+            <div>
+              <label style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>Your Connection</label>
+              <input
+                style={inputStyle}
+                value={form.connection}
+                onChange={e => setForm(f => ({ ...f, connection: e.target.value }))}
+                placeholder="e.g. grew up in Drake, worked near Court Ave, refugee family"
+                maxLength={100}
+                onFocus={e => { e.target.style.borderColor = "var(--copper)"; }}
+                onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }}
+              />
+            </div>
+            <div>
+              <label style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>Your Story *</label>
+              <textarea
+                style={{ ...inputStyle, minHeight: 110, resize: "vertical", lineHeight: 1.6 }}
+                value={form.story}
+                onChange={e => setForm(f => ({ ...f, story: e.target.value }))}
+                placeholder="Share a memory, moment, or piece of your Des Moines story..."
+                maxLength={800}
+                onFocus={e => { e.target.style.borderColor = "var(--copper)"; }}
+                onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }}
+              />
+              <div style={{ fontSize: "0.7rem", color: "var(--mist)", textAlign: "right", marginTop: 4 }}>{form.story.length}/800</div>
+            </div>
+            {error && <div style={{ color: "#c44", fontSize: "0.84rem", fontFamily: "'DM Sans', sans-serif" }}>{error}</div>}
+            {submitted && (
+              <div style={{
+                background: "rgba(80,160,100,0.12)", border: "1px solid rgba(80,160,100,0.3)",
+                borderRadius: 6, padding: "10px 16px",
+                color: "#2a7a40", fontSize: "0.88rem", fontFamily: "'DM Sans', sans-serif",
+              }}>
+                Thank you — your story has been added to the community record.
+              </div>
+            )}
+            <button type="submit" style={{
+              alignSelf: "flex-start",
+              background: "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)",
+              color: "#FFF8E8", border: "none", padding: "11px 28px",
+              borderRadius: 4, fontSize: "0.85rem", fontWeight: 700, cursor: "pointer",
+              fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em",
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 20px rgba(42,20,8,0.3)"; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
+            >Add My Voice</button>
+          </form>
+        </div>
+      </FadeSection>
+
+      {entries.length > 0 && (
+        <FadeSection delay={0.1}>
+          <div style={{ marginBottom: 8 }}>
+            <div style={{ fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--mist)", marginBottom: 18, fontFamily: "'DM Sans', sans-serif" }}>
+              {entries.length} {entries.length === 1 ? "story" : "stories"} shared
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {entries.map((e, i) => (
+                <div key={e.id || i} style={{
+                  background: "var(--cream)", borderRadius: 8, padding: "22px 26px",
+                  border: "1px solid rgba(120,80,30,0.12)",
+                  borderLeft: "3px solid var(--peach)",
+                  boxShadow: "0 2px 12px rgba(28,16,8,0.07)",
+                }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10, flexWrap: "wrap", gap: 6 }}>
+                    <div>
+                      <span style={{ fontWeight: 700, fontSize: "1rem", color: "var(--charcoal)", fontFamily: "'DM Sans', sans-serif" }}>{e.name}</span>
+                      {e.connection && <span style={{ fontSize: "0.78rem", color: "var(--mist)", marginLeft: 10 }}>{e.connection}</span>}
+                    </div>
+                    <div style={{ display: "flex", gap: 10, flexShrink: 0 }}>
+                      {e.year && <span style={{ fontSize: "0.72rem", color: "var(--copper)", fontWeight: 700, fontFamily: "'Playfair Display', serif" }}>{e.year}</span>}
+                      <span style={{ fontSize: "0.68rem", color: "rgba(0,0,0,0.3)", fontFamily: "'DM Sans', sans-serif" }}>{e.date}</span>
+                    </div>
+                  </div>
+                  <p style={{ color: "var(--mist)", fontSize: "0.9rem", lineHeight: 1.7, fontStyle: "italic", margin: 0 }}>"{e.story}"</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </FadeSection>
+      )}
+
+      {entries.length === 0 && (
+        <div style={{ textAlign: "center", padding: "40px 0", color: "var(--mist)", fontStyle: "italic", fontSize: "0.92rem", fontFamily: "'Playfair Display', serif" }}>
+          Be the first to add your voice to this community record.
+        </div>
+      )}
     </div>
   );
 }
@@ -1935,6 +2777,7 @@ function HistoricalMapPage() {
           font-size:${isSel ? '22px' : '17px'};
           cursor:pointer;
           transition:all 0.2s;
+          animation:${isSel ? 'none' : 'pinPulse 2.4s ease-in-out infinite'};
         ">${loc.emoji}</div>`,
         className: '',
         iconSize: [size, size],
@@ -1956,8 +2799,8 @@ function HistoricalMapPage() {
   return (
     <div style={{ minHeight: "100vh", background: "#F2E8D5" }}>
       <PageHero
-        title="Interactive Historical Map"
-        subtitle="Explore 180+ years of Des Moines history — click any marker to uncover the stories, people, and events that shaped Iowa's capital."
+        title="Community Map"
+        subtitle="A community story has a geography. Explore the places where Des Moines was built, fought for, and transformed — click any marker to uncover its story."
       />
 
       {/* Category filter */}
@@ -1989,7 +2832,7 @@ function HistoricalMapPage() {
 
       {/* Map + sidebar layout */}
       <FadeSection delay={0.1}>
-        <div style={{ maxWidth: 1200, margin: "24px auto 60px", padding: "0 24px", display: "flex", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
+        <div className="map-layout" style={{ maxWidth: 1200, margin: "24px auto 60px", padding: "0 24px", display: "flex", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
 
           {/* Leaflet map */}
           <div style={{ flex: "1 1 520px", borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.08)", height: 560 }}>
@@ -1997,7 +2840,7 @@ function HistoricalMapPage() {
           </div>
 
           {/* Info panel */}
-          <div style={{ flex: "1 1 300px", minWidth: 280 }}>
+          <div className="map-sidebar" style={{ flex: "1 1 300px", minWidth: 280 }}>
             {selected ? (
               <div style={{ ...panelStyle, animation: "fadeUp 0.35s ease" }}>
                 <div style={{ fontSize: "2.4rem", marginBottom: 10 }}>{selected.emoji}</div>
@@ -2066,6 +2909,9 @@ function HistoricalMapPage() {
 export default function App() {
   const [page, setPage] = useState("home");
   const [searchOpen, setSearchOpen] = useState(false);
+  const [transitioning, setTransitioning] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const pendingPage = useRef(null);
 
   useEffect(() => {
     const handler = (e) => {
@@ -2078,7 +2924,28 @@ export default function App() {
     return () => window.removeEventListener("keydown", handler);
   }, []);
 
-  const navigate = (p) => { setPage(p); window.scrollTo({ top: 0, behavior: "smooth" }); if (typeof window.__playNavSound === "function") window.__playNavSound(); };
+  useEffect(() => {
+    const onScroll = () => {
+      const el = document.documentElement;
+      const progress = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+      setScrollProgress(Math.min(progress, 100));
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const navigate = (p) => {
+    if (p === page) return;
+    pendingPage.current = p;
+    setTransitioning(true);
+    setTimeout(() => {
+      setPage(pendingPage.current);
+      window.scrollTo({ top: 0 });
+      setTransitioning(false);
+    }, 210);
+    if (typeof window.__playNavSound === "function") window.__playNavSound();
+  };
+
   const renderPage = () => {
     switch (page) {
       case "history": return <HistoryPage />;
@@ -2091,9 +2958,19 @@ export default function App() {
       default: return <HomePage setPage={navigate} />;
     }
   };
+
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <GlobalStyles />
+      {/* Scroll progress bar */}
+      <div style={{
+        position: "fixed", top: 0, left: 0, zIndex: 10001,
+        height: 3, width: `${scrollProgress}%`,
+        background: "linear-gradient(90deg, var(--copper), var(--peach))",
+        transition: "width 0.1s linear",
+        pointerEvents: "none",
+        boxShadow: "0 0 6px rgba(201,138,42,0.5)",
+      }} />
       {/* Skip to main content — accessibility */}
       <a
         href="#main-content"
@@ -2109,7 +2986,16 @@ export default function App() {
         Skip to main content
       </a>
       <Navbar activePage={page} setPage={navigate} onSearchOpen={() => setSearchOpen(true)} />
-      <main id="main-content" style={{ flex: 1 }} tabIndex={-1}>{renderPage()}</main>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        style={{
+          flex: 1,
+          opacity: transitioning ? 0 : 1,
+          transform: transitioning ? "translateY(10px)" : "translateY(0)",
+          transition: "opacity 0.21s ease, transform 0.21s ease",
+        }}
+      >{renderPage()}</main>
       <Footer setPage={navigate} />
       <SearchModal
         isOpen={searchOpen}

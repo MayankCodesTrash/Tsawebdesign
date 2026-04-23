@@ -217,6 +217,7 @@ export function ThenNowPage() {
   const [active, setActive] = useState(0);
   const [sliderPos, setSliderPos] = useState(50);
   const [dragging, setDragging] = useState(false);
+  const [hintDone, setHintDone] = useState(false);
   const containerRef = useRef(null);
   const [thenError, setThenError] = useState(false);
   const [nowError, setNowError] = useState(false);
@@ -242,7 +243,22 @@ export function ThenNowPage() {
     return () => { window.removeEventListener("mousemove", onMouseMove); window.removeEventListener("mouseup", onMouseUp); };
   }, [onMouseMove, onMouseUp]);
 
-  useEffect(() => { setSliderPos(50); setThenError(false); setNowError(false); }, [active]);
+  useEffect(() => { setSliderPos(50); setThenError(false); setNowError(false); setHintDone(false); }, [active]);
+
+  useEffect(() => {
+    if (hintDone) return;
+    const steps = [
+      { pos: 50, delay: 700 },
+      { pos: 28, delay: 1100 },
+      { pos: 72, delay: 1900 },
+      { pos: 50, delay: 2600 },
+    ];
+    const timers = steps.map(({ pos, delay }) =>
+      setTimeout(() => setSliderPos(pos), delay)
+    );
+    const done = setTimeout(() => setHintDone(true), 3000);
+    return () => { timers.forEach(clearTimeout); clearTimeout(done); };
+  }, [active]);
 
   return (
     <div style={{ background: "var(--warm)", minHeight: "100vh" }}>
@@ -258,7 +274,7 @@ export function ThenNowPage() {
           Then &amp; Now
         </h1>
         <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "1.05rem", maxWidth: 560, margin: "0 auto", lineHeight: 1.7, animation: "fadeUp 0.7s ease 0.1s both" }}>
-          Drag the divider to reveal how Des Moines transformed across generations — same places, different worlds.
+          A community's story is written across time. Drag the divider to see how Des Moines transformed across generations — the same streets, the same corners, different worlds.
         </p>
       </div>
 
@@ -314,7 +330,7 @@ export function ThenNowPage() {
           />
 
           {/* THEN image (clipped left side) */}
-          <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 ${100 - sliderPos}% 0 0)` }}>
+          <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 ${100 - sliderPos}% 0 0)`, transition: dragging ? "none" : "clip-path 0.55s cubic-bezier(0.16,1,0.3,1)" }}>
             <img
               src={thenError ? FALLBACK : pair.then.url}
               onError={() => setThenError(true)}
@@ -336,6 +352,7 @@ export function ThenNowPage() {
             width: 3, background: "#fff", transform: "translateX(-50%)",
             boxShadow: "0 0 16px rgba(0,0,0,0.5)",
             pointerEvents: "none",
+            transition: dragging ? "none" : "left 0.55s cubic-bezier(0.16,1,0.3,1)",
           }}>
             <div style={{
               position: "absolute", top: "50%", left: "50%",
@@ -819,7 +836,7 @@ export function NeighborhoodPage() {
           Neighborhoods
         </h1>
         <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "1.05rem", maxWidth: 580, margin: "0 auto", lineHeight: 1.7, animation: "fadeUp 0.7s ease 0.1s both" }}>
-          Each corner of Des Moines holds its own story — from Victorian bungalows to vibrant Latino cultural corridors and collegiate energy.
+          The community story is told neighborhood by neighborhood. Each corner of Des Moines holds a distinct chapter — from Victorian bungalows to vibrant Latino cultural corridors, historic Black enclaves to collegiate commons.
         </p>
       </div>
 
