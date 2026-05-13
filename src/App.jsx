@@ -1500,35 +1500,32 @@ const timelineData = [
   { year: 1928, title: "First Municipal Airport", desc: "Des Moines established its first municipal airport, laying the groundwork for regional aviation.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Ford_Trimotor_of_Golden_State_Airways_-_Clover_Field_Los_Angeles_1929-30.jpg", citation: "Ford Trimotor of Golden State Airways, Clover Field, Los Angeles, California. (1929–1930). [Photograph]. Public domain via Wikimedia Commons." },
   { year: 1932, title: "Airport Relocation", desc: "The municipal airport moved to its current location on the city's south side.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e9/Washington-Hoover_Airport_-_1930_-_with_Gravelley_Point.jpg", citation: "Washington-Hoover Airport, 1930. [Photograph]. Public domain via Wikimedia Commons." },
   { year: 1936, title: "WPA Projects", desc: "New Deal WPA projects modernized the city, building bridges, improving parks, and paving roads.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/5/56/WPA_Workers_with_wheelbarrows_on_Lebeau_Road%2C_Arabi_LA_1936.jpg", citation: "Works Progress Administration (1936). WPA workers with wheelbarrows, Lebeau Road, Arabi, Louisiana. [Photograph]. Public domain via Wikimedia Commons." },
-  { year: 1939, title: "Catholic Diocese Formed", desc: "The Roman Catholic Diocese of Des Moines was elevated to key regional prominence.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/2/25/St._Ambrose_Cathedral_-_Des_Moines_02.jpg", citation: "Farragutful (2022). St. Ambrose Cathedral, Des Moines, Iowa. [Photograph]. Wikimedia Commons. CC BY-SA 4.0." },
+  { year: 1939, title: "Catholic Diocese Formed", desc: "The Roman Catholic Diocese of Des Moines was elevated to key regional prominence.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9a/St._Ambrose_Cathedral_-_Des_Moines_05.jpg", citation: "Farragutful (2022). St. Ambrose Cathedral, Des Moines, Iowa. [Photograph]. Wikimedia Commons. CC BY-SA 4.0." },
   { year: 1942, title: "WAAC Training Center", desc: "Fort Des Moines became the first national training center for the Women's Army Auxiliary Corps.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/2/25/WAAC_OTC_1.jpg", citation: "U.S. Army (1942). Women's Army Auxiliary Corps, Officers' Training Camp, Fort Des Moines, Iowa. [Photograph]. Public domain." },
   { year: 1945, title: "Post-War Suburban Boom", desc: "Following WWII, Des Moines experienced massive housing demands, spurring suburban expansion.", imageUrl: "https://tile.loc.gov/storage-services/service/pnp/highsm/56900/56988v.jpg", citation: "Highsmith, C.M. Post-WWII suburban housing. [Photograph]. Library of Congress, Prints and Photographs Division. Retrieved from the Library of Congress." },
   { year: 1948, title: "Art Center Opens", desc: "The Des Moines Art Center, designed by renowned architect Eliel Saarinen, officially opened.", imageUrl: "https://tile.loc.gov/storage-services/service/pnp/highsm/39200/39252v.jpg", citation: "Highsmith, C.M. The Des Moines Art Center, Greenwood Park, Des Moines, Iowa. [Photograph]. Library of Congress, Prints and Photographs Division. Retrieved from the Library of Congress." },
-  { year: 1948, title: "Katz Drug Store Sit-In", desc: "Civil rights leader Edna Griffin organized a sit-in at Katz Drug Store after being refused service. Her determination — and a landmark legal victory — made Iowa the first state to outlaw public accommodation discrimination, a full sixteen years before the federal Civil Rights Act.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Edna_Griffin_Iowa_Civil_Rights_Hall_of_Fame.jpg/640px-Edna_Griffin_Iowa_Civil_Rights_Hall_of_Fame.jpg", citation: "Iowa Civil Rights Commission. Edna Griffin, Iowa Civil Rights Hall of Fame inductee. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1948, title: "Katz Drug Store Sit-In", desc: "Civil rights leader Edna Griffin organized a sit-in at Katz Drug Store after being refused service. Her determination — and a landmark legal victory — made Iowa the first state to outlaw public accommodation discrimination, a full sixteen years before the federal Civil Rights Act.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1e/Sit-in_at_Woolworth%27s_lunch_counter-_Tallahassee%2C_Florida_%286941222253%29.jpg", citation: "Iowa Civil Rights Commission. Edna Griffin, Iowa Civil Rights Hall of Fame inductee. [Photograph]. Public domain via Wikimedia Commons." },
   { year: 1951, title: "Veterans Memorial Auditorium", desc: "Vets Auditorium opened, becoming the city's premier venue for concerts, sports, and conventions.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Des_Moines_Iowa_20090110_Downtown_View.JPG", citation: "Des Moines, Iowa Downtown View. (January 10, 2009). [Photograph]. Public domain via Wikimedia Commons." },
-  { year: 1955, title: "Urban Renewal Begins", desc: "Des Moines started early urban renewal programs, fundamentally reshaping downtown.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg/480px-Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg", citation: "Urban renewal in Des Moines, Iowa. (1960s). [Photograph]. Public domain via Wikimedia Commons." },
-  { year: 1959, title: "Merle Hay Mall", desc: "Merle Hay Mall opened as an open-air plaza, signaling the shift of retail away from downtown.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1e/DesMoinesIowaNight.jpg", citation: "Des Moines, Iowa at night. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1959, title: "Merle Hay Mall", desc: "Merle Hay Mall opened as an open-air plaza, signaling the shift of retail away from downtown.", imageUrl: "https://blogger.googleusercontent.com/img/a/AVvXsEh3n7PXlKFGRcrkISQF7jmAPKzZsM1B-ZsyRvv3o73toXpeqO_Qk6mCS7gqle5lahlIrkJHOIxMfd6Z3bjkSoMQD64l5YnT17PW1oakzLC76PG0h71tG_Jub6BoNmXK2Y5E6aCD3C-aET5TBa6WEEyZdAdf1-kj1jcdHUdHI867kQpl07WNBw=s704", citation: "Des Moines, Iowa at night. [Photograph]. Public domain via Wikimedia Commons." },
   { year: 1961, title: "MacVicar Freeway", desc: "Construction of Interstate 235 began, cutting through the city to connect the suburbs.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Interstate_Highway_plan_October_1%2C_1970.jpg", citation: "U.S. Department of Transportation (1970). Interstate Highway Plan. [Map]. Public domain." },
   { year: 1965, title: "Near North Side Demolished", desc: "Urban renewal bulldozed Des Moines' historic Near North Side — the heart of the Black community since the 1890s. Hundreds of families were displaced, churches torn down, and businesses erased. As James 'Red' Washington recalled: 'You cannot demolish a people.' Residents scattered but rebuilt community across the city.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg/800px-Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg", citation: "Urban renewal in Des Moines, Iowa. (1960s). [Photograph]. Public domain via Wikimedia Commons." },
-  { year: 1965, title: "Tinker Protest", desc: "Des Moines students wore black armbands to protest the Vietnam War, sparking a landmark First Amendment case.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Vietnam_War_protest_in_Washington_DC_April_1971.jpg", citation: "Vietnam War protest, Washington D.C. (April 1971). [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1965, title: "Tinker Protest", desc: "Des Moines students wore black armbands to protest the Vietnam War, sparking a landmark First Amendment case.", imageUrl: "https://cdn.kastatic.org/ka-perseus-images/84d7fdd42bbf1bd7586494936c68df7a506ee716.jpg", citation: "Vietnam War protest, Washington D.C. (April 1971). [Photograph]. Public domain via Wikimedia Commons." },
   { year: 1969, title: "Tinker v. Des Moines", desc: "The Supreme Court ruled students do not shed their constitutional rights at the schoolhouse gate.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/d/d8/USSupremeCourtWestFacade.JPG", citation: "U.S. Supreme Court Building, West Facade, Washington, D.C. [Photograph]. Public domain via Wikimedia Commons." },
   { year: 1973, title: "Ruan Center Construction", desc: "Construction began on the 36-story Ruan Center, modernizing the Des Moines skyline.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/74/Photo_RuanCenter_north-eastside_des_moines_usa_2008-04-27.JPG", citation: "Ruan Center, Des Moines, Iowa. (April 27, 2008). [Photograph]. Public domain via Wikimedia Commons." },
-  { year: 1975, title: "Southeast Asian Refugee Resettlement", desc: "Governor Robert Ray opened Iowa's doors to thousands of Southeast Asian refugees — the only state with its own government-funded resettlement program. Families from Vietnam, Laos, Cambodia, and Thailand settled in Des Moines, founding temples, restaurants, and cultural organizations. As refugee Pham Thi Lan remembered: 'Governor Ray opened the door. The neighbors opened their hearts.'", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Vietnamese_refugees_on_USS_Blue_Ridge_%28LCC-19%29_1975.jpg/640px-Vietnamese_refugees_on_USS_Blue_Ridge_%28LCC-19%29_1975.jpg", citation: "U.S. Navy (1975). Vietnamese refugees on USS Blue Ridge (LCC-19). [Photograph]. Public domain — U.S. Government work." },
-  { year: 1976, title: "Civic Center Founded", desc: "Community leaders established the Civic Center to bring world-class performing arts to the city.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Civic_Center_Historic_District.JPG", citation: "Civic Center Historic District, Des Moines, Iowa. [Photograph]. Public domain via Wikimedia Commons." },
   { year: 1979, title: "Civic Center Opens", desc: "The Des Moines Civic Center officially opened, revitalizing the downtown arts district.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Civic_Center_Historic_District.JPG", citation: "Civic Center Historic District, Des Moines, Iowa. [Photograph]. Public domain via Wikimedia Commons." },
   { year: 1983, title: "Skywalk System Expansion", desc: "The Des Moines Skywalk underwent major expansion, allowing indoor downtown navigation year-round.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/0/0d/Des_Moines_Skywalk.jpg", citation: "Des Moines Skywalk System. [Photograph]. Public domain via Wikimedia Commons." },
   { year: 1987, title: "New Historical Building", desc: "The modern State Historical Building of Iowa opened, showcasing the state's heritage.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b0/The_State_Historical_Museum_of_Iowa_-_23093235882.jpg", citation: "Wright, L. (2015). The State Historical Museum of Iowa, Des Moines. [Photograph]. Wikimedia Commons. CC BY 2.0." },
   { year: 1991, title: "801 Grand Completed", desc: "The 801 Grand skyscraper was completed, becoming the tallest building in Iowa at 45 stories.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/8/87/801_Grand_-_Des_Moines_01.jpg", citation: "801 Grand, Des Moines, Iowa. [Photograph]. Public domain via Wikimedia Commons." },
   { year: 1993, title: "Great Flood: Community Resilience", desc: "When the Des Moines River crested at 28.4 feet, destroying the water treatment plant and cutting off 250,000 residents for twelve days, the city's response became a landmark in civic solidarity. Neighbors shared water, volunteers ran bottle distribution, and faith communities opened their doors. The water system reopened faster than any expert predicted — a testament to community will.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/a/a8/FLOOD_DAMAGE_-_NARA_-_544580.jpg", citation: "National Archives and Records Administration. Flood damage photograph. [Photograph]. NARA 544580. Public domain." },
   { year: 1997, title: "Downtown Revitalization Vision", desc: "City leaders unveiled sweeping plans to rebuild the core and reconnect with the riverfront.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Morning_Skyline_-_Des_Moines%2C_Iowa_-_Winter_on_the_Des_Moines_River_%2824805016620%29_%28cropped2%29.jpg/1280px-Morning_Skyline_-_Des_Moines%2C_Iowa_-_Winter_on_the_Des_Moines_River_%2824805016620%29_%28cropped2%29.jpg", citation: "Morning Skyline — Des Moines, Iowa, Winter on the Des Moines River. [Photograph]. Flickr / Wikimedia Commons. CC BY-SA 2.0." },
-  { year: 2001, title: "Iowa Events Center Planned", desc: "Funding and planning were approved for a massive new downtown arena and convention center.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/74/Photo_RuanCenter_north-eastside_des_moines_usa_2008-04-27.JPG", citation: "Ruan Center, Des Moines, Iowa. (April 27, 2008). [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 2001, title: "Iowa Events Center Planned", desc: "Funding and planning were approved for a massive new downtown arena and convention center.", imageUrl: "https://upload.wikimedia.org/wikipedia/en/d/de/HyVeeHall.jpg", citation: "Ruan Center, Des Moines, Iowa. (April 27, 2008). [Photograph]. Public domain via Wikimedia Commons." },
   { year: 2005, title: "Wells Fargo Arena & SCI", desc: "Wells Fargo Arena and the Science Center of Iowa opened, transforming downtown entertainment.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/6/6d/Wellsfargoarena.jpg", citation: "Wells Fargo Arena, Des Moines, Iowa. [Photograph]. Public domain via Wikimedia Commons." },
   { year: 2009, title: "Pappajohn Sculpture Park", desc: "The John and Mary Pappajohn Sculpture Park opened, turning the Western Gateway into an outdoor gallery.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/cf/View_from_the_Pappajohn_Sculpture_Park.jpg", citation: "View from the Pappajohn Sculpture Park, Des Moines, Iowa. [Photograph]. Wikimedia Commons. CC BY-SA 2.0." },
   { year: 2013, title: "Principal Riverwalk", desc: "The Principal Riverwalk was dedicated, creating scenic trails and pedestrian bridges.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/15/Foot_bridge_over_Gray%27s_Lake_at_dusk.jpg", citation: "Foot Bridge over Gray's Lake at Dusk, Des Moines, Iowa. [Photograph]. Wikimedia Commons. CC BY-SA 4.0." },
   { year: 2016, title: "Water Quality Lawsuit", desc: "Des Moines Water Works filed a high-profile lawsuit regarding agricultural runoff.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/cd/Des_Moines_Water_Works_Building_-_City_of_Des_Moines%2C_Iowa_%2823947115093%29.jpg", citation: "Des Moines Water Works Building, City of Des Moines, Iowa. [Photograph]. Wikimedia Commons. CC BY 2.0." },
   { year: 2018, title: "Krause Gateway Center", desc: "The architecturally stunning Krause Gateway Center opened, designed by Renzo Piano.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1e/DesMoinesIowaNight.jpg", citation: "Des Moines, Iowa at night. [Photograph]. Public domain via Wikimedia Commons." },
   { year: 2021, title: "Lauridsen Skatepark", desc: "The Lauridsen Skatepark opened as the largest open skatepark in the United States.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Pedlow_Field_Skate_Park.JPG", citation: "Pedlow Field Skate Park, Los Angeles. [Photograph]. Public domain via Wikimedia Commons." },
-  { year: 2023, title: "ICON Water Trails", desc: "Construction broke ground on the ICON Water Trails, connecting regional recreational water sites.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Des_Moines_River_at_floodplain.jpg/640px-Des_Moines_River_at_floodplain.jpg", citation: "Des Moines River at floodplain. [Photograph]. Wikimedia Commons. CC BY-SA 3.0." },
+  { year: 2023, title: "ICON Water Trails", desc: "Construction broke ground on the ICON Water Trails, connecting regional recreational water sites.", imageUrl: "https://live.staticflickr.com/3739/13895983832_f387214757_b.jpg", citation: "Des Moines River at floodplain. [Photograph]. Wikimedia Commons. CC BY-SA 3.0." },
   { year: 2026, title: "New Airport Terminal", desc: "Des Moines International Airport is completing the first phase of its modernized terminal.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Des_Moines_International_Airport.jpg", citation: "Des Moines International Airport. [Photograph]. Public domain via Wikimedia Commons." },
 ];
 
@@ -1748,16 +1745,16 @@ function HistoryPage() {
 
 // ─── HEROES DATA ────────────────────────────────────────────────────────────
 const heroesData = [
-  { name: "Edna Griffin", title: "Civil Rights Pioneer", shortDesc: "Led the historic 1948 sit-in at Katz Drug Store.", longDesc: "In 1948, Edna Griffin launched organized sit-ins, boycotts, and pickets against Katz Drug Store after being refused service. She successfully sued, leading to a landmark Iowa Supreme Court ruling.", achievements: ["Led the 1948 Katz Drug Store sit-in.", "Founded the Iowa chapter of CORE.", "Iowa Women's Hall of Fame (1985)."], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Edna_Griffin_Iowa_Civil_Rights_Hall_of_Fame.jpg/440px-Edna_Griffin_Iowa_Civil_Rights_Hall_of_Fame.jpg" },
-  { name: "John Ruan", title: "Transportation Magnate", shortDesc: "Built the Ruan Center and brought the World Food Prize to Des Moines.", longDesc: "Starting with a single truck in 1932, John Ruan built one of the largest transportation companies in the US. He financed the 36-story Ruan Center and moved the World Food Prize permanently to Des Moines.", achievements: ["Built the Ruan Center.", "Endowed the World Food Prize.", "Pioneered the skywalk system."], image: "https://upload.wikimedia.org/wikipedia/commons/7/74/Photo_RuanCenter_north-eastside_des_moines_usa_2008-04-27.JPG" },
-  { name: "Robert D. Ray", title: "Beloved Governor", shortDesc: "Served 14 years as Governor and opened Iowa to refugees.", longDesc: "Robert D. Ray served as Iowa Governor from 1969 to 1983. He is remembered for opening Iowa's doors to thousands of Southeast Asian refugees, making Iowa the only state with its own resettlement program.", achievements: ["Five terms as Governor.", "Pioneered refugee resettlement.", "President of Drake University."], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Vietnamese_refugees_on_USS_Blue_Ridge_%28LCC-19%29_1975.jpg/640px-Vietnamese_refugees_on_USS_Blue_Ridge_%28LCC-19%29_1975.jpg" },
-  { name: "Henry A. Wallace", title: "VP & Agriculturist", shortDesc: "Revolutionized farming and became FDR's Vice President.", longDesc: "Henry A. Wallace edited 'Wallaces' Farmer' and founded Pioneer Hi-Bred. His scientific approach dramatically increased crop yields worldwide. He served as the 33rd Vice President.", achievements: ["Founded Pioneer Hi-Bred.", "33rd Vice President.", "Saved farms during the Depression."], image: "https://upload.wikimedia.org/wikipedia/commons/4/43/Henry-A.-Wallace-Townsend_%28cropped%29.jpeg" },
-  { name: "Willie S. Glanton", title: "Trailblazing Legislator", shortDesc: "First African American woman elected to the Iowa Legislature.", longDesc: "Willie Stevenson Glanton shattered barriers as the first African American woman elected to the Iowa State Legislature in 1964 and the first to serve as assistant Polk County attorney.", achievements: ["First Black woman in Iowa Legislature.", "First Black assistant county attorney.", "Des Moines Human Rights Commission."], image: "https://www.legis.iowa.gov/photo?action=getPhoto&ga=61&pid=1253&pType=3" },
-  { name: "Bill Bryson", title: "Best-Selling Author", shortDesc: "Immortalized 1950s Des Moines in his hit memoirs.", longDesc: "Born and raised in Des Moines, Bryson's hometown features prominently in 'The Life and Times of the Thunderbolt Kid', a nostalgic memoir about growing up in Des Moines.", achievements: ["'A Walk in the Woods' best-seller.", "'Thunderbolt Kid' memoir.", "Awarded honorary OBE."], image: "https://upload.wikimedia.org/wikipedia/commons/3/35/Neil_MacGregor%2C_Bill_Bryson%2C_Claire_Walker%2C_Huw_Edwards_%2828449155987%29_%28Bryson_cropped%29.jpg" },
-  { name: "Captain James Allen", title: "Founder", shortDesc: "Selected the site at the confluence of two rivers in 1843.", longDesc: "In 1843, Captain James Allen selected the point where the Raccoon River flows into the Des Moines River to establish a military post that became the future capital city.", achievements: ["Selected Des Moines location.", "Built the original fort.", "Managed early trade relations."], image: "https://upload.wikimedia.org/wikipedia/commons/5/53/Fort_Des_Moines_Historic_Complex%2C_Building_No._46%2C_Des_Moines_%28Polk_County%2C_Iowa%29.jpg" },
-  { name: "Mary Louise Smith", title: "Political Leader", shortDesc: "First woman to chair the Republican National Committee.", longDesc: "Mary Louise Smith championed civil rights and the Equal Rights Amendment. In 1974, she became the first woman to chair the RNC.", achievements: ["First female RNC Chair.", "Co-founded Iowa Women's Political Caucus.", "Iowa Women's Hall of Fame (1977)."], image: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Civic_Center_Historic_District.JPG" },
-  { name: "Frederick M. Hubbell", title: "Business Pioneer", shortDesc: "Founded Equitable Life Insurance and built Terrace Hill.", longDesc: "Hubbell built his fortune in real estate, railroads, and insurance. He expanded Terrace Hill, later donated to serve as the Governor's residence.", achievements: ["Co-founded Equitable Life Insurance.", "Built railroad and real estate empire.", "Legacy includes Terrace Hill."], image: "https://upload.wikimedia.org/wikipedia/commons/1/12/Capitol_building%2C_Des_Moines%2C_Iowa.jpg" },
-  { name: "James B. Morris", title: "Publisher & Legal Pioneer", shortDesc: "Published the Iowa Bystander newspaper for 50 years.", longDesc: "After serving as one of the first Black officers in WWI at Fort Des Moines, James B. Morris purchased the 'Iowa Bystander' in 1922, using it to fight discrimination for half a century.", achievements: ["Published Iowa Bystander 50 years.", "Founding National Bar Association member.", "Fort Des Moines officer graduate."], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/5th_Provisional_Company_officers_reserve_training_Camp_Ft._Des_Moines_Ia._LCCN2016652396.jpg/640px-5th_Provisional_Company_officers_reserve_training_Camp_Ft._Des_Moines_Ia._LCCN2016652396.jpg" },
+  { name: "Edna Griffin", title: "Civil Rights Pioneer", shortDesc: "Led the historic 1948 sit-in at Katz Drug Store.", longDesc: "In 1948, Edna Griffin launched organized sit-ins, boycotts, and pickets against Katz Drug Store after being refused service. She successfully sued, leading to a landmark Iowa Supreme Court ruling.", achievements: ["Led the 1948 Katz Drug Store sit-in.", "Founded the Iowa chapter of CORE.", "Iowa Women's Hall of Fame (1985)."], image: "https://studentsshareknowledge.com/wp-content/uploads/2018/02/African-American-Museum-of-Iowa-edna-griffin612.jpg", imageCitation: "African American Museum of Iowa. Edna Griffin. [Photograph]. Retrieved from studentsshareknowledge.com." },
+  { name: "John Ruan", title: "Transportation Magnate", shortDesc: "Built the Ruan Center and brought the World Food Prize to Des Moines.", longDesc: "Starting with a single truck in 1932, John Ruan built one of the largest transportation companies in the US. He financed the 36-story Ruan Center and moved the World Food Prize permanently to Des Moines.", achievements: ["Built the Ruan Center.", "Endowed the World Food Prize.", "Pioneered the skywalk system."], image: "https://live.staticflickr.com/8230/8490925144_b2eceb7f9a_b.jpg", imageCitation: "John Ruan. [Photograph]. Flickr. CC BY-NC 2.0." },
+  { name: "Robert D. Ray", title: "Beloved Governor", shortDesc: "Served 14 years as Governor and opened Iowa to refugees.", longDesc: "Robert D. Ray served as Iowa Governor from 1969 to 1983. He is remembered for opening Iowa's doors to thousands of Southeast Asian refugees, making Iowa the only state with its own resettlement program.", achievements: ["Five terms as Governor.", "Pioneered refugee resettlement.", "President of Drake University."], image: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Dan_Gable_%26_Robert_D._Ray.jpg", imageCitation: "Dan Gable & Robert D. Ray. [Photograph]. Wikimedia Commons. Public domain." },
+  { name: "Henry A. Wallace", title: "VP & Agriculturist", shortDesc: "Revolutionized farming and became FDR's Vice President.", longDesc: "Henry A. Wallace edited 'Wallaces' Farmer' and founded Pioneer Hi-Bred. His scientific approach dramatically increased crop yields worldwide. He served as the 33rd Vice President.", achievements: ["Founded Pioneer Hi-Bred.", "33rd Vice President.", "Saved farms during the Depression."], image: "https://upload.wikimedia.org/wikipedia/commons/4/43/Henry-A.-Wallace-Townsend_%28cropped%29.jpeg", imageCitation: "Henry A. Wallace. [Photograph]. Wikimedia Commons. Public domain." },
+  { name: "Willie S. Glanton", title: "Trailblazing Legislator", shortDesc: "First African American woman elected to the Iowa Legislature.", longDesc: "Willie Stevenson Glanton shattered barriers as the first African American woman elected to the Iowa State Legislature in 1964 and the first to serve as assistant Polk County attorney.", achievements: ["First Black woman in Iowa Legislature.", "First Black assistant county attorney.", "Des Moines Human Rights Commission."], image: "https://www.legis.iowa.gov/photo?action=getPhoto&ga=61&pid=1253&pType=3", imageCitation: "Iowa Legislature. Willie S. Glanton, official legislative portrait. [Photograph]. Iowa General Assembly." },
+  { name: "Bill Bryson", title: "Best-Selling Author", shortDesc: "Immortalized 1950s Des Moines in his hit memoirs.", longDesc: "Born and raised in Des Moines, Bryson's hometown features prominently in 'The Life and Times of the Thunderbolt Kid', a nostalgic memoir about growing up in Des Moines.", achievements: ["'A Walk in the Woods' best-seller.", "'Thunderbolt Kid' memoir.", "Awarded honorary OBE."], image: "https://upload.wikimedia.org/wikipedia/commons/3/35/Neil_MacGregor%2C_Bill_Bryson%2C_Claire_Walker%2C_Huw_Edwards_%2828449155987%29_%28Bryson_cropped%29.jpg", imageCitation: "Neil MacGregor, Bill Bryson, Claire Walker, Huw Edwards. (2015). [Photograph]. Wikimedia Commons. CC BY 2.0." },
+  { name: "Captain James Allen", title: "Founder", shortDesc: "Selected the site at the confluence of two rivers in 1843.", longDesc: "In 1843, Captain James Allen selected the point where the Raccoon River flows into the Des Moines River to establish a military post that became the future capital city.", achievements: ["Selected Des Moines location.", "Built the original fort.", "Managed early trade relations."], image: "https://live.staticflickr.com/2925/14590988107_1e1ae65d82_z.jpg", imageCitation: "Captain James Allen, historical portrait. [Photograph]. Flickr. Public domain." },
+  { name: "Mary Louise Smith", title: "Political Leader", shortDesc: "First woman to chair the Republican National Committee.", longDesc: "Mary Louise Smith championed civil rights and the Equal Rights Amendment. In 1974, she became the first woman to chair the RNC.", achievements: ["First female RNC Chair.", "Co-founded Iowa Women's Political Caucus.", "Iowa Women's Hall of Fame (1977)."], image: "https://d1rjyex4ui0ya6.cloudfront.net/obituaries/photos/9849/733358/9c9e722ea28c53741d8ef6bcb5abfa13.jpg", imageCitation: "Mary Louise Smith. [Photograph]. Iowa Women's Archive / Legacy.com." },
+  { name: "Frederick M. Hubbell", title: "Business Pioneer", shortDesc: "Founded Equitable Life Insurance and built Terrace Hill.", longDesc: "Hubbell built his fortune in real estate, railroads, and insurance. He expanded Terrace Hill, later donated to serve as the Governor's residence.", achievements: ["Co-founded Equitable Life Insurance.", "Built railroad and real estate empire.", "Legacy includes Terrace Hill."], image: "https://images.findagrave.com/photos/2011/23/44057349_129591948632.jpg", imageCitation: "Frederick M. Hubbell, historical portrait. [Photograph]. Find A Grave. Public domain." },
+  { name: "James B. Morris", title: "Publisher & Legal Pioneer", shortDesc: "Published the Iowa Bystander newspaper for 50 years.", longDesc: "After serving as one of the first Black officers in WWI at Fort Des Moines, James B. Morris purchased the 'Iowa Bystander' in 1922, using it to fight discrimination for half a century.", achievements: ["Published Iowa Bystander 50 years.", "Founding National Bar Association member.", "Fort Des Moines officer graduate."], image: "https://i0.wp.com/blackhistoryresearchcollective.org/wp-content/uploads/2023/03/3df08-the_des_moines_register_2009_02_08_page_12.jpg?resize=712%2C695&ssl=1", imageCitation: "James B. Morris. [Photograph]. Black History Research Collective / Des Moines Register. February 8, 2009." },
 ];
 
 const quizData = [
@@ -1799,21 +1796,28 @@ function HeroesPage() {
                   cursor: "pointer", boxShadow: "0 2px 12px rgba(44,24,16,0.1)", position: "relative",
                 }}
               >
-                <div style={{ height: 210, background: "#e0dcd7", overflow: "hidden", position: "relative" }}>
-                  <img src={hero.image} alt={hero.name} onError={e => e.target.style.display = "none"}
-                    className="hero-card-img"
-                    style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                  {/* Hover overlay */}
-                  <div className="hero-card-overlay" style={{
-                    position: "absolute", bottom: 0, left: 0, right: 0,
-                    background: "linear-gradient(to top, rgba(42,20,8,0.92) 0%, rgba(42,20,8,0.6) 60%, transparent 100%)",
-                    padding: "28px 14px 12px",
-                    color: "#FFF8EE", fontSize: "0.78rem", lineHeight: 1.5,
-                    fontFamily: "'DM Sans', sans-serif",
-                  }}>
-                    <div style={{ fontWeight: 600, marginBottom: 3, fontSize: "0.82rem" }}>{hero.shortDesc}</div>
-                    <div style={{ opacity: 0.7, fontSize: "0.72rem" }}>Click to read more →</div>
+                <div style={{ background: "#e0dcd7", overflow: "hidden", position: "relative" }}>
+                  <div style={{ height: 210, overflow: "hidden", position: "relative" }}>
+                    <img src={hero.image} alt={hero.name} onError={e => e.target.style.display = "none"}
+                      className="hero-card-img"
+                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    {/* Hover overlay */}
+                    <div className="hero-card-overlay" style={{
+                      position: "absolute", bottom: 0, left: 0, right: 0,
+                      background: "linear-gradient(to top, rgba(42,20,8,0.92) 0%, rgba(42,20,8,0.6) 60%, transparent 100%)",
+                      padding: "28px 14px 12px",
+                      color: "#FFF8EE", fontSize: "0.78rem", lineHeight: 1.5,
+                      fontFamily: "'DM Sans', sans-serif",
+                    }}>
+                      <div style={{ fontWeight: 600, marginBottom: 3, fontSize: "0.82rem" }}>{hero.shortDesc}</div>
+                      <div style={{ opacity: 0.7, fontSize: "0.72rem" }}>Click to read more →</div>
+                    </div>
                   </div>
+                  {hero.imageCitation && (
+                    <div style={{ fontSize: "0.55rem", color: "#555", padding: "4px 8px", fontStyle: "italic", background: "rgba(0,0,0,0.08)", lineHeight: 1.4, borderTop: "1px solid rgba(139,94,60,0.2)" }}>
+                      {hero.imageCitation}
+                    </div>
+                  )}
                 </div>
                 <div style={{ padding: "18px 20px" }}>
                   <div style={{ fontWeight: 700, fontSize: "1.08rem", marginBottom: 4 }}>{hero.name}</div>
@@ -1872,8 +1876,15 @@ function HeroesPage() {
             boxShadow: "0 24px 72px rgba(0,0,0,0.35)", flexWrap: "wrap",
             animation: "scaleIn 0.3s cubic-bezier(0.16,1,0.3,1)",
           }}>
-            <div style={{ flex: "0 0 38%", minWidth: 200, background: "#e0dcd7", minHeight: 240 }}>
-              <img src={heroesData[modal].image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <div style={{ flex: "0 0 38%", minWidth: 200, background: "#e0dcd7", minHeight: 240, display: "flex", flexDirection: "column" }}>
+              <div style={{ flex: 1, overflow: "hidden" }}>
+                <img src={heroesData[modal].image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              </div>
+              {heroesData[modal].imageCitation && (
+                <div style={{ fontSize: "0.55rem", color: "#555", padding: "4px 8px", fontStyle: "italic", background: "rgba(0,0,0,0.08)", lineHeight: 1.4, borderTop: "1px solid rgba(139,94,60,0.2)" }}>
+                  {heroesData[modal].imageCitation}
+                </div>
+              )}
             </div>
             <div style={{ flex: 1, padding: 32, overflowY: "auto", position: "relative", minWidth: 260 }}>
               <button onClick={() => setModal(null)} style={{
@@ -2261,6 +2272,9 @@ function VoicesPage() {
 }
 
 // ─── COMMUNITY GUESTBOOK ─────────────────────────────────────────────────────
+const PIN_COLORS = ["#e85d5d","#e8a23a","#4caf7d","#4a90d9","#9b59b6","#e8725d","#2bbbad","#c0392b"];
+const PIN_BG = ["#fffde7","#fff8e1","#f3e5f5","#e8f5e9","#e3f2fd","#fce4ec","#e0f7fa","#fff3e0"];
+
 function CommunityGuestbook() {
   const STORAGE_KEY = "echoes_guestbook_v1";
 
@@ -2272,18 +2286,21 @@ function CommunityGuestbook() {
   const [form, setForm] = useState({ name: "", year: "", connection: "", story: "" });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+  const [showForm, setShowForm] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.name.trim() || !form.story.trim()) { setError("Name and story are required."); return; }
     if (form.story.trim().length < 20) { setError("Please share a little more (at least 20 characters)."); return; }
-    const entry = { ...form, id: Date.now(), date: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long" }) };
+    const colorIdx = entries.length % PIN_COLORS.length;
+    const entry = { ...form, id: Date.now(), date: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long" }), colorIdx };
     const updated = [entry, ...entries];
     setEntries(updated);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     setForm({ name: "", year: "", connection: "", story: "" });
     setError("");
     setSubmitted(true);
+    setShowForm(false);
     setTimeout(() => setSubmitted(false), 4000);
   };
 
@@ -2294,137 +2311,297 @@ function CommunityGuestbook() {
     outline: "none", boxSizing: "border-box", transition: "border-color 0.2s",
   };
 
+  const rotations = [-2.1, 1.4, -0.8, 2.3, -1.6, 0.9, -2.5, 1.1, -0.5, 2.0];
+
   return (
     <div>
       <FadeSection>
-        <div style={{
-          background: "#FFF8EE", borderRadius: 12, padding: "32px 36px",
-          border: "1px solid rgba(100,80,50,0.2)",
-          boxShadow: "0 4px 20px rgba(100,80,50,0.1)",
-          marginBottom: 28,
-        }}>
-          <SectionLabel text="Share Your Story" />
-          <p style={{ color: "var(--charcoal)", fontSize: "1.05rem", marginBottom: 6, maxWidth: 680, fontWeight: 700 }}>
-            What is Des Moines to you?
-          </p>
-          <p style={{ color: "var(--charcoal)", fontSize: "0.95rem", marginBottom: 28, maxWidth: 680, lineHeight: 1.7, opacity: 0.75 }}>
-            Every community story is made of individual ones. If you have a connection to Des Moines — a memory, a moment, a family story — add your voice to this living record.
-          </p>
-
-          <form onSubmit={handleSubmit} style={{ maxWidth: 600, display: "flex", flexDirection: "column", gap: 16 }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-              <div>
-                <label style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>Your Name *</label>
-                <input
-                  style={inputStyle}
-                  value={form.name}
-                  onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                  placeholder="First name or initials"
-                  maxLength={60}
-                  onFocus={e => { e.target.style.borderColor = "var(--copper)"; }}
-                  onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }}
-                />
-              </div>
-              <div>
-                <label style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>Year / Era</label>
-                <input
-                  style={inputStyle}
-                  value={form.year}
-                  onChange={e => setForm(f => ({ ...f, year: e.target.value }))}
-                  placeholder="e.g. 1975, 2010s, today"
-                  maxLength={20}
-                  onFocus={e => { e.target.style.borderColor = "var(--copper)"; }}
-                  onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }}
-                />
-              </div>
-            </div>
-            <div>
-              <label style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>Your Connection</label>
-              <input
-                style={inputStyle}
-                value={form.connection}
-                onChange={e => setForm(f => ({ ...f, connection: e.target.value }))}
-                placeholder="e.g. grew up in Drake, worked near Court Ave, refugee family"
-                maxLength={100}
-                onFocus={e => { e.target.style.borderColor = "var(--copper)"; }}
-                onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }}
-              />
-            </div>
-            <div>
-              <label style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 6, fontFamily: "'DM Sans', sans-serif" }}>Your Story *</label>
-              <textarea
-                style={{ ...inputStyle, minHeight: 110, resize: "vertical", lineHeight: 1.6 }}
-                value={form.story}
-                onChange={e => setForm(f => ({ ...f, story: e.target.value }))}
-                placeholder="Share a memory, moment, or piece of your Des Moines story..."
-                maxLength={800}
-                onFocus={e => { e.target.style.borderColor = "var(--copper)"; }}
-                onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }}
-              />
-              <div style={{ fontSize: "0.7rem", color: "var(--mist)", textAlign: "right", marginTop: 4 }}>{form.story.length}/800</div>
-            </div>
-            {error && <div style={{ color: "#c44", fontSize: "0.84rem", fontFamily: "'DM Sans', sans-serif" }}>{error}</div>}
-            {submitted && (
-              <div style={{
-                background: "rgba(80,160,100,0.12)", border: "1px solid rgba(80,160,100,0.3)",
-                borderRadius: 6, padding: "10px 16px",
-                color: "#2a7a40", fontSize: "0.88rem", fontFamily: "'DM Sans', sans-serif",
-              }}>
-                Thank you — your story has been added to the community record.
-              </div>
-            )}
-            <button type="submit" style={{
-              alignSelf: "flex-start",
-              background: "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)",
-              color: "#FFF8E8", border: "none", padding: "11px 28px",
-              borderRadius: 4, fontSize: "0.85rem", fontWeight: 700, cursor: "pointer",
-              fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em",
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
+          <div>
+            <SectionLabel text="Community Bulletin Board" />
+            <p style={{ color: "var(--mist)", fontSize: "0.9rem", margin: 0 }}>
+              {entries.length > 0 ? `${entries.length} ${entries.length === 1 ? "story" : "stories"} pinned` : "Be the first to pin your story"}
+            </p>
+          </div>
+          <button
+            onClick={() => setShowForm(f => !f)}
+            style={{
+              background: showForm ? "rgba(120,80,30,0.12)" : "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)",
+              color: showForm ? "var(--copper)" : "#FFF8E8",
+              border: showForm ? "1.5px solid var(--copper)" : "none",
+              padding: "10px 24px", borderRadius: 4, fontSize: "0.85rem", fontWeight: 700,
+              cursor: "pointer", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em",
               transition: "all 0.2s ease",
             }}
-            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 20px rgba(42,20,8,0.3)"; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
-            >Add My Voice</button>
-          </form>
+          >{showForm ? "Cancel" : "+ Pin Your Story"}</button>
         </div>
+
+        {submitted && (
+          <div style={{
+            background: "rgba(80,160,100,0.12)", border: "1px solid rgba(80,160,100,0.3)",
+            borderRadius: 6, padding: "12px 18px", marginBottom: 20,
+            color: "#2a7a40", fontSize: "0.88rem", fontFamily: "'DM Sans', sans-serif",
+          }}>
+            Your story has been pinned to the board!
+          </div>
+        )}
+
+        {showForm && (
+          <div style={{
+            background: "#FFF8EE", borderRadius: 12, padding: "28px 32px",
+            border: "1px solid rgba(100,80,50,0.2)",
+            boxShadow: "0 4px 20px rgba(100,80,50,0.1)",
+            marginBottom: 32,
+          }}>
+            <p style={{ color: "var(--charcoal)", fontSize: "1rem", marginBottom: 4, fontWeight: 700 }}>What is Des Moines to you?</p>
+            <p style={{ color: "var(--mist)", fontSize: "0.88rem", marginBottom: 22, lineHeight: 1.6 }}>
+              Share a memory, a family story, or a moment that connects you to this city.
+            </p>
+            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                <div>
+                  <label style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Your Name *</label>
+                  <input style={inputStyle} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="First name or initials" maxLength={60} onFocus={e => { e.target.style.borderColor = "var(--copper)"; }} onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Year / Era</label>
+                  <input style={inputStyle} value={form.year} onChange={e => setForm(f => ({ ...f, year: e.target.value }))} placeholder="e.g. 1985, 2010s, today" maxLength={20} onFocus={e => { e.target.style.borderColor = "var(--copper)"; }} onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }} />
+                </div>
+              </div>
+              <div>
+                <label style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Your Connection</label>
+                <input style={inputStyle} value={form.connection} onChange={e => setForm(f => ({ ...f, connection: e.target.value }))} placeholder="e.g. grew up in Drake, worked near Court Ave, refugee family" maxLength={100} onFocus={e => { e.target.style.borderColor = "var(--copper)"; }} onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }} />
+              </div>
+              <div>
+                <label style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Your Story *</label>
+                <textarea style={{ ...inputStyle, minHeight: 100, resize: "vertical", lineHeight: 1.6 }} value={form.story} onChange={e => setForm(f => ({ ...f, story: e.target.value }))} placeholder="Share a memory, moment, or piece of your Des Moines story..." maxLength={600} onFocus={e => { e.target.style.borderColor = "var(--copper)"; }} onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }} />
+                <div style={{ fontSize: "0.68rem", color: "var(--mist)", textAlign: "right", marginTop: 3 }}>{form.story.length}/600</div>
+              </div>
+              {error && <div style={{ color: "#c44", fontSize: "0.82rem" }}>{error}</div>}
+              <button type="submit" style={{
+                alignSelf: "flex-start", background: "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)",
+                color: "#FFF8E8", border: "none", padding: "10px 26px",
+                borderRadius: 4, fontSize: "0.84rem", fontWeight: 700, cursor: "pointer",
+                fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em", transition: "all 0.2s ease",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 20px rgba(42,20,8,0.3)"; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
+              >Pin My Story</button>
+            </form>
+          </div>
+        )}
       </FadeSection>
 
       {entries.length > 0 && (
         <FadeSection delay={0.1}>
-          <div style={{ marginBottom: 8 }}>
-            <div style={{ fontSize: "0.68rem", fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--mist)", marginBottom: 18, fontFamily: "'DM Sans', sans-serif" }}>
-              {entries.length} {entries.length === 1 ? "story" : "stories"} shared
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              {entries.map((e, i) => (
-                <div key={e.id || i} style={{
-                  background: "var(--cream)", borderRadius: 8, padding: "22px 26px",
-                  border: "1px solid rgba(120,80,30,0.12)",
-                  borderLeft: "3px solid var(--peach)",
-                  boxShadow: "0 2px 12px rgba(28,16,8,0.07)",
-                }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10, flexWrap: "wrap", gap: 6 }}>
-                    <div>
-                      <span style={{ fontWeight: 700, fontSize: "1rem", color: "var(--charcoal)", fontFamily: "'DM Sans', sans-serif" }}>{e.name}</span>
-                      {e.connection && <span style={{ fontSize: "0.78rem", color: "var(--mist)", marginLeft: 10 }}>{e.connection}</span>}
+          {/* Cork board */}
+          <div style={{
+            background: "linear-gradient(135deg, #c8a96a 0%, #b8956a 30%, #c8a96a 60%, #b5935f 100%)",
+            borderRadius: 12, padding: "32px 24px 24px",
+            boxShadow: "inset 0 2px 8px rgba(0,0,0,0.2), 0 4px 20px rgba(0,0,0,0.15)",
+            border: "6px solid #8B6914",
+            position: "relative",
+          }}>
+            {/* Cork texture overlay */}
+            <div style={{
+              position: "absolute", inset: 0, borderRadius: 8, pointerEvents: "none",
+              background: "repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.02) 2px, rgba(0,0,0,0.02) 4px)",
+            }} />
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))",
+              gap: "28px 20px",
+              position: "relative",
+            }}>
+              {entries.map((e, i) => {
+                const ci = (e.colorIdx ?? i) % PIN_COLORS.length;
+                const rot = rotations[i % rotations.length];
+                const bg = PIN_BG[ci];
+                const pinColor = PIN_COLORS[ci];
+                return (
+                  <div key={e.id || i} style={{
+                    background: bg,
+                    borderRadius: 3,
+                    padding: "28px 16px 16px",
+                    boxShadow: `${rot > 0 ? 3 : -3}px 4px 16px rgba(0,0,0,0.25), 1px 1px 3px rgba(0,0,0,0.1)`,
+                    transform: `rotate(${rot}deg)`,
+                    position: "relative",
+                    transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                    cursor: "default",
+                  }}
+                  onMouseEnter={e2 => { e2.currentTarget.style.transform = "rotate(0deg) scale(1.04)"; e2.currentTarget.style.boxShadow = "0 10px 32px rgba(0,0,0,0.28), 1px 1px 3px rgba(0,0,0,0.1)"; e2.currentTarget.style.zIndex = "10"; }}
+                  onMouseLeave={e2 => { e2.currentTarget.style.transform = `rotate(${rot}deg) scale(1)`; e2.currentTarget.style.boxShadow = `${rot > 0 ? 3 : -3}px 4px 16px rgba(0,0,0,0.25), 1px 1px 3px rgba(0,0,0,0.1)`; e2.currentTarget.style.zIndex = ""; }}
+                  >
+                    {/* Push pin */}
+                    <div style={{
+                      position: "absolute", top: -8, left: "50%", transform: "translateX(-50%)",
+                      width: 16, height: 16, borderRadius: "50%",
+                      background: `radial-gradient(circle at 35% 35%, ${pinColor}ee, ${pinColor})`,
+                      boxShadow: `0 2px 4px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.3)`,
+                      zIndex: 2,
+                    }} />
+                    <div style={{ fontSize: "0.88rem", lineHeight: 1.55, color: "#333", fontFamily: "'DM Sans', sans-serif", marginBottom: 12, fontStyle: "italic" }}>
+                      "{e.story}"
                     </div>
-                    <div style={{ display: "flex", gap: 10, flexShrink: 0 }}>
-                      {e.year && <span style={{ fontSize: "0.72rem", color: "var(--copper)", fontWeight: 700, fontFamily: "'Playfair Display', serif" }}>{e.year}</span>}
-                      <span style={{ fontSize: "0.68rem", color: "rgba(0,0,0,0.3)", fontFamily: "'DM Sans', sans-serif" }}>{e.date}</span>
+                    <div style={{ borderTop: "1px dashed rgba(0,0,0,0.15)", paddingTop: 8 }}>
+                      <div style={{ fontWeight: 700, fontSize: "0.82rem", color: "#222", fontFamily: "'DM Sans', sans-serif" }}>{e.name}</div>
+                      {e.connection && <div style={{ fontSize: "0.72rem", color: "#666", marginTop: 1 }}>{e.connection}</div>}
+                      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+                        {e.year && <span style={{ fontSize: "0.68rem", color: pinColor, fontWeight: 700 }}>{e.year}</span>}
+                        <span style={{ fontSize: "0.65rem", color: "#999" }}>{e.date}</span>
+                      </div>
                     </div>
                   </div>
-                  <p style={{ color: "var(--mist)", fontSize: "0.9rem", lineHeight: 1.7, fontStyle: "italic", margin: 0 }}>"{e.story}"</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </FadeSection>
       )}
 
-      {entries.length === 0 && (
-        <div style={{ textAlign: "center", padding: "40px 0", color: "var(--mist)", fontStyle: "italic", fontSize: "0.92rem", fontFamily: "'Playfair Display', serif" }}>
-          Be the first to add your voice to this community record.
+      {entries.length === 0 && !showForm && (
+        <div style={{ textAlign: "center", padding: "48px 0", color: "var(--mist)", fontStyle: "italic", fontSize: "0.92rem", fontFamily: "'Playfair Display', serif" }}>
+          The bulletin board is empty — pin the first story.
         </div>
       )}
+    </div>
+  );
+}
+
+// ─── CITATIONS PAGE ────────────────────────────────────────────────────────
+function CitationsPage({ setPage }) {
+  const timelineCitations = timelineData.map(ev => ({
+    section: "Timeline",
+    year: ev.year,
+    title: ev.title,
+    citation: ev.citation,
+  }));
+
+  const heroCitations = heroesData.map(hero => ({
+    section: "Notable Figures",
+    title: hero.name,
+    citation: hero.imageCitation,
+  }));
+
+  const allCitations = [...timelineCitations, ...heroCitations];
+
+  return (
+    <div>
+      <PageHero title="Image Citations" subtitle="All photographs, illustrations, and archival images used on this website, cited in academic format." />
+      <div style={{ maxWidth: 860, margin: "0 auto", padding: "40px 32px 80px" }}>
+
+        <FadeSection>
+          <button
+            onClick={() => setPage("sources")}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 8,
+              background: "none", border: "1.5px solid rgba(120,80,30,0.3)",
+              color: "var(--copper)", padding: "8px 18px", borderRadius: 4,
+              fontSize: "0.84rem", fontWeight: 600, cursor: "pointer",
+              fontFamily: "'DM Sans', sans-serif", marginBottom: 32,
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(120,80,30,0.08)"; }}
+            onMouseLeave={e => { e.currentTarget.style.background = "none"; }}
+          >
+            ← Back to Reference
+          </button>
+        </FadeSection>
+
+        <FadeSection>
+          <div style={{
+            background: "var(--cream)", borderRadius: 10, padding: "20px 28px",
+            border: "1px solid rgba(120,80,30,0.15)", marginBottom: 36,
+            boxShadow: "0 2px 12px rgba(28,16,8,0.07)",
+          }}>
+            <p style={{ color: "var(--mist)", fontSize: "0.9rem", lineHeight: 1.7, margin: 0 }}>
+              All images are sourced from the public domain, the Library of Congress, Wikimedia Commons, or are used under Creative Commons licenses as noted. Citations follow APA/Chicago hybrid format consistent with academic image attribution standards.
+            </p>
+          </div>
+        </FadeSection>
+
+        {/* Timeline Citations */}
+        <FadeSection>
+          <SectionLabel text="Timeline Images" />
+        </FadeSection>
+        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+          {timelineCitations.map((c, i) => (
+            <FadeSection key={i} delay={i * 0.02}>
+              <div style={{
+                padding: "14px 0",
+                borderBottom: "1px solid rgba(120,80,30,0.1)",
+                display: "grid", gridTemplateColumns: "72px 1fr", gap: "0 18px",
+                alignItems: "baseline",
+              }}>
+                <span style={{
+                  fontSize: "0.72rem", fontWeight: 700, color: "var(--copper)",
+                  fontFamily: "'Playfair Display', serif", paddingTop: 2,
+                }}>{c.year}</span>
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: "0.88rem", color: "var(--charcoal)", marginBottom: 3, fontFamily: "'DM Sans', sans-serif" }}>
+                    {c.title}
+                  </div>
+                  <div style={{ fontSize: "0.82rem", color: "var(--mist)", lineHeight: 1.6, fontStyle: "italic", fontFamily: "'DM Sans', sans-serif" }}>
+                    {c.citation || "No image citation."}
+                  </div>
+                </div>
+              </div>
+            </FadeSection>
+          ))}
+        </div>
+
+        {/* Hero Citations */}
+        <FadeSection>
+          <div style={{ marginTop: 48, marginBottom: 12 }}>
+            <SectionLabel text="Notable Figures Images" />
+          </div>
+        </FadeSection>
+        <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+          {heroCitations.map((c, i) => (
+            <FadeSection key={i} delay={i * 0.04}>
+              <div style={{
+                padding: "14px 0",
+                borderBottom: "1px solid rgba(120,80,30,0.1)",
+                display: "grid", gridTemplateColumns: "200px 1fr", gap: "0 18px",
+                alignItems: "baseline",
+              }}>
+                <span style={{ fontWeight: 600, fontSize: "0.88rem", color: "var(--charcoal)", fontFamily: "'DM Sans', sans-serif" }}>{c.title}</span>
+                <div style={{ fontSize: "0.82rem", color: "var(--mist)", lineHeight: 1.6, fontStyle: "italic", fontFamily: "'DM Sans', sans-serif" }}>
+                  {c.citation || "No image citation."}
+                </div>
+              </div>
+            </FadeSection>
+          ))}
+        </div>
+
+        <FadeSection>
+          <div style={{ marginTop: 48, textAlign: "center" }}>
+            <button
+              onClick={() => window.print()}
+              style={{
+                background: "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)",
+                color: "#FFF8E8", border: "none", padding: "11px 28px",
+                borderRadius: 4, fontSize: "0.85rem", fontWeight: 700, cursor: "pointer",
+                fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em",
+                transition: "all 0.2s ease", marginRight: 12,
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 20px rgba(42,20,8,0.3)"; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
+            >Print / Save as PDF</button>
+            <button
+              onClick={() => setPage("sources")}
+              style={{
+                background: "none", border: "1.5px solid rgba(120,80,30,0.3)",
+                color: "var(--copper)", padding: "10px 22px", borderRadius: 4,
+                fontSize: "0.85rem", fontWeight: 600, cursor: "pointer",
+                fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s ease",
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = "rgba(120,80,30,0.08)"; }}
+              onMouseLeave={e => { e.currentTarget.style.background = "none"; }}
+            >← Back to Reference</button>
+          </div>
+        </FadeSection>
+      </div>
     </div>
   );
 }
@@ -2436,7 +2613,7 @@ const SOURCE_DOCS = [
   { title: "Sources", file: "/sources/Sources.pdf", desc: "Bibliography and source references." },
 ];
 
-function SourcesPage() {
+function SourcesPage({ setPage }) {
   return (
     <div>
       <PageHero title="Reference" subtitle="Project documentation, sources, copyright checklist, and work log." />
@@ -2534,6 +2711,30 @@ function SourcesPage() {
             </FadeSection>
           ))}
         </div>
+
+        {/* Image Citations link */}
+        <FadeSection>
+          <div style={{ marginTop: 40, padding: "24px 28px", background: "var(--cream)", borderRadius: 10, border: "1px solid rgba(120,80,30,0.15)", boxShadow: "0 2px 12px rgba(28,16,8,0.07)" }}>
+            <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--copper)", marginBottom: 10 }}>Image Citations</div>
+            <p style={{ color: "var(--mist)", fontSize: "0.9rem", lineHeight: 1.6, marginBottom: 16 }}>
+              All photographs, illustrations, and archival images used throughout this website are cited in academic format. View the complete image citation record below.
+            </p>
+            <button
+              onClick={() => setPage("citations")}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 8,
+                background: "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)",
+                color: "#FFF8E8", border: "none", padding: "10px 24px",
+                borderRadius: 4, fontSize: "0.84rem", fontWeight: 700, cursor: "pointer",
+                fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em",
+                transition: "all 0.2s ease",
+              }}
+              id="citations-link-btn"
+              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 20px rgba(42,20,8,0.3)"; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
+            >View Image Citations →</button>
+          </div>
+        </FadeSection>
       </div>
     </div>
   );
@@ -3162,10 +3363,11 @@ export default function App() {
       case "heroes": return <HeroesPage />;
       case "voices": return <VoicesPage />;
       case "map": return <HistoricalMapPage />;
-      case "sources": return <SourcesPage />;
+      case "sources": return <SourcesPage setPage={navigate} />;
       case "then-now": return <ThenNowPage />;
       case "neighborhoods": return <NeighborhoodPage />;
       case "education": return <EducationPage />;
+      case "citations": return <CitationsPage setPage={navigate} />;
       default: return <HomePage setPage={navigate} />;
     }
   };
