@@ -2286,7 +2286,6 @@ function CommunityGuestbook() {
   const [form, setForm] = useState({ name: "", year: "", connection: "", story: "" });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-  const [showForm, setShowForm] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -2300,7 +2299,6 @@ function CommunityGuestbook() {
     setForm({ name: "", year: "", connection: "", story: "" });
     setError("");
     setSubmitted(true);
-    setShowForm(false);
     setTimeout(() => setSubmitted(false), 4000);
   };
 
@@ -2316,80 +2314,60 @@ function CommunityGuestbook() {
   return (
     <div>
       <FadeSection>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20, flexWrap: "wrap", gap: 12 }}>
-          <div>
-            <SectionLabel text="Community Bulletin Board" />
-            <p style={{ color: "var(--mist)", fontSize: "0.9rem", margin: 0 }}>
-              {entries.length > 0 ? `${entries.length} ${entries.length === 1 ? "story" : "stories"} pinned` : "Be the first to pin your story"}
-            </p>
-          </div>
-          <button
-            onClick={() => setShowForm(f => !f)}
-            style={{
-              background: showForm ? "rgba(120,80,30,0.12)" : "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)",
-              color: showForm ? "var(--copper)" : "#FFF8E8",
-              border: showForm ? "1.5px solid var(--copper)" : "none",
-              padding: "10px 24px", borderRadius: 4, fontSize: "0.85rem", fontWeight: 700,
-              cursor: "pointer", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em",
-              transition: "all 0.2s ease",
+        <div style={{
+          background: "#FFF8EE", borderRadius: 12, padding: "28px 32px",
+          border: "1px solid rgba(100,80,50,0.2)",
+          boxShadow: "0 4px 20px rgba(100,80,50,0.1)",
+          marginBottom: 32,
+        }}>
+          <SectionLabel text="Share Your Story" />
+          <p style={{ color: "var(--charcoal)", fontSize: "1rem", marginBottom: 4, fontWeight: 700 }}>What is Des Moines to you?</p>
+          <p style={{ color: "var(--mist)", fontSize: "0.88rem", marginBottom: 22, lineHeight: 1.6 }}>
+            Share a memory, a family story, or a moment that connects you to this city. Your story gets pinned to the community board below.
+          </p>
+
+          {submitted && (
+            <div style={{
+              background: "rgba(80,160,100,0.12)", border: "1px solid rgba(80,160,100,0.3)",
+              borderRadius: 6, padding: "10px 16px", marginBottom: 18,
+              color: "#2a7a40", fontSize: "0.88rem", fontFamily: "'DM Sans', sans-serif",
+            }}>
+              Your story has been pinned to the board below!
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              <div>
+                <label style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Your Name *</label>
+                <input style={inputStyle} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="First name or initials" maxLength={60} onFocus={e => { e.target.style.borderColor = "var(--copper)"; }} onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }} />
+              </div>
+              <div>
+                <label style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Year / Era</label>
+                <input style={inputStyle} value={form.year} onChange={e => setForm(f => ({ ...f, year: e.target.value }))} placeholder="e.g. 1985, 2010s, today" maxLength={20} onFocus={e => { e.target.style.borderColor = "var(--copper)"; }} onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }} />
+              </div>
+            </div>
+            <div>
+              <label style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Your Connection</label>
+              <input style={inputStyle} value={form.connection} onChange={e => setForm(f => ({ ...f, connection: e.target.value }))} placeholder="e.g. grew up in Drake, worked near Court Ave, refugee family" maxLength={100} onFocus={e => { e.target.style.borderColor = "var(--copper)"; }} onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }} />
+            </div>
+            <div>
+              <label style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Your Story *</label>
+              <textarea style={{ ...inputStyle, minHeight: 100, resize: "vertical", lineHeight: 1.6 }} value={form.story} onChange={e => setForm(f => ({ ...f, story: e.target.value }))} placeholder="Share a memory, moment, or piece of your Des Moines story..." maxLength={600} onFocus={e => { e.target.style.borderColor = "var(--copper)"; }} onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }} />
+              <div style={{ fontSize: "0.68rem", color: "var(--mist)", textAlign: "right", marginTop: 3 }}>{form.story.length}/600</div>
+            </div>
+            {error && <div style={{ color: "#c44", fontSize: "0.82rem" }}>{error}</div>}
+            <button type="submit" style={{
+              alignSelf: "flex-start", background: "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)",
+              color: "#FFF8E8", border: "none", padding: "10px 26px",
+              borderRadius: 4, fontSize: "0.84rem", fontWeight: 700, cursor: "pointer",
+              fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em", transition: "all 0.2s ease",
             }}
-          >{showForm ? "Cancel" : "+ Pin Your Story"}</button>
+            onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 20px rgba(42,20,8,0.3)"; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
+            >Pin My Story</button>
+          </form>
         </div>
-
-        {submitted && (
-          <div style={{
-            background: "rgba(80,160,100,0.12)", border: "1px solid rgba(80,160,100,0.3)",
-            borderRadius: 6, padding: "12px 18px", marginBottom: 20,
-            color: "#2a7a40", fontSize: "0.88rem", fontFamily: "'DM Sans', sans-serif",
-          }}>
-            Your story has been pinned to the board!
-          </div>
-        )}
-
-        {showForm && (
-          <div style={{
-            background: "#FFF8EE", borderRadius: 12, padding: "28px 32px",
-            border: "1px solid rgba(100,80,50,0.2)",
-            boxShadow: "0 4px 20px rgba(100,80,50,0.1)",
-            marginBottom: 32,
-          }}>
-            <p style={{ color: "var(--charcoal)", fontSize: "1rem", marginBottom: 4, fontWeight: 700 }}>What is Des Moines to you?</p>
-            <p style={{ color: "var(--mist)", fontSize: "0.88rem", marginBottom: 22, lineHeight: 1.6 }}>
-              Share a memory, a family story, or a moment that connects you to this city.
-            </p>
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
-                <div>
-                  <label style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Your Name *</label>
-                  <input style={inputStyle} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="First name or initials" maxLength={60} onFocus={e => { e.target.style.borderColor = "var(--copper)"; }} onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }} />
-                </div>
-                <div>
-                  <label style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Year / Era</label>
-                  <input style={inputStyle} value={form.year} onChange={e => setForm(f => ({ ...f, year: e.target.value }))} placeholder="e.g. 1985, 2010s, today" maxLength={20} onFocus={e => { e.target.style.borderColor = "var(--copper)"; }} onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }} />
-                </div>
-              </div>
-              <div>
-                <label style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Your Connection</label>
-                <input style={inputStyle} value={form.connection} onChange={e => setForm(f => ({ ...f, connection: e.target.value }))} placeholder="e.g. grew up in Drake, worked near Court Ave, refugee family" maxLength={100} onFocus={e => { e.target.style.borderColor = "var(--copper)"; }} onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }} />
-              </div>
-              <div>
-                <label style={{ fontSize: "0.7rem", fontWeight: 700, color: "var(--copper)", textTransform: "uppercase", letterSpacing: "0.1em", display: "block", marginBottom: 5, fontFamily: "'DM Sans', sans-serif" }}>Your Story *</label>
-                <textarea style={{ ...inputStyle, minHeight: 100, resize: "vertical", lineHeight: 1.6 }} value={form.story} onChange={e => setForm(f => ({ ...f, story: e.target.value }))} placeholder="Share a memory, moment, or piece of your Des Moines story..." maxLength={600} onFocus={e => { e.target.style.borderColor = "var(--copper)"; }} onBlur={e => { e.target.style.borderColor = "rgba(120,80,30,0.25)"; }} />
-                <div style={{ fontSize: "0.68rem", color: "var(--mist)", textAlign: "right", marginTop: 3 }}>{form.story.length}/600</div>
-              </div>
-              {error && <div style={{ color: "#c44", fontSize: "0.82rem" }}>{error}</div>}
-              <button type="submit" style={{
-                alignSelf: "flex-start", background: "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)",
-                color: "#FFF8E8", border: "none", padding: "10px 26px",
-                borderRadius: 4, fontSize: "0.84rem", fontWeight: 700, cursor: "pointer",
-                fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em", transition: "all 0.2s ease",
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 20px rgba(42,20,8,0.3)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
-              >Pin My Story</button>
-            </form>
-          </div>
-        )}
       </FadeSection>
 
       {entries.length > 0 && (
@@ -2459,7 +2437,7 @@ function CommunityGuestbook() {
         </FadeSection>
       )}
 
-      {entries.length === 0 && !showForm && (
+      {entries.length === 0 && (
         <div style={{ textAlign: "center", padding: "48px 0", color: "var(--mist)", fontStyle: "italic", fontSize: "0.92rem", fontFamily: "'Playfair Display', serif" }}>
           The bulletin board is empty — pin the first story.
         </div>
@@ -2680,48 +2658,6 @@ function SourcesPage({ setPage }) {
             </p>
           </div>
         </FadeSection>
-
-        {/* Bibliography */}
-        <FadeSection><SectionLabel text="Bibliography" /></FadeSection>
-        {BIBLIOGRAPHY.map((cat, ci) => (
-          <FadeSection key={ci} delay={ci * 0.06}>
-            <div style={{ marginBottom: 36 }}>
-              <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--copper)", marginBottom: 14, fontFamily: "'DM Sans', sans-serif" }}>
-                {cat.category}
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-                {cat.entries.map((e, ei) => (
-                  <div key={ei} style={{
-                    padding: "13px 0",
-                    borderBottom: "1px solid rgba(120,80,30,0.1)",
-                    display: "grid", gridTemplateColumns: "1fr auto", gap: "0 16px", alignItems: "start",
-                  }}>
-                    <div>
-                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.88rem", color: "var(--charcoal)" }}>
-                        <strong>{e.author}</strong>{e.year ? ` (${e.year}). ` : ". "}
-                        <em>{e.title}.</em>
-                        {e.note ? <span style={{ color: "var(--mist)", fontSize: "0.8rem" }}> — {e.note}</span> : null}
-                      </span>
-                    </div>
-                    <a
-                      href={e.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        fontSize: "0.75rem", fontWeight: 600, color: "var(--copper)",
-                        textDecoration: "none", whiteSpace: "nowrap", fontFamily: "'DM Sans', sans-serif",
-                        padding: "2px 8px", border: "1px solid rgba(120,80,30,0.25)", borderRadius: 3,
-                        transition: "all 0.15s ease",
-                      }}
-                      onMouseEnter={e2 => { e2.currentTarget.style.background = "rgba(120,80,30,0.08)"; }}
-                      onMouseLeave={e2 => { e2.currentTarget.style.background = "none"; }}
-                    >Visit →</a>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </FadeSection>
-        ))}
 
         {/* Project Documents */}
         <FadeSection><div style={{ marginTop: 20 }}><SectionLabel text="Project Documents" /></div></FadeSection>
