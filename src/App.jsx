@@ -447,8 +447,8 @@ const NAV_ITEMS = [
   { id: "map", label: "Historical Map" },
   { id: "neighborhoods", label: "Neighborhoods" },
   { id: "then-now", label: "Then & Now" },
-  { id: "sources", label: "Reference" },
   { id: "education", label: "Education" },
+  { id: "sources", label: "Reference" },
 ];
 
 function Navbar({ activePage, setPage, onSearchOpen }) {
@@ -1489,12 +1489,12 @@ const timelineData = [
   { year: 1889, title: "Electric Streetcars", desc: "Electric streetcars replaced horse-drawn ones, expanding the reach of Des Moines suburbs.", imageUrl: "https://projectdesmoines.dmpl.org/files/fullsize/b410d2d8247d626009f1a7ddd2962dc8.jpg", citation: "Des Moines Public Library. Project Des Moines Digital Archive. Electric streetcar, Des Moines. Courtesy of Des Moines Public Library." },
   { year: 1893, title: "Rise of Insurance", desc: "Despite the nationwide Panic of 1893, Des Moines began establishing itself as a robust insurance center.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e1/World_Columbian_Exposition_-_White_City_-_1.JPG", citation: "Johnston, F.B. (1893). World's Columbian Exposition — White City, Chicago. [Photograph]. Public domain via Wikimedia Commons." },
   { year: 1896, title: "Grand View College", desc: "Grand View College was founded by Danish immigrants to preserve their heritage and provide education.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e4/Grand_View_College%2C_Des_Moines%2C_Iowa_ca._1900.jpg", citation: "Grand View College, Des Moines, Iowa. (ca. 1900). [Photograph]. Public domain via Wikimedia Commons." },
-  { year: 1901, title: "Fort Des Moines Reborn", desc: "A new Fort Des Moines was established south of the city as a major cavalry post.", imageUrl: "https://tile.loc.gov/image-services/iiif/service:ndnp:iahi:batch_iahi_ames_ver01:data:sn83025186:00202198399:1901050301:1295/full/pct:6.25/0/default.jpg", citation: "Iowa State Bystander (Des Moines). May 3, 1901. [Newspaper front page]. Library of Congress, Chronicling America: Historic American Newspapers. LCCN sn83025186. Public domain." },
+  { year: 1901, title: "Fort Des Moines Reborn", desc: "A new Fort Des Moines was established south of the city as a major cavalry post.", imageUrl: "https://tile.loc.gov/storage-services/service/pnp/ppmsca/50500/50565v.jpg", citation: "Library of Congress, Prints and Photographs Division. Fort Des Moines, Iowa. [Photograph]. PPMSCA 50565. Retrieved from the Library of Congress." },
   { year: 1904, title: "City Beautiful Movement", desc: "Des Moines embraced the City Beautiful movement, leading to new civic centers and riverfront improvements.", imageUrl: "https://tile.loc.gov/storage-services/service/pnp/pan/6a05000/6a05000/6a05088v.jpg", citation: "Library of Congress, Panoramic Photographs Collection (1904). Des Moines, Iowa. [Panoramic Photograph]. PAN 6a05088. Retrieved from the Library of Congress." },
-  { year: 1907, title: "The Des Moines Plan", desc: "The city adopted the Des Moines Plan of commission government, sparking a national municipal reform trend.", imageUrl: "https://tile.loc.gov/image-services/iiif/service:ndnp:iahi:batch_iahi_estes_ver01:data:sn85049554:00415622521:1907101101:0280/full/pct:6.25/0/default.jpg", citation: "Evening Times-Republican (Marshalltown, Iowa). October 11, 1907. [Newspaper page]. Library of Congress, Chronicling America: Historic American Newspapers. LCCN sn85049554. Public domain." },
+  { year: 1907, title: "The Des Moines Plan", desc: "The city adopted the Des Moines Plan of commission government, sparking a national municipal reform trend.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/0/06/Municipal_Building_Des_Moines.jpg", citation: "Municipal Building, Des Moines, Iowa. [Photograph]. Public domain via Wikimedia Commons." },
   { year: 1911, title: "Hartford of the West", desc: "With dozens of national insurance companies headquartered locally, the city was dubbed the 'Hartford of the West.'", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/cd/Photo_EquitableBuilding_north-eastside_des_moines_usa_2008-04-27.JPG", citation: "Equitable Life Assurance Company Building, 605 Locust Street, Des Moines, Iowa. (2008). [Photograph]. Public domain via Wikimedia Commons." },
   { year: 1915, title: "Capitol Fire", desc: "A major fire broke out in the State Capitol, nearly destroying the House chambers.", imageUrl: "https://projectdesmoines.dmpl.org/files/fullsize/ed63a1a8b05cc6d09d779998928a7ddb.jpg", citation: "Des Moines Public Library. Project Des Moines Digital Archive. Iowa State Capitol Fire, 1915. Courtesy of Des Moines Public Library." },
-  { year: 1917, title: "First Black Officers", desc: "During WWI, Fort Des Moines became the site of the first training camp for African American Army officers.", imageUrl: "https://tile.loc.gov/image-services/iiif/service:ndnp:iahi:batch_iahi_ames_ver01:data:sn85049804:00202198429:1917062201:1245/full/pct:6.25/0/default.jpg", citation: "The Bystander (Des Moines). June 22, 1917. [Newspaper front page]. Library of Congress, Chronicling America: Historic American Newspapers. LCCN sn85049804. Public domain. The Bystander, Des Moines' African-American newspaper, covered the opening of the Fort Des Moines officer training camp — a landmark moment in Black military history." },
+  { year: 1917, title: "First Black Officers", desc: "During WWI, Fort Des Moines became the site of the first training camp for African American Army officers.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/5th_Provisional_Company_officers_reserve_training_Camp_Ft._Des_Moines_Ia._LCCN2016652396.jpg/1280px-5th_Provisional_Company_officers_reserve_training_Camp_Ft._Des_Moines_Ia._LCCN2016652396.jpg", citation: "Library of Congress (1917). 5th Provisional Company officers reserve training camp, Fort Des Moines, Iowa. [Photograph]. LCCN 2016652396. Public domain." },
   { year: 1920, title: "Population Milestone", desc: "Des Moines population surpassed 126,000, solidifying its place as the undisputed metropolis of Iowa.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Bird%27s_eye_view_of_the_city_of_Des_Moines%2C_the_capital_of_Iowa_1868._LOC_73693394.jpg/1280px-Bird%27s_eye_view_of_the_city_of_Des_Moines%2C_the_capital_of_Iowa_1868._LOC_73693394.jpg", citation: "Ruger, A. (1868). Bird's Eye View of the City of Des Moines. [Lithograph]. Library of Congress Geography and Map Division. Public domain." },
   { year: 1924, title: "WHO Radio Broadcasts", desc: "WHO Radio began broadcasting, quickly becoming a massive 50,000-watt clear-channel station.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/6/6f/KDKA_-_Early_studio_-_circa_1921.jpg", citation: "KDKA Radio early studio, Pittsburgh. (ca. 1921). [Photograph]. Public domain via Wikimedia Commons." },
   { year: 1928, title: "First Municipal Airport", desc: "Des Moines established its first municipal airport, laying the groundwork for regional aviation.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Ford_Trimotor_of_Golden_State_Airways_-_Clover_Field_Los_Angeles_1929-30.jpg", citation: "Ford Trimotor of Golden State Airways, Clover Field, Los Angeles, California. (1929–1930). [Photograph]. Public domain via Wikimedia Commons." },
@@ -2613,11 +2613,59 @@ const SOURCE_DOCS = [
   { title: "Sources", file: "/sources/Sources.pdf", desc: "Bibliography and source references." },
 ];
 
+const BIBLIOGRAPHY = [
+  {
+    category: "Primary Archives & Digital Collections",
+    entries: [
+      { author: "Library of Congress", title: "Chronicling America: Historic American Newspapers — Iowa", year: "1770–1963", url: "https://chroniclingamerica.loc.gov/", note: "Iowa State Bystander (LCCN sn83025186), The Bystander (LCCN sn85049804)" },
+      { author: "Library of Congress, Prints & Photographs Division", title: "Carol M. Highsmith Archive — Des Moines, Iowa", year: "1980–2020", url: "https://www.loc.gov/pictures/collection/highsm/", note: "Iowa State Capitol, Des Moines Art Center" },
+      { author: "Library of Congress, Panoramic Photographs Collection", title: "Des Moines, Iowa Panoramic Views", year: "1904", url: "https://www.loc.gov/pictures/search/?q=des+moines+iowa+panoramic", note: "PAN 6a05088" },
+      { author: "Des Moines Public Library", title: "Project Des Moines Digital Archive", year: "2010–present", url: "https://projectdesmoines.dmpl.org/", note: "Historic photographs of railroads, streetcars, and Capitol fire" },
+      { author: "National Archives and Records Administration", title: "Fort Des Moines Military Records & Photographs", year: "1901–1942", url: "https://www.archives.gov/research/military/", note: "WWI officer training camp, WAAC records" },
+      { author: "Wikimedia Commons", title: "Des Moines, Iowa — Historical Images", year: "Various", url: "https://commons.wikimedia.org/wiki/Des_Moines,_Iowa", note: "Public domain photographs used throughout" },
+    ],
+  },
+  {
+    category: "Books & Academic Sources",
+    entries: [
+      { author: "Sage, Leland L.", title: "A History of Iowa", year: "1974", url: "https://iowaculture.gov/history/education/iowa-core-social-studies/iowa-history", note: "Iowa State University Press. Standard reference for Iowa statewide history." },
+      { author: "Brigham, Johnson", title: "Des Moines: The Pioneer of Municipal Progress and Reform of the Middle West", year: "1911", url: "https://archive.org/details/desmoinespioneero00brig", note: "Internet Archive. Primary source on the Des Moines Plan of commission government." },
+      { author: "Dykstra, Robert R.", title: "The Cattle Towns", year: "1968", url: "https://archive.org/search?query=dykstra+cattle+towns", note: "Context for Iowa frontier economy." },
+      { author: "Schwieder, Dorothy", title: "Iowa: The Middle Land", year: "1996", url: "https://uipress.uiowa.edu/books/iowa-middle-land", note: "University of Iowa Press. Broad Iowa social and cultural history." },
+      { author: "Swisher, Jacob Armstrong", title: "The Iowa Department of History and Archives", year: "1945", url: "https://iowaculture.gov/history", note: "Iowa historical records context." },
+    ],
+  },
+  {
+    category: "Government & Institutional Sources",
+    entries: [
+      { author: "State Historical Society of Iowa", title: "Iowa History — Official Archive", year: "ongoing", url: "https://iowaculture.gov/history", note: "Buxton history, civil rights narratives, statewide records" },
+      { author: "Iowa Civil Rights Commission", title: "Civil Rights History of Iowa", year: "ongoing", url: "https://icrc.iowa.gov/about/history", note: "Edna Griffin, Katz Drug Store case, Iowa Civil Rights Act" },
+      { author: "Iowa Commission on Latino Affairs", title: "Near South Side Community History", year: "ongoing", url: "https://latinoaffairs.iowa.gov/", note: "Latino community oral history project" },
+      { author: "U.S. Supreme Court", title: "Tinker v. Des Moines Independent Community School District, 393 U.S. 503", year: "1969", url: "https://www.oyez.org/cases/1968/21", note: "Oyez.org full case record with oral arguments" },
+      { author: "Drake University", title: "History of Drake University", year: "1881–present", url: "https://www.drake.edu/about/history/", note: "Founding by Francis Marion Drake; university archives" },
+      { author: "Iowa State Fair Board", title: "Iowa State Fair History", year: "1854–present", url: "https://www.iowastatefair.org/about/history/", note: "History of the fair and its permanent Des Moines grounds since 1886" },
+      { author: "Fort Des Moines Museum & Education Center", title: "Fort Des Moines History", year: "ongoing", url: "https://www.fortdesmoines.org/", note: "1901 cavalry post, WWI Black officer training, WAAC training center" },
+      { author: "Iowa Women's Archive, University of Iowa", title: "Mary Louise Smith Papers", year: "1974–1997", url: "https://www.lib.uiowa.edu/iwa/", note: "First female RNC Chair; Equal Rights Amendment" },
+    ],
+  },
+  {
+    category: "News & Digital References",
+    entries: [
+      { author: "Des Moines Register", title: "Des Moines Register Historical Archives", year: "1849–present", url: "https://www.desmoinesregister.com/", note: "Katz Drug ruling (Sept. 2, 1948), Urban Renewal coverage, Water Works lawsuit" },
+      { author: "WHO Radio", title: "WHO Radio — History & Background", year: "1924–present", url: "https://www.whonews.com/", note: "1924 founding; 50,000-watt clear-channel heritage" },
+      { author: "Wikipedia", title: "Des Moines, Iowa — History", year: "ongoing", url: "https://en.wikipedia.org/wiki/Des_Moines,_Iowa", note: "Used as secondary overview source; all primary facts independently verified" },
+      { author: "Oyez Project, IIT Chicago-Kent College of Law", title: "Tinker v. Des Moines — Case Summary & Audio", year: "2023", url: "https://www.oyez.org/cases/1968/21", note: "Full oral argument recordings and case analysis" },
+      { author: "Iowa Heritage Digital Collections", title: "Iowa Historical Photographs & Documents", year: "ongoing", url: "https://iowaheritage.org/", note: "Digitized photographs from Iowa institutions" },
+      { author: "Grand View University", title: "Grand View University History", year: "1896–present", url: "https://www.grandview.edu/about/history/", note: "Founded 1896 by Danish Lutheran immigrants" },
+    ],
+  },
+];
+
 function SourcesPage({ setPage }) {
   return (
     <div>
-      <PageHero title="Reference" subtitle="Project documentation, sources, copyright checklist, and work log." />
-      <div style={{ maxWidth: 800, margin: "0 auto", padding: "48px 32px 64px" }}>
+      <PageHero title="Reference" subtitle="Sources, bibliography, project documentation, and copyright checklist." />
+      <div style={{ maxWidth: 860, margin: "0 auto", padding: "48px 32px 80px" }}>
 
         {/* Framework Statement */}
         <FadeSection>
@@ -2633,106 +2681,96 @@ function SourcesPage({ setPage }) {
           </div>
         </FadeSection>
 
-        {/* Community Acknowledgments */}
-        <FadeSection>
-          <div style={{
-            background: "var(--cream)", borderRadius: 10, padding: "28px 32px",
-            border: "1px solid rgba(120,80,30,0.15)", marginBottom: 40,
-            boxShadow: "0 2px 14px rgba(28,16,8,0.08)",
-          }}>
-            <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--copper)", marginBottom: 14 }}>Community Acknowledgments</div>
-            <p style={{ color: "var(--mist)", fontSize: "0.92rem", lineHeight: 1.75, marginBottom: 18 }}>
-              This project would not be possible without the communities, archives, and organizations whose stories it tells. We are grateful to the following:
-            </p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "10px 32px" }}>
-              {[
-                { org: "State Historical Society of Iowa", role: "Buxton history & archival research" },
-                { org: "Iowa Commission on Latino Affairs", role: "Near South Side oral history project" },
-                { org: "Iowa Civil Rights Commission Archives", role: "Civil rights narratives & testimonies" },
-                { org: "National Archives & Records Administration", role: "Fort Des Moines military records" },
-                { org: "Iowa Office of State Archaeologist", role: "Meskwaki homeland research" },
-                { org: "Terrace Hill Foundation Archives", role: "Domestic workers oral history project" },
-                { org: "Catholic Diocese of Des Moines Historical Records", role: "Community social services history" },
-                { org: "African Community Services of Iowa", role: "African immigrant community oral history" },
-                { org: "Iowa Department of Human Services Refugee Collection", role: "Southeast Asian resettlement records" },
-                { org: "Des Moines Register Community Voices Archive", role: "Near North Side displacement testimonies" },
-              ].map((item, i) => (
-                <div key={i} style={{ borderLeft: "2px solid var(--peach)", paddingLeft: 12, marginBottom: 4 }}>
-                  <div style={{ fontWeight: 600, fontSize: "0.88rem", color: "var(--charcoal)" }}>{item.org}</div>
-                  <div style={{ fontSize: "0.78rem", color: "var(--mist)" }}>{item.role}</div>
-                </div>
-              ))}
+        {/* Bibliography */}
+        <FadeSection><SectionLabel text="Bibliography" /></FadeSection>
+        {BIBLIOGRAPHY.map((cat, ci) => (
+          <FadeSection key={ci} delay={ci * 0.06}>
+            <div style={{ marginBottom: 36 }}>
+              <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--copper)", marginBottom: 14, fontFamily: "'DM Sans', sans-serif" }}>
+                {cat.category}
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                {cat.entries.map((e, ei) => (
+                  <div key={ei} style={{
+                    padding: "13px 0",
+                    borderBottom: "1px solid rgba(120,80,30,0.1)",
+                    display: "grid", gridTemplateColumns: "1fr auto", gap: "0 16px", alignItems: "start",
+                  }}>
+                    <div>
+                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "0.88rem", color: "var(--charcoal)" }}>
+                        <strong>{e.author}</strong>{e.year ? ` (${e.year}). ` : ". "}
+                        <em>{e.title}.</em>
+                        {e.note ? <span style={{ color: "var(--mist)", fontSize: "0.8rem" }}> — {e.note}</span> : null}
+                      </span>
+                    </div>
+                    <a
+                      href={e.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        fontSize: "0.75rem", fontWeight: 600, color: "var(--copper)",
+                        textDecoration: "none", whiteSpace: "nowrap", fontFamily: "'DM Sans', sans-serif",
+                        padding: "2px 8px", border: "1px solid rgba(120,80,30,0.25)", borderRadius: 3,
+                        transition: "all 0.15s ease",
+                      }}
+                      onMouseEnter={e2 => { e2.currentTarget.style.background = "rgba(120,80,30,0.08)"; }}
+                      onMouseLeave={e2 => { e2.currentTarget.style.background = "none"; }}
+                    >Visit →</a>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        </FadeSection>
+          </FadeSection>
+        ))}
 
-        <FadeSection><SectionLabel text="Documents" /></FadeSection>
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+        {/* Project Documents */}
+        <FadeSection><div style={{ marginTop: 20 }}><SectionLabel text="Project Documents" /></div></FadeSection>
+        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
           {SOURCE_DOCS.map((doc, i) => (
-            <FadeSection key={i} delay={i * 0.08}>
+            <FadeSection key={i} delay={i * 0.06}>
               <a
                 href={doc.file}
                 download
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 20,
-                  padding: "24px 28px",
-                  background: "var(--cream)",
-                  borderRadius: 16,
-                  borderTop: "4px solid var(--peach)",
-                  textDecoration: "none",
-                  color: "var(--charcoal)",
-                  transition: "all 0.35s cubic-bezier(0.16,1,0.3,1)",
-                  boxShadow: "0 2px 12px rgba(0,0,0,0.03)",
+                  display: "flex", alignItems: "center", gap: 18, padding: "20px 24px",
+                  background: "var(--cream)", borderRadius: 10, borderTop: "3px solid var(--peach)",
+                  textDecoration: "none", color: "var(--charcoal)",
+                  transition: "all 0.3s ease", boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
                 }}
-                onMouseEnter={e => {
-                  e.currentTarget.style.transform = "translateY(-4px)";
-                  e.currentTarget.style.boxShadow = "0 16px 40px rgba(0,0,0,0.09)";
-                }}
-                onMouseLeave={e => {
-                  e.currentTarget.style.transform = "";
-                  e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.03)";
-                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.09)"; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 10px rgba(0,0,0,0.05)"; }}
               >
-                <span style={{ fontSize: "2rem" }}>📄</span>
+                <span style={{ fontSize: "1.6rem" }}>📄</span>
                 <div style={{ flex: 1 }}>
-                  <h3 style={{ fontSize: "1.2rem", fontWeight: 700, marginBottom: 4 }}>{doc.title}</h3>
-                  <p style={{ color: "var(--mist)", fontSize: "0.9rem", lineHeight: 1.5, margin: 0 }}>{doc.desc}</p>
+                  <div style={{ fontWeight: 700, fontSize: "1rem", marginBottom: 2 }}>{doc.title}</div>
+                  <div style={{ color: "var(--mist)", fontSize: "0.85rem" }}>{doc.desc}</div>
                 </div>
-                <span style={{
-                  color: "var(--peach)",
-                  fontWeight: 600,
-                  fontSize: "0.9rem",
-                }}>Download ↓</span>
+                <span style={{ color: "var(--peach)", fontWeight: 600, fontSize: "0.84rem" }}>Download ↓</span>
               </a>
             </FadeSection>
           ))}
         </div>
 
-        {/* Image Citations link */}
+        {/* Community Acknowledgments */}
         <FadeSection>
-          <div style={{ marginTop: 40, padding: "24px 28px", background: "var(--cream)", borderRadius: 10, border: "1px solid rgba(120,80,30,0.15)", boxShadow: "0 2px 12px rgba(28,16,8,0.07)" }}>
-            <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--copper)", marginBottom: 10 }}>Image Citations</div>
-            <p style={{ color: "var(--mist)", fontSize: "0.9rem", lineHeight: 1.6, marginBottom: 16 }}>
-              All photographs, illustrations, and archival images used throughout this website are cited in academic format. View the complete image citation record below.
+          <div style={{ marginTop: 40, background: "var(--cream)", borderRadius: 10, padding: "24px 28px", border: "1px solid rgba(120,80,30,0.15)", boxShadow: "0 2px 12px rgba(28,16,8,0.07)" }}>
+            <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--copper)", marginBottom: 12 }}>Community Acknowledgments</div>
+            <p style={{ color: "var(--mist)", fontSize: "0.88rem", lineHeight: 1.7, marginBottom: 14 }}>
+              This project would not be possible without the communities, archives, and organizations whose stories it tells.
             </p>
-            <button
-              onClick={() => setPage("citations")}
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                background: "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)",
-                color: "#FFF8E8", border: "none", padding: "10px 24px",
-                borderRadius: 4, fontSize: "0.84rem", fontWeight: 700, cursor: "pointer",
-                fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.06em",
-                transition: "all 0.2s ease",
-              }}
-              id="citations-link-btn"
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 20px rgba(42,20,8,0.3)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
-            >View Image Citations →</button>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "8px 28px" }}>
+              {[
+                "State Historical Society of Iowa", "Iowa Commission on Latino Affairs",
+                "Iowa Civil Rights Commission Archives", "National Archives & Records Administration",
+                "Iowa Office of State Archaeologist", "Terrace Hill Foundation Archives",
+                "Catholic Diocese of Des Moines", "African Community Services of Iowa",
+                "Des Moines Public Library", "Fort Des Moines Museum & Education Center",
+              ].map((org, i) => (
+                <div key={i} style={{ borderLeft: "2px solid var(--peach)", paddingLeft: 10, fontSize: "0.82rem", color: "var(--charcoal)", fontFamily: "'DM Sans', sans-serif" }}>{org}</div>
+              ))}
+            </div>
           </div>
         </FadeSection>
       </div>
@@ -3367,7 +3405,6 @@ export default function App() {
       case "then-now": return <ThenNowPage />;
       case "neighborhoods": return <NeighborhoodPage />;
       case "education": return <EducationPage />;
-      case "citations": return <CitationsPage setPage={navigate} />;
       default: return <HomePage setPage={navigate} />;
     }
   };

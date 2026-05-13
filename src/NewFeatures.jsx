@@ -1128,6 +1128,50 @@ const NEWSPAPER_STORIES = [
     col2: "Coal mined from the region's extensive deposits will now move efficiently to markets East. The rail connection, say manufacturers, opens a new chapter: 'We are no longer isolated. Des Moines is now tied to the nation.'",
   },
   {
+    paper: "Iowa State Bystander",
+    date: "May 3, 1901",
+    headline: "BUFFALO SOLDIERS ARRIVE — NEW FORT DES MOINES CAVALRY POST OPENS",
+    subheadline: "25th Infantry Regiment Stationed South of City; Black Community Celebrates Military Presence",
+    body: "The new Fort Des Moines cavalry post south of the city has received its first companies of the 25th Infantry Regiment — the storied Buffalo Soldiers. Des Moines' Black community gathered at the rail depot to cheer the arriving troops. City leaders say the post will bring economic activity to the south side.",
+    byline: "Publisher: James B. Morris",
+    archiveUrl: "https://tile.loc.gov/image-services/iiif/service:ndnp:iahi:batch_iahi_ames_ver01:data:sn83025186:00202198399:1901050301:1295/full/pct:6.25/0/default.jpg",
+    locUrl: "https://www.loc.gov/resource/sn83025186/1901-05-03/ed-1/",
+    col2: "The Bystander has long advocated for the recognition of Black military service. The arrival of a full cavalry regiment at Fort Des Moines signals that this city, at least, will honor that service with respect and opportunity.",
+  },
+  {
+    paper: "Evening Times-Republican",
+    date: "October 11, 1907",
+    headline: "'DES MOINES PLAN' SWEEPS NATION — COMMISSION GOVERNMENT HAILED AS REFORM MODEL",
+    subheadline: "Iowa Capital's New Municipal Structure Replaces Corrupt Aldermanic System; 50 Cities Watch Closely",
+    body: "What began as a local response to flood disaster and municipal inefficiency has become the most closely watched government reform in the country. The Des Moines Plan — replacing the old aldermanic council with a small elected commission of experts — has attracted delegations from cities as far as New York and San Francisco seeking to replicate the model.",
+    byline: "Marshalltown, Iowa Bureau",
+    archiveUrl: "https://tile.loc.gov/image-services/iiif/service:ndnp:iahi:batch_iahi_estes_ver01:data:sn85049554:00415622521:1907101101:0280/full/pct:6.25/0/default.jpg",
+    locUrl: "https://www.loc.gov/resource/sn85049554/1907-10-11/ed-1/?sp=4",
+    col2: "Reformers argue the commission system ends patronage politics by placing technical governance in the hands of elected specialists rather than ward bosses. Des Moines is already seeing tangible results: cleaner streets, faster flood response, and a budget surplus.",
+  },
+  {
+    paper: "The Bystander",
+    date: "June 22, 1917",
+    headline: "FORT DES MOINES SELECTED FOR BLACK OFFICER TRAINING CAMP",
+    subheadline: "War Department Yields to Civil Rights Pressure; First African American Officer School in Nation's History",
+    body: "After months of lobbying by the NAACP and Iowa's Black press, the War Department has announced that Fort Des Moines will serve as the nation's first and only training camp for African American Army officers. The Bystander called the decision 'a vindication of years of patient demand' and a testament to the dignity of Iowa's Black community.",
+    byline: "James B. Morris, Publisher & Editor",
+    archiveUrl: "https://tile.loc.gov/image-services/iiif/service:ndnp:iahi:batch_iahi_ames_ver01:data:sn85049804:00202198429:1917062201:1245/full/pct:6.25/0/default.jpg",
+    locUrl: "https://www.loc.gov/resource/sn85049804/1917-06-22/ed-1/",
+    col2: "The men who will train here will be the highest-ranking Black officers in American military history. This city — this state — will bear witness to that history being made. Des Moines stands on the right side of this fight.",
+  },
+  {
+    paper: "The Bystander",
+    date: "August 3, 1917",
+    headline: "SPECIAL EDITION: FORT DES MOINES OFFICER CORPS — WHO THEY ARE",
+    subheadline: "Profiles of the 1,200 Men Commissioned at Iowa's Historic Training Camp",
+    body: "This special edition of the Bystander profiles the men commissioned at Fort Des Moines — attorneys, teachers, ministers, and businessmen from across the nation, now officers of the United States Army. Among them: graduates of Harvard, Howard, and Fisk. Among them: sons of Des Moines who grew up on the Near North Side.",
+    byline: "Special Edition — James B. Morris, Publisher",
+    archiveUrl: "https://tile.loc.gov/image-services/iiif/service:ndnp:iahi:batch_iahi_ames_ver01:data:sn85049804:00202198429:1917080301:1275/full/pct:6.25/0/default.jpg",
+    locUrl: "https://www.loc.gov/resource/sn85049804/1917-08-03/ed-1/?sp=7",
+    col2: "History will record what this community already knows: that these men did not receive opportunity — they demanded it, earned it, and claimed it. Their commissioning is not a gift from America. It is a debt long owed, finally beginning to be paid.",
+  },
+  {
     paper: "The Iowa Bystander",
     date: "October 15, 1917",
     headline: "1,200 BLACK OFFICERS COMMISSIONED AT FORT DES MOINES",
@@ -1144,6 +1188,24 @@ const NEWSPAPER_STORIES = [
     body: "In a landmark ruling, the Iowa Supreme Court has sided with Edna Griffin and three other plaintiffs who were refused ice cream service at the Katz Drug Store on 6th Avenue. Mrs. Griffin, who organized boycotts and pickets after being turned away, called the decision 'a victory for every Iowa resident, regardless of color.' The ruling is expected to accelerate integration of public accommodations across the state.",
     byline: "By Margaret Owens, Courthouse Reporter",
     col2: "The Katz Drug Store sit-in, inspired by earlier national CORE actions, took two years of organized community pressure to reach this moment. Civil rights leaders across the Midwest are calling Des Moines 'a model city' for the peaceful but persistent methods employed by Mrs. Griffin and her supporters.",
+  },
+  {
+    paper: "The Des Moines Tribune",
+    date: "January 15, 1969",
+    headline: "SUPREME COURT RULES FOR DES MOINES STUDENTS — FREE SPEECH IN SCHOOLS",
+    subheadline: "Tinker Case Overturns Suspension of Armband Protesters; First Amendment Extends to Schoolhouse Gate",
+    body: "In a landmark 7-2 decision, the U.S. Supreme Court ruled that students Mary Beth Tinker, John Tinker, and Christopher Eckhardt — Des Moines students suspended in 1965 for wearing black armbands to protest the Vietnam War — had the constitutional right to do so. Justice Abe Fortas wrote: 'It can hardly be argued that students shed their constitutional rights at the schoolhouse gate.'",
+    byline: "By Robert Harmon, Washington Correspondent",
+    col2: "The ACLU of Iowa, which backed the Tinkers from the beginning, called the ruling 'a foundation stone for student rights for generations to come.' Mary Beth Tinker, now a sophomore in college, said: 'We just wanted people to know we cared. That's all we ever wanted.'",
+  },
+  {
+    paper: "The Des Moines Register",
+    date: "July 15, 1993",
+    headline: "WATER RESTORED AFTER 12 DAYS — CITY RALLIES THROUGH HISTORIC FLOOD",
+    subheadline: "Des Moines River Crests at 28.4 Feet; 250,000 Lose Water Service; Community Response Called 'Extraordinary'",
+    body: "After twelve days without running water following the catastrophic Des Moines River flood, water service was restored to 250,000 residents this morning — faster than any federal official predicted. The city's water treatment plant, overwhelmed when the river crested at 28.4 feet on July 11, was rebuilt by an army of volunteers and city workers operating around the clock.",
+    byline: "By Carol Dawson, City Desk",
+    col2: "Churches set up water distribution. Neighbors shared gallons. A city that had never faced this before responded with a solidarity that will not soon be forgotten. Governor Terry Branstad said: 'I've never been more proud to be an Iowan.' The flood of 1993 will be remembered not for the water, but for the people.",
   },
 ];
 
@@ -1206,6 +1268,23 @@ export function NewspaperSection() {
                 }}>{story.date}</div>
               </div>
 
+              {/* Archive scan image */}
+              {story.archiveUrl && (
+                <div style={{ borderBottom: "2px solid rgba(100,80,50,0.2)", overflow: "hidden", maxHeight: 160, position: "relative" }}>
+                  <img
+                    src={story.archiveUrl}
+                    alt={`Archive scan: ${story.paper}, ${story.date}`}
+                    style={{ width: "100%", objectFit: "cover", objectPosition: "top", display: "block", filter: "sepia(0.3) contrast(1.05)" }}
+                    loading="lazy"
+                  />
+                  <div style={{
+                    position: "absolute", bottom: 0, left: 0, right: 0,
+                    background: "linear-gradient(to top, rgba(255,248,238,0.95) 0%, transparent 100%)",
+                    height: 40,
+                  }} />
+                </div>
+              )}
+
               {/* Content */}
               <div style={{ padding: "16px 18px 20px", position: "relative" }}>
                 <h4 style={{
@@ -1241,12 +1320,27 @@ export function NewspaperSection() {
                   }}>{story.col2}</p>
                 )}
 
-                {/* Byline + expand */}
-                <div style={{ borderTop: "1px solid rgba(100,80,50,0.15)", marginTop: 14, paddingTop: 10, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{
-                    fontSize: "0.68rem", color: "rgba(100,70,30,0.55)",
-                    fontFamily: "'DM Sans', sans-serif", fontStyle: "italic",
-                  }}>{story.byline}</span>
+                {/* Byline + expand + LOC link */}
+                <div style={{ borderTop: "1px solid rgba(100,80,50,0.15)", marginTop: 14, paddingTop: 10, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 6 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{
+                      fontSize: "0.68rem", color: "rgba(100,70,30,0.55)",
+                      fontFamily: "'DM Sans', sans-serif", fontStyle: "italic",
+                    }}>{story.byline}</span>
+                    {story.locUrl && (
+                      <a
+                        href={story.locUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          fontSize: "0.62rem", color: "rgba(80,50,20,0.6)",
+                          fontFamily: "'DM Sans', sans-serif", fontWeight: 600,
+                          textDecoration: "none", border: "1px solid rgba(100,80,50,0.25)",
+                          padding: "2px 6px", borderRadius: 3, letterSpacing: "0.04em",
+                        }}
+                      >LOC →</a>
+                    )}
+                  </div>
                   <button
                     onClick={() => setExpanded(expanded === i ? null : i)}
                     aria-expanded={expanded === i}
