@@ -171,7 +171,7 @@ const THEN_NOW_PAIRS = [
     location: "Drake University Old Main",
     then: {
       year: "c. 1882",
-      url: "https://drakeapedia.library.drake.edu/w/images/7/78/OLDOLDMAIN.jpg",
+      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Old_Main_Front.png/640px-Old_Main_Front.png",
       caption: "Drake University's original Old Main building circa 1882 — the very first structure on campus, founded just a year earlier with 43 students. This building was later demolished and replaced.",
     },
     now: {
@@ -201,12 +201,12 @@ const THEN_NOW_PAIRS = [
     location: "Near South Side",
     then: {
       year: "1950s",
-      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Des_Moines_Iowa_South_Side_1950s.jpg/1280px-Des_Moines_Iowa_South_Side_1950s.jpg",
+      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Packinghouse_Workers_Organizing_Committee_banner%2C_Iowa%2C_1940s.jpg/800px-Packinghouse_Workers_Organizing_Committee_banner%2C_Iowa%2C_1940s.jpg",
       caption: "The Near South Side in the 1950s — Mexican American families who arrived to work in packinghouses built a tight-knit neighborhood of taquerias, Spanish-language newspapers, mutual aid clubs, and Catholic churches that served as the cultural heart of Iowa's Latino community.",
     },
     now: {
       year: "Today",
-      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Des_Moines_South_Side_mural.jpg/1280px-Des_Moines_South_Side_mural.jpg",
+      url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg/480px-Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg",
       caption: "The Near South Side today — still Iowa's most vibrant Latino neighborhood, with murals, the Cinco de Mayo festival, the Mexican Consulate, and a new generation of entrepreneurs keeping the community's traditions alive while building its future.",
     },
     fact: "The Near South Side's Latino population grew over 300% between 1990 and 2020. It hosts Iowa's largest Cinco de Mayo celebration, drawing 20,000+ attendees each year to honor a community that has shaped Des Moines for over 80 years.",

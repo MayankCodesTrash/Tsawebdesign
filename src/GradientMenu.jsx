@@ -8,6 +8,7 @@ import {
   IoGridOutline,
   IoSwapHorizontalOutline,
   IoLibraryOutline,
+  IoSchoolOutline,
 } from "react-icons/io5";
 
 const GRADIENT_ITEMS = [
@@ -19,6 +20,7 @@ const GRADIENT_ITEMS = [
   { id: "neighborhoods", label: "Areas",      Icon: IoGridOutline,           from: "#a955ff", to: "#7B2FBE" },
   { id: "then-now",      label: "Then/Now",   Icon: IoSwapHorizontalOutline, from: "#FF6B9D", to: "#C44569" },
   { id: "sources",       label: "Reference",  Icon: IoLibraryOutline,        from: "#A8EDEA", to: "#5FC3BA" },
+  { id: "education",    label: "Education",  Icon: IoSchoolOutline,         from: "#F7971E", to: "#FFD200" },
 ];
 
 export function GradientMenu({ activePage, setPage }) {

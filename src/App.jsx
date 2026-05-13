@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import L from 'leaflet';
 import { ThenNowPage, NeighborhoodPage, PopulationChart, SearchModal, NewspaperSection } from './NewFeatures.jsx';
 import { GradientMenu } from './GradientMenu.jsx';
+import { setupNavSound, CursorTrail, AmbientPlayer, BackToTop, ConfettiBurst, DidYouKnow, useCountUp } from './Effects.jsx';
+import { EducationPage } from './EducationPage.jsx';
 import 'leaflet/dist/leaflet.css';
 
 // ─── IMAGE (will be replaced with data URI via build script) ────────────────
@@ -200,6 +202,42 @@ const GlobalStyles = () => (
     .hero-card:hover .hero-card-img { transform: scale(1.07) !important; }
     .hero-card-overlay { opacity: 0; transform: translateY(100%); transition: all 0.35s cubic-bezier(0.16,1,0.3,1); }
     .hero-card:hover .hero-card-overlay { opacity: 1; transform: translateY(0); }
+
+    /* ── Ambient music pulse ring ── */
+    @keyframes musicPulse {
+      0%   { box-shadow: 0 0 0 0 rgba(201,138,42,0.5); }
+      70%  { box-shadow: 0 0 0 12px rgba(201,138,42,0); }
+      100% { box-shadow: 0 0 0 0 rgba(201,138,42,0); }
+    }
+
+    /* ── Shimmer button sweep ── */
+    @keyframes shimmerSweep {
+      0%   { transform: translateX(-120%) skewX(-20deg); }
+      100% { transform: translateX(320%) skewX(-20deg); }
+    }
+
+    /* ── Floating badge pulse ── */
+    @keyframes badgePulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.08); }
+    }
+
+    /* ── Custom scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #1C1008; }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, #C98A2A, #8B5A2B); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #E8A535; }
+
+    /* ── Smooth image load ── */
+    img { transition: filter 0.4s ease; }
+
+    /* ── Focus rings ── */
+    *:focus-visible { outline: 2px solid var(--peach); outline-offset: 3px; border-radius: 4px; }
+
+    /* ── Reduce motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
 
     .tl-scroll::-webkit-scrollbar { display: none; }
     .tl-scroll { scrollbar-width: none; }
@@ -410,6 +448,7 @@ const NAV_ITEMS = [
   { id: "neighborhoods", label: "Neighborhoods" },
   { id: "then-now", label: "Then & Now" },
   { id: "sources", label: "Reference" },
+  { id: "education", label: "Education" },
 ];
 
 function Navbar({ activePage, setPage, onSearchOpen }) {
@@ -435,20 +474,27 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
         display: "flex", alignItems: "center", justifyContent: "space-between",
         height: scrolled ? 56 : 66, transition: "height 0.4s ease",
       }}>
-        <button onClick={() => setPage("home")} style={{
-          background: "none", border: "none", cursor: "pointer",
-          display: "flex", alignItems: "center", gap: 10,
-        }}>
+        <motion.button
+          onClick={() => setPage("home")}
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 10 }}
+        >
           <span style={{
             fontFamily: "'Playfair Display', serif", fontSize: "1.3rem",
             fontWeight: 700, color: "#fff", letterSpacing: "-0.02em",
           }}>Echoes of the Fort</span>
-          <span style={{
-            background: "var(--peach)", color: "#F2E8D5",
-            fontSize: "0.55rem", fontWeight: 700, letterSpacing: "0.14em",
-            textTransform: "uppercase", padding: "3px 8px", borderRadius: 4,
-          }}>Des Moines, Iowa</span>
-        </button>
+          <motion.span
+            animate={{ opacity: [0.8, 1, 0.8] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              background: "linear-gradient(135deg, var(--peach), var(--copper))", color: "#F2E8D5",
+              fontSize: "0.55rem", fontWeight: 700, letterSpacing: "0.14em",
+              textTransform: "uppercase", padding: "3px 8px", borderRadius: 4,
+              boxShadow: "0 0 8px rgba(201,138,42,0.3)",
+            }}
+          >Des Moines, Iowa</motion.span>
+        </motion.button>
 
         <div className="desktop-nav" style={{ display: "flex", alignItems: "center" }}>
           <GradientMenu activePage={activePage} setPage={setPage} />
@@ -476,21 +522,35 @@ function Navbar({ activePage, setPage, onSearchOpen }) {
         }} className="mobile-toggle" aria-label={mobileOpen ? "Close menu" : "Open menu"}>{mobileOpen ? "✕" : "☰"}</button>
       </div>
 
-      {mobileOpen && (
-        <div style={{
-          background: "rgba(100,56,20,0.98)", padding: "8px 24px 16px",
-          animation: "slideDown 0.25s ease",
-        }}>
-          {NAV_ITEMS.map(item => (
-            <button key={item.id} onClick={() => { setPage(item.id); setMobileOpen(false); }} style={{
-              display: "block", width: "100%", textAlign: "left", background: "none",
-              border: "none", color: activePage === item.id ? "var(--peach)" : "rgba(255,255,255,0.7)",
-              padding: "14px 0", fontSize: "1rem", fontWeight: 500, cursor: "pointer",
-              borderBottom: "1px solid rgba(255,255,255,0.06)", fontFamily: "'DM Sans', sans-serif",
-            }}>{item.label}</button>
-          ))}
-        </div>
-      )}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+            style={{ overflow: "hidden", background: "rgba(100,56,20,0.98)" }}
+          >
+            <div style={{ padding: "8px 24px 16px" }}>
+              {NAV_ITEMS.map((item, i) => (
+                <motion.button
+                  key={item.id}
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: i * 0.04, duration: 0.25 }}
+                  onClick={() => { setPage(item.id); setMobileOpen(false); }}
+                  style={{
+                    display: "block", width: "100%", textAlign: "left", background: "none",
+                    border: "none", color: activePage === item.id ? "var(--peach)" : "rgba(255,255,255,0.7)",
+                    padding: "14px 0", fontSize: "1rem", fontWeight: 500, cursor: "pointer",
+                    borderBottom: "1px solid rgba(255,255,255,0.06)", fontFamily: "'DM Sans', sans-serif",
+                  }}
+                >{item.label}</motion.button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <style>{`
         @media (max-width: 768px) {
@@ -561,24 +621,63 @@ function Footer({ setPage }) {
 function PageHero({ title, subtitle }) {
   return (
     <div style={{
-      padding: "130px 32px 72px", textAlign: "center",
-      background: "linear-gradient(160deg, #2A1608 0%, #4A2410 100%)",
+      padding: "130px 32px 76px", textAlign: "center",
+      background: "linear-gradient(160deg, #1C0C04 0%, #3D1F0A 50%, #4A2410 100%)",
       position: "relative", overflow: "hidden",
     }}>
-      <div style={{
-        width: 40, height: 3, background: "var(--peach)",
-        margin: "0 auto 20px", borderRadius: 2,
-      }} />
-      <h1 style={{
-        fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 5vw, 3.4rem)",
-        color: "#FFF8EE", fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 14,
-      }}>{title}</h1>
+      {/* Animated radial glow */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.5 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
+        style={{
+          position: "absolute", top: "50%", left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: 700, height: 300,
+          background: "radial-gradient(ellipse, rgba(201,138,42,0.12) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }}
+      />
+      {/* Subtle grid dots */}
+      <div style={{ position: "absolute", inset: 0, opacity: 0.025, backgroundImage: "radial-gradient(circle at 2px 2px, white 1px, transparent 0)", backgroundSize: "28px 28px", pointerEvents: "none" }} />
+
+      {/* Animated accent bar */}
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: 1 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          width: 44, height: 3, background: "linear-gradient(90deg, var(--copper), var(--peach), #FFD700)",
+          margin: "0 auto 22px", borderRadius: 2, transformOrigin: "center",
+          boxShadow: "0 0 12px rgba(201,138,42,0.5)",
+        }}
+      />
+
+      <motion.h1
+        initial={{ opacity: 0, y: 32, filter: "blur(8px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 5vw, 3.6rem)",
+          color: "#FFF8EE", fontWeight: 700, letterSpacing: "-0.025em", marginBottom: 16,
+          position: "relative",
+        }}
+      >{title}</motion.h1>
+
       {subtitle && (
-        <p style={{
-          color: "rgba(255, 245, 220, 0.82)", fontSize: "1.05rem",
-          maxWidth: 560, margin: "0 auto", lineHeight: 1.75, fontWeight: 400,
-        }}>{subtitle}</p>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.65, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            color: "rgba(255, 245, 220, 0.78)", fontSize: "1.05rem",
+            maxWidth: 580, margin: "0 auto", lineHeight: 1.8, fontWeight: 400,
+          }}
+        >{subtitle}</motion.p>
       )}
+
+      {/* Decorative bottom fade */}
+      <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 40, background: "linear-gradient(to bottom, transparent, rgba(28,12,4,0.3))", pointerEvents: "none" }} />
     </div>
   );
 }
@@ -620,86 +719,111 @@ const COMMUNITY_QUOTES = [
 
 function CommunityQuote() {
   const [idx, setIdx] = React.useState(0);
-  const [fading, setFading] = React.useState(false);
 
   React.useEffect(() => {
-    const t = setInterval(() => {
-      setFading(true);
-      setTimeout(() => {
-        setIdx(i => (i + 1) % COMMUNITY_QUOTES.length);
-        setFading(false);
-      }, 400);
-    }, 5000);
+    const t = setInterval(() => setIdx(i => (i + 1) % COMMUNITY_QUOTES.length), 5500);
     return () => clearInterval(t);
   }, []);
 
   const q = COMMUNITY_QUOTES[idx];
   return (
-    <div style={{
-      marginTop: 20, maxWidth: 280, textAlign: "center",
-      opacity: fading ? 0 : 1, transition: "opacity 0.4s ease",
-    }}>
-      <div style={{
-        width: 32, height: 1, background: "rgba(92,48,16,0.35)", margin: "0 auto 10px",
-      }} />
-      <p style={{
-        fontFamily: "'Playfair Display', serif", fontStyle: "italic",
-        fontSize: "0.72rem", color: "#3D2010", lineHeight: 1.6, marginBottom: 6,
-      }}>"{q.quote}"</p>
-      <div style={{
-        fontSize: "0.6rem", fontWeight: 700, color: "#7A4F2C",
-        textTransform: "uppercase", letterSpacing: "0.1em",
-      }}>— {q.name}, {q.year}</div>
-      <div style={{
-        display: "inline-block", marginTop: 5,
-        fontSize: "0.55rem", color: "#7A4F2C", background: "rgba(92,48,16,0.1)",
-        padding: "2px 8px", borderRadius: 20, letterSpacing: "0.08em",
-      }}>{q.tag}</div>
+    <div style={{ marginTop: 20, maxWidth: 280, textAlign: "center" }}>
+      <motion.div
+        animate={{ scaleX: [0, 1] }}
+        transition={{ duration: 0.5 }}
+        style={{ width: 32, height: 1, background: "rgba(92,48,16,0.35)", margin: "0 auto 10px" }}
+      />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={idx}
+          initial={{ opacity: 0, y: 12, filter: "blur(4px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, y: -12, filter: "blur(4px)" }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
+        >
+          <p style={{
+            fontFamily: "'Playfair Display', serif", fontStyle: "italic",
+            fontSize: "0.72rem", color: "#3D2010", lineHeight: 1.6, marginBottom: 6,
+          }}>"{q.quote}"</p>
+          <div style={{
+            fontSize: "0.6rem", fontWeight: 700, color: "#7A4F2C",
+            textTransform: "uppercase", letterSpacing: "0.1em",
+          }}>— {q.name}, {q.year}</div>
+          <div style={{
+            display: "inline-block", marginTop: 5,
+            fontSize: "0.55rem", color: "#7A4F2C", background: "rgba(92,48,16,0.1)",
+            padding: "2px 8px", borderRadius: 20, letterSpacing: "0.08em",
+          }}>{q.tag}</div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
+}
+
+function StatCounter({ target, suffix = "", duration = 1800, active }) {
+  const count = useCountUp(target, duration, active);
+  return <>{count}{suffix}</>;
 }
 
 function AnimatedStats() {
   const [ref, vis] = useScrollReveal();
   const stats = [
-    { value: "180+", label: "Years of History", icon: "⏳" },
-    { value: "55",   label: "Timeline Events",  icon: "📜" },
-    { value: "10",   label: "Heroes Profiled",  icon: "🏅" },
-    { value: "35",   label: "Map Locations",    icon: "📍" },
+    { num: 180, suffix: "+", label: "Years of History", icon: "⏳" },
+    { num: 55,  suffix: "",  label: "Timeline Events",  icon: "📜" },
+    { num: 10,  suffix: "",  label: "Heroes Profiled",  icon: "🏅" },
+    { num: 35,  suffix: "",  label: "Map Locations",    icon: "📍" },
   ];
   return (
     <div ref={ref} style={{
       background: "linear-gradient(135deg, #3D1F0A 0%, #5C3010 40%, #3D1F0A 100%)",
       backgroundSize: "200% 200%",
       animation: "gradientShift 9s ease infinite",
-      padding: "52px 32px",
+      padding: "56px 32px",
       borderTop: "1px solid rgba(201,138,42,0.3)",
       borderBottom: "1px solid rgba(201,138,42,0.3)",
       position: "relative", overflow: "hidden",
     }}>
-      {/* subtle grain */}
+      {/* grain overlay */}
       <div style={{ position: "absolute", inset: 0, opacity: 0.03, backgroundImage: "radial-gradient(circle at 1px 1px, white 1px, transparent 0)", backgroundSize: "28px 28px", pointerEvents: "none" }} />
+      {/* radial glow behind stats */}
+      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", width: 600, height: 200, background: "radial-gradient(ellipse, rgba(201,138,42,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
       <div style={{ maxWidth: 860, margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 28, position: "relative" }}>
         {stats.map((s, i) => (
-          <div key={i} style={{
-            textAlign: "center",
-            opacity: vis ? 1 : 0,
-            transform: vis ? "scale(1) translateY(0)" : "scale(0.7) translateY(24px)",
-            transition: `opacity 0.6s cubic-bezier(0.16,1,0.3,1) ${i * 0.1}s, transform 0.6s cubic-bezier(0.16,1,0.3,1) ${i * 0.1}s`,
-          }}>
-            <div style={{ fontSize: "2rem", marginBottom: 8, lineHeight: 1 }}>{s.icon}</div>
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 40, scale: 0.7 }}
+            animate={vis ? { opacity: 1, y: 0, scale: 1 } : {}}
+            transition={{ duration: 0.7, delay: i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+            whileHover={{ scale: 1.06, y: -4 }}
+            style={{ textAlign: "center", cursor: "default" }}
+          >
+            <motion.div
+              animate={vis ? { rotate: [0, -10, 10, 0] } : {}}
+              transition={{ duration: 0.6, delay: i * 0.12 + 0.4 }}
+              style={{ fontSize: "2.2rem", marginBottom: 10, lineHeight: 1, display: "block" }}
+            >{s.icon}</motion.div>
             <div style={{
               fontFamily: "'Playfair Display', serif",
-              fontSize: "clamp(2.2rem, 4vw, 3.2rem)", fontWeight: 800,
-              color: "var(--peach)", lineHeight: 1, marginBottom: 6,
-              textShadow: "0 0 30px rgba(201,138,42,0.4)",
-            }}>{s.value}</div>
+              fontSize: "clamp(2.4rem, 4.5vw, 3.6rem)", fontWeight: 800,
+              color: "var(--peach)", lineHeight: 1, marginBottom: 8,
+              textShadow: "0 0 40px rgba(201,138,42,0.5)",
+              letterSpacing: "-0.02em",
+            }}>
+              <StatCounter target={s.num} suffix={s.suffix} duration={1600 + i * 100} active={vis} />
+            </div>
             <div style={{
-              fontSize: "0.68rem", color: "rgba(242,232,213,0.6)",
-              letterSpacing: "0.14em", textTransform: "uppercase", fontWeight: 600,
+              fontSize: "0.66rem", color: "rgba(242,232,213,0.55)",
+              letterSpacing: "0.16em", textTransform: "uppercase", fontWeight: 700,
               fontFamily: "'DM Sans', sans-serif",
             }}>{s.label}</div>
-          </div>
+            {/* shimmer underline */}
+            <motion.div
+              initial={{ scaleX: 0 }}
+              animate={vis ? { scaleX: 1 } : {}}
+              transition={{ duration: 0.6, delay: i * 0.12 + 0.5 }}
+              style={{ height: 1, background: "linear-gradient(90deg, transparent, rgba(201,138,42,0.5), transparent)", marginTop: 10, transformOrigin: "center" }}
+            />
+          </motion.div>
         ))}
       </div>
     </div>
@@ -905,17 +1029,29 @@ function CommunityToday({ setPage }) {
 
         {/* CTA */}
         <div style={{ textAlign: "center", marginTop: 52 }}>
-          <button onClick={() => setPage("map")} style={{
-            background: "transparent", border: "1.5px solid rgba(201,138,42,0.5)", color: "var(--peach)",
-            padding: "12px 32px", borderRadius: 4, fontSize: "0.82rem", fontWeight: 700,
-            cursor: "pointer", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.1em",
-            textTransform: "uppercase", transition: "all 0.25s ease",
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = "rgba(201,138,42,0.12)"; e.currentTarget.style.borderColor = "var(--peach)"; }}
-          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(201,138,42,0.5)"; }}
+          <motion.button
+            onClick={() => setPage("map")}
+            whileHover={{ scale: 1.06, borderColor: "var(--peach)", background: "rgba(201,138,42,0.12)", boxShadow: "0 0 24px rgba(201,138,42,0.25)" }}
+            whileTap={{ scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 340, damping: 18 }}
+            style={{
+              background: "transparent", border: "1.5px solid rgba(201,138,42,0.5)", color: "var(--peach)",
+              padding: "12px 32px", borderRadius: 4, fontSize: "0.82rem", fontWeight: 700,
+              cursor: "pointer", fontFamily: "'DM Sans', sans-serif", letterSpacing: "0.1em",
+              textTransform: "uppercase", position: "relative", overflow: "hidden",
+            }}
           >
+            <motion.span
+              animate={{ x: ["-120%", "220%"] }}
+              transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 2, ease: "easeInOut" }}
+              style={{
+                position: "absolute", inset: 0, width: "35%",
+                background: "linear-gradient(90deg, transparent, rgba(201,138,42,0.25), transparent)",
+                skewX: "-15deg", pointerEvents: "none",
+              }}
+            />
             Explore the Map →
-          </button>
+          </motion.button>
         </div>
       </div>
     </div>
@@ -1135,22 +1271,40 @@ function HomePage({ setPage }) {
                 A community story — the voices, landmarks &amp; turning points of Des Moines, Iowa.
               </p>
 
-              <div style={{ opacity: 0, animation: "heroCenterFade 0.6s ease 2.2s forwards" }}>
-                <button onClick={() => setPage("history")} style={{
-                  background: "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)",
-                  color: "#FFF8E8", border: "2px solid rgba(42,20,8,0.45)",
-                  padding: "11px 32px", borderRadius: 3,
-                  fontSize: "0.85rem", fontWeight: 700, cursor: "pointer",
-                  fontFamily: "'Playfair Display', serif", fontStyle: "italic",
-                  letterSpacing: "0.08em", textTransform: "uppercase",
-                  boxShadow: "0 4px 14px rgba(42,20,8,0.4), inset 0 1px 0 rgba(255,220,150,0.2)",
-                  transition: "all 0.25s ease",
-                  animation: "glowPulse 3s ease-in-out 3s infinite",
-                }}
-                onMouseEnter={e => { e.currentTarget.style.background = "linear-gradient(180deg, #A06830 0%, #7A4F2C 100%)"; e.currentTarget.style.transform = "translateY(-3px) scale(1.03)"; e.currentTarget.style.boxShadow = "0 12px 28px rgba(42,20,8,0.55)"; }}
-                onMouseLeave={e => { e.currentTarget.style.background = "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)"; e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 14px rgba(42,20,8,0.4), inset 0 1px 0 rgba(255,220,150,0.2)"; }}
-                >Enter the Fort</button>
-              </div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 2.2, duration: 0.6 }}
+              >
+                <motion.button
+                  onClick={() => setPage("history")}
+                  whileHover={{ scale: 1.07, y: -4, boxShadow: "0 18px 40px rgba(42,20,8,0.6), 0 0 24px rgba(201,138,42,0.35)" }}
+                  whileTap={{ scale: 0.96, y: 0 }}
+                  animate={{ boxShadow: ["0 4px 14px rgba(42,20,8,0.4), inset 0 1px 0 rgba(255,220,150,0.2)", "0 4px 28px rgba(201,138,42,0.35), inset 0 1px 0 rgba(255,220,150,0.2)", "0 4px 14px rgba(42,20,8,0.4), inset 0 1px 0 rgba(255,220,150,0.2)"] }}
+                  transition={{ boxShadow: { duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 3 }, scale: { type: "spring", stiffness: 380, damping: 18 } }}
+                  style={{
+                    background: "linear-gradient(180deg, #8B5A2B 0%, #5C3010 100%)",
+                    color: "#FFF8E8", border: "2px solid rgba(42,20,8,0.45)",
+                    padding: "12px 36px", borderRadius: 3,
+                    fontSize: "0.85rem", fontWeight: 700, cursor: "pointer",
+                    fontFamily: "'Playfair Display', serif", fontStyle: "italic",
+                    letterSpacing: "0.08em", textTransform: "uppercase",
+                    position: "relative", overflow: "hidden",
+                  }}
+                >
+                  {/* shimmer sweep */}
+                  <motion.span
+                    animate={{ x: ["-120%", "220%"] }}
+                    transition={{ duration: 2.2, repeat: Infinity, repeatDelay: 1.8, ease: "easeInOut" }}
+                    style={{
+                      position: "absolute", inset: 0, width: "40%",
+                      background: "linear-gradient(90deg, transparent, rgba(255,220,150,0.35), transparent)",
+                      skewX: "-20deg", pointerEvents: "none",
+                    }}
+                  />
+                  Enter the Fort
+                </motion.button>
+              </motion.div>
             </div>
           </div>
 
@@ -1317,66 +1471,65 @@ function HomePage({ setPage }) {
 
 // ─── TIMELINE DATA (ALL EVENTS) ─────────────────────────────────────────────
 const timelineData = [
-  { year: 1843, title: "Fort Des Moines Built", desc: "Captain James Allen established Fort Des Moines at the confluence of the rivers.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/0/09/First_Log_Cabin_at_Fort_Des_Moines_-_History_of_Iowa.jpg" },
-  { year: 1846, title: "Town Incorporation & Statehood", desc: "Fort Des Moines was incorporated as a town, the same year Iowa became the 29th US state.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Iowa_Old_Capitol.jpg/480px-Iowa_Old_Capitol.jpg" },
-  { year: 1851, title: "City of Des Moines", desc: "The town charter was updated, officially dropping 'Fort' to become the City of Des Moines.", imageUrl: "https://iowaarchfoundation.b-cdn.net/wp-content/uploads/2016/03/DM-City-Hall-Sketch.gif" },
-  { year: 1854, title: "First Brick Building", desc: "Des Moines saw its first brick building erected as the local construction industry began to boom.", imageUrl: "https://www.legis.iowa.gov/docs/images/resources/tour/historical/capbrick.jpg" },
-  { year: 1857, title: "Capital Moved", desc: "The capital was officially relocated to Des Moines from Iowa City.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Iowa_Old_Capitol.jpg/480px-Iowa_Old_Capitol.jpg" },
-  { year: 1860, title: "Eve of the Civil War", desc: "Des Moines population reached nearly 4,000 as it established itself as a regional trade hub.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Bird%27s_eye_view_of_the_city_of_Des_Moines%2C_the_capital_of_Iowa_1868._LOC_73693394.jpg" },
-  { year: 1864, title: "Coal Mining Boom", desc: "Rapid expansion of coal mining began in the Des Moines area, heavily driving the local economy.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/5/51/Jules_F%C3%A9rat_-_Coal_Miners_of_Le_Creusot_during_the_Second_Empire_illustration_from_Les_Grandes_Usines_by_Julien_Turgan_c1880.jpg" },
-  { year: 1866, title: "Railroads Arrive", desc: "The first railroad links reached Des Moines, sparking an industrial boom.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/2/25/Chicago_Rock_Island_%26_Pacific_RR_Passenger_Station_Stuart_IA.jpg" },
-  { year: 1868, title: "First Street Railway", desc: "The Des Moines Street Railway Company began operating horse-drawn streetcars.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/2/28/Horse-drawn_streetcar_San_Francisco_1860%27s.jpg" },
-  { year: 1871, title: "State Capitol Foundation", desc: "The foundation was laid for the grand new Iowa State Capitol building on a hill east of the river.", imageUrl: "https://www.iowapbs.org/sites/default/files/iowapathways/artifact/2021-12/a_000350_large.jpg" },
-  { year: 1875, title: "Industrial Growth", desc: "Des Moines saw rapid growth in manufacturing and publishing, pushing the population past 20,000.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Bird%27s_eye_view_of_the_city_of_Des_Moines%2C_the_capital_of_Iowa_1868._LOC_73693394.jpg/800px-Bird%27s_eye_view_of_the_city_of_Des_Moines%2C_the_capital_of_Iowa_1868._LOC_73693394.jpg" },
-  { year: 1878, title: "First Telephone Exchange", desc: "Des Moines entered the modern communications era with its first telephone exchange opening.", imageUrl: "https://wordpress.wbur.org/wp-content/uploads/2021/12/download-6-1000x625.jpeg" },
-  { year: 1881, title: "Drake University Founded", desc: "George C. Carpenter and Francis Marion Drake founded Drake University.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Old_Main_Front.png/1280px-Old_Main_Front.png" },
-  { year: 1884, title: "Capitol Dedicated", desc: "The current Iowa State Capitol, with its iconic 275-foot gold dome, was formally dedicated.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/2/24/IowaStateCapNorthView.jpg" },
-  { year: 1886, title: "Iowa State Fair Finds a Home", desc: "After moving between cities, the Iowa State Fair permanently relocated to its current Des Moines grounds.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/a/ac/Maytag-Mason_Motor_Co._at_Iowas_State_Fair_%28Postcard%2C_1910%29.jpg" },
-  { year: 1889, title: "Electric Streetcars", desc: "Electric streetcars replaced horse-drawn ones, expanding the reach of Des Moines suburbs.", imageUrl: "https://projectdesmoines.dmpl.org/files/fullsize/b410d2d8247d626009f1a7ddd2962dc8.jpg" },
-  { year: 1893, title: "Rise of Insurance", desc: "Despite the nationwide Panic of 1893, Des Moines began establishing itself as a robust insurance center.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/2/24/IowaStateCapNorthView.jpg" },
-  { year: 1896, title: "Grand View College", desc: "Grand View College was founded by Danish immigrants to preserve their heritage and provide education.", imageUrl: "https://upload.wikimedia.org/wikipedia/en/0/01/GVC_Old_Main.jpg" },
-  { year: 1901, title: "Fort Des Moines Reborn", desc: "A new Fort Des Moines was established south of the city as a major cavalry post.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/5/53/Fort_Des_Moines_Historic_Complex%2C_Building_No.46%2C_Des_Moines%28Polk_County%2C_Iowa%29.jpg" },
-  { year: 1904, title: "City Beautiful Movement", desc: "Des Moines embraced the City Beautiful movement, leading to new civic centers and riverfront improvements.", imageUrl: "https://projectdesmoines.dmpl.org/files/fullsize/b410d2d8247d626009f1a7ddd2962dc8.jpg" },
-  { year: 1907, title: "The Des Moines Plan", desc: "The city adopted the Des Moines Plan of commission government, sparking a national municipal reform trend.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/2/24/IowaStateCapNorthView.jpg" },
-  { year: 1911, title: "Hartford of the West", desc: "With dozens of national insurance companies headquartered locally, the city was dubbed the 'Hartford of the West.'", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/2/24/IowaStateCapNorthView.jpg" },
-  { year: 1915, title: "Capitol Fire", desc: "A major fire broke out in the State Capitol, nearly destroying the House chambers.", imageUrl: "https://projectdesmoines.dmpl.org/files/fullsize/ed63a1a8b05cc6d09d779998928a7ddb.jpg" },
-  { year: 1917, title: "First Black Officers", desc: "During WWI, Fort Des Moines became the site of the first training camp for African American Army officers.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/5th_Provisional_Company_officers_reserve_training_Camp_Ft._Des_Moines_Ia._LCCN2016652396.jpg/1280px-5th_Provisional_Company_officers_reserve_training_Camp_Ft._Des_Moines_Ia._LCCN2016652396.jpg" },
-  { year: 1920, title: "Population Milestone", desc: "Des Moines population surpassed 126,000, solidifying its place as the undisputed metropolis of Iowa.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Bird%27s_eye_view_of_the_city_of_Des_Moines%2C_the_capital_of_Iowa_1868._LOC_73693394.jpg/1280px-Bird%27s_eye_view_of_the_city_of_Des_Moines%2C_the_capital_of_Iowa_1868._LOC_73693394.jpg" },
-  { year: 1924, title: "WHO Radio Broadcasts", desc: "WHO Radio began broadcasting, quickly becoming a massive 50,000-watt clear-channel station.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/a/ad/1922_radio_station_WDY_hexagonal_studio.JPEG" },
-  { year: 1928, title: "First Municipal Airport", desc: "Des Moines established its first municipal airport, laying the groundwork for regional aviation.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Early_aviation_postcard.jpg/480px-Early_aviation_postcard.jpg" },
-  { year: 1932, title: "Airport Relocation", desc: "The municipal airport moved to its current location on the city's south side.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/3/39/StateLibQld_1_192335_Avro_Avian_biplane_in_a_field%2C_1920-1930.jpg" },
-  { year: 1936, title: "WPA Projects", desc: "New Deal WPA projects modernized the city, building bridges, improving parks, and paving roads.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/8/80/Morton_County_WPA_bridge_from_W_1.JPG" },
-  { year: 1939, title: "Catholic Diocese Formed", desc: "The Roman Catholic Diocese of Des Moines was elevated to key regional prominence.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1c/St._Ambrose_Cathedral_-_Des_Moines_02.jpg" },
-  { year: 1942, title: "WAAC Training Center", desc: "Fort Des Moines became the first national training center for the Women's Army Auxiliary Corps.", imageUrl: "https://www.nps.gov/articles/000/images/WAAC-Inspection.jpg" },
-  { year: 1944, title: "Near South Side Community Forms", desc: "Mexican American workers recruited for Des Moines packinghouses and railroads settle on the Near South Side, founding a vibrant Latino neighborhood with its own markets, mutual aid societies, and cultural traditions that endures to this day.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Packinghouse_Workers_Organizing_Committee_banner%2C_Iowa%2C_1940s.jpg/800px-Packinghouse_Workers_Organizing_Committee_banner%2C_Iowa%2C_1940s.jpg" },
-  { year: 1945, title: "Post-War Suburban Boom", desc: "Following WWII, Des Moines experienced massive housing demands, spurring suburban expansion.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Old_Main_Front.png/640px-Old_Main_Front.png" },
-  { year: 1948, title: "Art Center Opens", desc: "The Des Moines Art Center, designed by renowned architect Eliel Saarinen, officially opened.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Des_Moines_Art_Center_Meier_wing.jpg/640px-Des_Moines_Art_Center_Meier_wing.jpg" },
-  { year: 1948, title: "Katz Drug Store Sit-In", desc: "Civil rights leader Edna Griffin organized a sit-in at Katz Drug Store after being refused service. Her determination — and a landmark legal victory — made Iowa the first state to outlaw public accommodation discrimination, a full sixteen years before the federal Civil Rights Act.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Edna_Griffin_Iowa_Civil_Rights_Hall_of_Fame.jpg/640px-Edna_Griffin_Iowa_Civil_Rights_Hall_of_Fame.jpg" },
-  { year: 1951, title: "Veterans Memorial Auditorium", desc: "Vets Auditorium opened, becoming the city's premier venue for concerts, sports, and conventions.", imageUrl: "https://upload.wikimedia.org/wikipedia/en/2/2f/Civic_Center_of_Greater_Des_Moines.jpg" },
-  { year: 1955, title: "Urban Renewal Begins", desc: "Des Moines started early urban renewal programs, fundamentally reshaping downtown.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg/480px-Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg" },
-  { year: 1959, title: "Merle Hay Mall", desc: "Merle Hay Mall opened as an open-air plaza, signaling the shift of retail away from downtown.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg/480px-Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg" },
-  { year: 1961, title: "MacVicar Freeway", desc: "Construction of Interstate 235 began, cutting through the city to connect the suburbs.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg/800px-Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg" },
-  { year: 1965, title: "Near North Side Demolished", desc: "Urban renewal bulldozed Des Moines' historic Near North Side — the heart of the Black community since the 1890s. Hundreds of families were displaced, churches torn down, and businesses erased. As James 'Red' Washington recalled: 'You cannot demolish a people.' Residents scattered but rebuilt community across the city.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg/800px-Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg" },
-  { year: 1965, title: "Tinker Protest", desc: "Des Moines students wore black armbands to protest the Vietnam War, sparking a landmark First Amendment case.", imageUrl: "https://th-thumbnailer.cdn-si-edu.com/2lDX6Y-rov6f3bUyg5e19aD-4FI=/fit-in/1600x0/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/88/ff/88ff95e6-2ff9-4e11-831f-bae01988ad1e/tinker-kids-2.jpg" },
-  { year: 1969, title: "Tinker v. Des Moines", desc: "The Supreme Court ruled students do not shed their constitutional rights at the schoolhouse gate.", imageUrl: "https://th-thumbnailer.cdn-si-edu.com/2lDX6Y-rov6f3bUyg5e19aD-4FI=/fit-in/1600x0/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/88/ff/88ff95e6-2ff9-4e11-831f-bae01988ad1e/tinker-kids-2.jpg" },
-  { year: 1973, title: "Ruan Center Construction", desc: "Construction began on the 36-story Ruan Center, modernizing the Des Moines skyline.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/74/Photo_RuanCenter_north-eastside_des_moines_usa_2008-04-27.JPG" },
-  { year: 1975, title: "Southeast Asian Refugee Resettlement", desc: "Governor Robert Ray opened Iowa's doors to thousands of Southeast Asian refugees — the only state with its own government-funded resettlement program. Families from Vietnam, Laos, Cambodia, and Thailand settled in Des Moines, founding temples, restaurants, and cultural organizations. As refugee Pham Thi Lan remembered: 'Governor Ray opened the door. The neighbors opened their hearts.'", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Vietnamese_refugees_on_USS_Blue_Ridge_%28LCC-19%29_1975.jpg/640px-Vietnamese_refugees_on_USS_Blue_Ridge_%28LCC-19%29_1975.jpg" },
-  { year: 1976, title: "Civic Center Founded", desc: "Community leaders established the Civic Center to bring world-class performing arts to the city.", imageUrl: "https://upload.wikimedia.org/wikipedia/en/2/2f/Civic_Center_of_Greater_Des_Moines.jpg" },
-  { year: 1979, title: "Civic Center Opens", desc: "The Des Moines Civic Center officially opened, revitalizing the downtown arts district.", imageUrl: "https://upload.wikimedia.org/wikipedia/en/2/2f/Civic_Center_of_Greater_Des_Moines.jpg" },
-  { year: 1983, title: "Skywalk System Expansion", desc: "The Des Moines Skywalk underwent major expansion, allowing indoor downtown navigation year-round.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/74/Photo_RuanCenter_north-eastside_des_moines_usa_2008-04-27.JPG" },
-  { year: 1987, title: "New Historical Building", desc: "The modern State Historical Building of Iowa opened, showcasing the state's heritage.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/2/24/IowaStateCapNorthView.jpg" },
-  { year: 1991, title: "801 Grand Completed", desc: "The 801 Grand skyscraper was completed, becoming the tallest building in Iowa at 45 stories.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/74/Photo_RuanCenter_north-eastside_des_moines_usa_2008-04-27.JPG" },
-  { year: 1993, title: "Great Flood: Community Resilience", desc: "When the Des Moines River crested at 28.4 feet, destroying the water treatment plant and cutting off 250,000 residents for twelve days, the city's response became a landmark in civic solidarity. Neighbors shared water, volunteers ran bottle distribution, and faith communities opened their doors. The water system reopened faster than any expert predicted — a testament to community will.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/High_Water_in_Des_Moines_2015.jpg/640px-High_Water_in_Des_Moines_2015.jpg" },
-  { year: 1997, title: "Downtown Revitalization Vision", desc: "City leaders unveiled sweeping plans to rebuild the core and reconnect with the riverfront.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Morning_Skyline_-_Des_Moines%2C_Iowa_-_Winter_on_the_Des_Moines_River_%2824805016620%29_%28cropped2%29.jpg/1280px-Morning_Skyline_-_Des_Moines%2C_Iowa_-_Winter_on_the_Des_Moines_River_%2824805016620%29_%28cropped2%29.jpg" },
-  { year: 2001, title: "Iowa Events Center Planned", desc: "Funding and planning were approved for a massive new downtown arena and convention center.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Morning_Skyline_-_Des_Moines%2C_Iowa_-_Winter_on_the_Des_Moines_River_%2824805016620%29_%28cropped2%29.jpg/1280px-Morning_Skyline_-_Des_Moines%2C_Iowa_-_Winter_on_the_Des_Moines_River_%2824805016620%29_%28cropped2%29.jpg" },
-  { year: 2005, title: "Wells Fargo Arena & SCI", desc: "Wells Fargo Arena and the Science Center of Iowa opened, transforming downtown entertainment.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Morning_Skyline_-_Des_Moines%2C_Iowa_-_Winter_on_the_Des_Moines_River_%2824805016620%29_%28cropped2%29.jpg/1280px-Morning_Skyline_-_Des_Moines%2C_Iowa_-_Winter_on_the_Des_Moines_River_%2824805016620%29_%28cropped2%29.jpg" },
-  { year: 2009, title: "Pappajohn Sculpture Park", desc: "The John and Mary Pappajohn Sculpture Park opened, turning the Western Gateway into an outdoor gallery.", imageUrl: "https://www.traveliowa.com/userdocs/modulepage/heroimages/DMAC_PappajohnSculpturePark_Plensa_11020_Elevation.jpg" },
-  { year: 2013, title: "Principal Riverwalk", desc: "The Principal Riverwalk was dedicated, creating scenic trails and pedestrian bridges.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/4/4b/High_Water_in_Des_Moines_2015.jpg" },
-  { year: 2016, title: "Water Quality Lawsuit", desc: "Des Moines Water Works filed a high-profile lawsuit regarding agricultural runoff.", imageUrl: "https://civileats.com/wp-content/uploads/2016/07/DesMoines-water.jpg" },
-  { year: 2018, title: "Krause Gateway Center", desc: "The architecturally stunning Krause Gateway Center opened, designed by Renzo Piano.", imageUrl: "https://opnarchitects.b-cdn.net/app/uploads/2019/04/RPBW_KRAUSE-GATEWAY-CENTER_20181129_083-cropped.jpg" },
-  { year: 2021, title: "Lauridsen Skatepark", desc: "The Lauridsen Skatepark opened as the largest open skatepark in the United States.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Des_Moines_River_at_floodplain.jpg/640px-Des_Moines_River_at_floodplain.jpg" },
-  { year: 2023, title: "ICON Water Trails", desc: "Construction broke ground on the ICON Water Trails, connecting regional recreational water sites.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Des_Moines_River_at_floodplain.jpg/640px-Des_Moines_River_at_floodplain.jpg" },
-  { year: 2026, title: "New Airport Terminal", desc: "Des Moines International Airport is completing the first phase of its modernized terminal.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Des_Moines_International_Airport.jpg" },
+  { year: 1843, title: "Fort Des Moines Built", desc: "Captain James Allen established Fort Des Moines at the confluence of the rivers.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/0/09/First_Log_Cabin_at_Fort_Des_Moines_-_History_of_Iowa.jpg", citation: "Iowa State Historical Records. First Log Cabin at Fort Des Moines. [Illustration]. Public domain via Wikimedia Commons." },
+  { year: 1846, title: "Town Incorporation & Statehood", desc: "Fort Des Moines was incorporated as a town, the same year Iowa became the 29th US state.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/5/53/Fort_Des_Moines_Historic_Complex%2C_Building_No._46%2C_Des_Moines_%28Polk_County%2C_Iowa%29.jpg", citation: "Library of Congress, Historic American Buildings Survey. Fort Des Moines Historic Complex, Building No. 46, Des Moines, Iowa. [Photograph]. Public domain." },
+  { year: 1851, title: "City of Des Moines", desc: "The town charter was updated, officially dropping 'Fort' to become the City of Des Moines.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Bird%27s_eye_view_of_the_city_of_Des_Moines%2C_the_capital_of_Iowa_1868._LOC_73693394.jpg", citation: "Ruger, A. (1868). Bird's Eye View of the City of Des Moines, the Capital of Iowa. [Lithograph]. Library of Congress Geography and Map Division. Public domain." },
+  { year: 1854, title: "First Brick Building", desc: "Des Moines saw its first brick building erected as the local construction industry began to boom.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/75/Locust_St.%2C_Des_Moines%2C_Iowa_LCCN91790588.jpg", citation: "Library of Congress, Prints and Photographs Division. Locust St., Des Moines, Iowa. [Photograph]. LCCN 91790588. Public domain." },
+  { year: 1857, title: "Capital Moved", desc: "The capital was officially relocated to Des Moines from Iowa City.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/11/Iowa_old_capitol_1855.jpg", citation: "Iowa Old Capitol, Iowa City, ca. 1855. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1860, title: "Eve of the Civil War", desc: "Des Moines population reached nearly 4,000 as it established itself as a regional trade hub.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/f/f0/Bird%27s_eye_view_of_the_city_of_Des_Moines%2C_the_capital_of_Iowa_1868._LOC_73693394.jpg", citation: "Ruger, A. (1868). Bird's Eye View of the City of Des Moines, the Capital of Iowa. [Lithograph]. Library of Congress Geography and Map Division. Public domain." },
+  { year: 1864, title: "Coal Mining Boom", desc: "Rapid expansion of coal mining began in the Des Moines area, heavily driving the local economy.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Workers_at_the_Gilman_Coal_Mine%2C_Issaquah%2C_between_1892-1899_%28INDOCC_1461%29.jpg", citation: "Curtis, A. (ca. 1892–1899). Workers at the Gilman Coal Mine, Issaquah. [Photograph]. Indiana Division of Historic Preservation. Public domain via Wikimedia Commons." },
+  { year: 1866, title: "Railroads Arrive", desc: "The first railroad links reached Des Moines, sparking an industrial boom.", imageUrl: "https://projectdesmoines.dmpl.org/files/fullsize/6d44391944b9066c278d03a7fc2d63e2.jpg", citation: "Des Moines Public Library. Project Des Moines Digital Archive. Railroad era photograph. Courtesy of Des Moines Public Library." },
+  { year: 1868, title: "First Street Railway", desc: "The Des Moines Street Railway Company began operating horse-drawn streetcars.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/3/3f/St_Charles_Napoleon_New_Orleans_Streetcars_1860.jpg", citation: "St. Charles/Napoleon streetcars, New Orleans, 1860. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1871, title: "State Capitol Foundation", desc: "The foundation was laid for the grand new Iowa State Capitol building on a hill east of the river.", imageUrl: "https://tile.loc.gov/storage-services/service/pnp/highsm/15200/15231v.jpg", citation: "Highsmith, C.M. Capitol Building, Des Moines, Iowa. [Photograph]. Library of Congress, Prints and Photographs Division. Retrieved from the Library of Congress." },
+  { year: 1875, title: "Industrial Growth", desc: "Des Moines saw rapid growth in manufacturing and publishing, pushing the population past 20,000.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/cf/Union_stock_yards_chicago_1870s_loc_%28cropped%29.jpg", citation: "Library of Congress. Union Stock Yards, Chicago, 1870s. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1878, title: "First Telephone Exchange", desc: "Des Moines entered the modern communications era with its first telephone exchange opening.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/9/94/Antique_long_distance_telephone_switchboard.jpg", citation: "Antique long distance telephone switchboard. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1881, title: "Drake University Founded", desc: "George C. Carpenter and Francis Marion Drake founded Drake University.", imageUrl: "https://tile.loc.gov/storage-services/service/pnp/pan/6a05000/6a05200/6a05241r.jpg", citation: "Haines Photo Co, C. C. (ca. 1914). Drake University, Des Moines, Iowa. [Photograph]. Retrieved from the Library of Congress, https://www.loc.gov/item/2007660974/." },
+  { year: 1884, title: "Capitol Dedicated", desc: "The current Iowa State Capitol, with its iconic 275-foot gold dome, was formally dedicated.", imageUrl: "https://cache.getarchive.net/Prod/thumb/cdn4/L3Bob3RvLzE5NDAvMDEvMDEvdW50aXRsZWQtcGhvdG8tcG9zc2libHktcmVsYXRlZC10by1zdGF0ZS1jYXBpdG9sLWRlcy1tb2luZXMtaW93YS05NjVjNTUtNjQwLmpwZw==/480/657/webp", citation: "Rothstein, A. / Library of Congress (ca. 1940). Iowa State Capitol, Des Moines. [Photograph]. Retrieved from the Library of Congress, https://www.loc.gov/item/2017778433/." },
+  { year: 1886, title: "Iowa State Fair Finds a Home", desc: "After moving between cities, the Iowa State Fair permanently relocated to its current Des Moines grounds.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/a/ac/Maytag-Mason_Motor_Co._at_Iowas_State_Fair_%28Postcard%2C_1910%29.jpg", citation: "Maytag-Mason Motor Co. at Iowa's State Fair. (ca. 1910). [Postcard]. Public domain via Wikimedia Commons." },
+  { year: 1889, title: "Electric Streetcars", desc: "Electric streetcars replaced horse-drawn ones, expanding the reach of Des Moines suburbs.", imageUrl: "https://projectdesmoines.dmpl.org/files/fullsize/b410d2d8247d626009f1a7ddd2962dc8.jpg", citation: "Des Moines Public Library. Project Des Moines Digital Archive. Electric streetcar, Des Moines. Courtesy of Des Moines Public Library." },
+  { year: 1893, title: "Rise of Insurance", desc: "Despite the nationwide Panic of 1893, Des Moines began establishing itself as a robust insurance center.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e1/World_Columbian_Exposition_-_White_City_-_1.JPG", citation: "Johnston, F.B. (1893). World's Columbian Exposition — White City, Chicago. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1896, title: "Grand View College", desc: "Grand View College was founded by Danish immigrants to preserve their heritage and provide education.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e4/Grand_View_College%2C_Des_Moines%2C_Iowa_ca._1900.jpg", citation: "Grand View College, Des Moines, Iowa. (ca. 1900). [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1901, title: "Fort Des Moines Reborn", desc: "A new Fort Des Moines was established south of the city as a major cavalry post.", imageUrl: "https://tile.loc.gov/storage-services/service/pnp/ppmsca/50500/50565v.jpg", citation: "Library of Congress, Prints and Photographs Division. Fort Des Moines, Iowa. [Photograph]. PPMSCA 50565. Retrieved from the Library of Congress." },
+  { year: 1904, title: "City Beautiful Movement", desc: "Des Moines embraced the City Beautiful movement, leading to new civic centers and riverfront improvements.", imageUrl: "https://tile.loc.gov/storage-services/service/pnp/pan/6a05000/6a05000/6a05088v.jpg", citation: "Library of Congress, Panoramic Photographs Collection (1904). Des Moines, Iowa. [Panoramic Photograph]. PAN 6a05088. Retrieved from the Library of Congress." },
+  { year: 1907, title: "The Des Moines Plan", desc: "The city adopted the Des Moines Plan of commission government, sparking a national municipal reform trend.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/0/06/Municipal_Building_Des_Moines.jpg", citation: "Municipal Building, Des Moines, Iowa. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1911, title: "Hartford of the West", desc: "With dozens of national insurance companies headquartered locally, the city was dubbed the 'Hartford of the West.'", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/cd/Photo_EquitableBuilding_north-eastside_des_moines_usa_2008-04-27.JPG", citation: "Equitable Life Assurance Company Building, 605 Locust Street, Des Moines, Iowa. (2008). [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1915, title: "Capitol Fire", desc: "A major fire broke out in the State Capitol, nearly destroying the House chambers.", imageUrl: "https://projectdesmoines.dmpl.org/files/fullsize/ed63a1a8b05cc6d09d779998928a7ddb.jpg", citation: "Des Moines Public Library. Project Des Moines Digital Archive. Iowa State Capitol Fire, 1915. Courtesy of Des Moines Public Library." },
+  { year: 1917, title: "First Black Officers", desc: "During WWI, Fort Des Moines became the site of the first training camp for African American Army officers.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/5th_Provisional_Company_officers_reserve_training_Camp_Ft._Des_Moines_Ia._LCCN2016652396.jpg/1280px-5th_Provisional_Company_officers_reserve_training_Camp_Ft._Des_Moines_Ia._LCCN2016652396.jpg", citation: "Library of Congress (1917). 5th Provisional Company officers reserve training camp, Fort Des Moines, Iowa. [Photograph]. LCCN 2016652396. Public domain." },
+  { year: 1920, title: "Population Milestone", desc: "Des Moines population surpassed 126,000, solidifying its place as the undisputed metropolis of Iowa.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Bird%27s_eye_view_of_the_city_of_Des_Moines%2C_the_capital_of_Iowa_1868._LOC_73693394.jpg/1280px-Bird%27s_eye_view_of_the_city_of_Des_Moines%2C_the_capital_of_Iowa_1868._LOC_73693394.jpg", citation: "Ruger, A. (1868). Bird's Eye View of the City of Des Moines. [Lithograph]. Library of Congress Geography and Map Division. Public domain." },
+  { year: 1924, title: "WHO Radio Broadcasts", desc: "WHO Radio began broadcasting, quickly becoming a massive 50,000-watt clear-channel station.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/6/6f/KDKA_-_Early_studio_-_circa_1921.jpg", citation: "KDKA Radio early studio, Pittsburgh. (ca. 1921). [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1928, title: "First Municipal Airport", desc: "Des Moines established its first municipal airport, laying the groundwork for regional aviation.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/9/9d/Ford_Trimotor_of_Golden_State_Airways_-_Clover_Field_Los_Angeles_1929-30.jpg", citation: "Ford Trimotor of Golden State Airways, Clover Field, Los Angeles, California. (1929–1930). [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1932, title: "Airport Relocation", desc: "The municipal airport moved to its current location on the city's south side.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e9/Washington-Hoover_Airport_-_1930_-_with_Gravelley_Point.jpg", citation: "Washington-Hoover Airport, 1930. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1936, title: "WPA Projects", desc: "New Deal WPA projects modernized the city, building bridges, improving parks, and paving roads.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/5/56/WPA_Workers_with_wheelbarrows_on_Lebeau_Road%2C_Arabi_LA_1936.jpg", citation: "Works Progress Administration (1936). WPA workers with wheelbarrows, Lebeau Road, Arabi, Louisiana. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1939, title: "Catholic Diocese Formed", desc: "The Roman Catholic Diocese of Des Moines was elevated to key regional prominence.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/2/25/St._Ambrose_Cathedral_-_Des_Moines_02.jpg", citation: "Farragutful (2022). St. Ambrose Cathedral, Des Moines, Iowa. [Photograph]. Wikimedia Commons. CC BY-SA 4.0." },
+  { year: 1942, title: "WAAC Training Center", desc: "Fort Des Moines became the first national training center for the Women's Army Auxiliary Corps.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/2/25/WAAC_OTC_1.jpg", citation: "U.S. Army (1942). Women's Army Auxiliary Corps, Officers' Training Camp, Fort Des Moines, Iowa. [Photograph]. Public domain." },
+  { year: 1945, title: "Post-War Suburban Boom", desc: "Following WWII, Des Moines experienced massive housing demands, spurring suburban expansion.", imageUrl: "https://tile.loc.gov/storage-services/service/pnp/highsm/56900/56988v.jpg", citation: "Highsmith, C.M. Post-WWII suburban housing. [Photograph]. Library of Congress, Prints and Photographs Division. Retrieved from the Library of Congress." },
+  { year: 1948, title: "Art Center Opens", desc: "The Des Moines Art Center, designed by renowned architect Eliel Saarinen, officially opened.", imageUrl: "https://tile.loc.gov/storage-services/service/pnp/highsm/39200/39252v.jpg", citation: "Highsmith, C.M. The Des Moines Art Center, Greenwood Park, Des Moines, Iowa. [Photograph]. Library of Congress, Prints and Photographs Division. Retrieved from the Library of Congress." },
+  { year: 1948, title: "Katz Drug Store Sit-In", desc: "Civil rights leader Edna Griffin organized a sit-in at Katz Drug Store after being refused service. Her determination — and a landmark legal victory — made Iowa the first state to outlaw public accommodation discrimination, a full sixteen years before the federal Civil Rights Act.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Edna_Griffin_Iowa_Civil_Rights_Hall_of_Fame.jpg/640px-Edna_Griffin_Iowa_Civil_Rights_Hall_of_Fame.jpg", citation: "Iowa Civil Rights Commission. Edna Griffin, Iowa Civil Rights Hall of Fame inductee. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1951, title: "Veterans Memorial Auditorium", desc: "Vets Auditorium opened, becoming the city's premier venue for concerts, sports, and conventions.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1b/Des_Moines_Iowa_20090110_Downtown_View.JPG", citation: "Des Moines, Iowa Downtown View. (January 10, 2009). [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1955, title: "Urban Renewal Begins", desc: "Des Moines started early urban renewal programs, fundamentally reshaping downtown.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg/480px-Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg", citation: "Urban renewal in Des Moines, Iowa. (1960s). [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1959, title: "Merle Hay Mall", desc: "Merle Hay Mall opened as an open-air plaza, signaling the shift of retail away from downtown.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1e/DesMoinesIowaNight.jpg", citation: "Des Moines, Iowa at night. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1961, title: "MacVicar Freeway", desc: "Construction of Interstate 235 began, cutting through the city to connect the suburbs.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e7/Interstate_Highway_plan_October_1%2C_1970.jpg", citation: "U.S. Department of Transportation (1970). Interstate Highway Plan. [Map]. Public domain." },
+  { year: 1965, title: "Near North Side Demolished", desc: "Urban renewal bulldozed Des Moines' historic Near North Side — the heart of the Black community since the 1890s. Hundreds of families were displaced, churches torn down, and businesses erased. As James 'Red' Washington recalled: 'You cannot demolish a people.' Residents scattered but rebuilt community across the city.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg/800px-Urban_renewal_in_Des_Moines%2C_Iowa%2C_1960s_%28cropped%29.jpg", citation: "Urban renewal in Des Moines, Iowa. (1960s). [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1965, title: "Tinker Protest", desc: "Des Moines students wore black armbands to protest the Vietnam War, sparking a landmark First Amendment case.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Vietnam_War_protest_in_Washington_DC_April_1971.jpg", citation: "Vietnam War protest, Washington D.C. (April 1971). [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1969, title: "Tinker v. Des Moines", desc: "The Supreme Court ruled students do not shed their constitutional rights at the schoolhouse gate.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/d/d8/USSupremeCourtWestFacade.JPG", citation: "U.S. Supreme Court Building, West Facade, Washington, D.C. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1973, title: "Ruan Center Construction", desc: "Construction began on the 36-story Ruan Center, modernizing the Des Moines skyline.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/74/Photo_RuanCenter_north-eastside_des_moines_usa_2008-04-27.JPG", citation: "Ruan Center, Des Moines, Iowa. (April 27, 2008). [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1975, title: "Southeast Asian Refugee Resettlement", desc: "Governor Robert Ray opened Iowa's doors to thousands of Southeast Asian refugees — the only state with its own government-funded resettlement program. Families from Vietnam, Laos, Cambodia, and Thailand settled in Des Moines, founding temples, restaurants, and cultural organizations. As refugee Pham Thi Lan remembered: 'Governor Ray opened the door. The neighbors opened their hearts.'", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Vietnamese_refugees_on_USS_Blue_Ridge_%28LCC-19%29_1975.jpg/640px-Vietnamese_refugees_on_USS_Blue_Ridge_%28LCC-19%29_1975.jpg", citation: "U.S. Navy (1975). Vietnamese refugees on USS Blue Ridge (LCC-19). [Photograph]. Public domain — U.S. Government work." },
+  { year: 1976, title: "Civic Center Founded", desc: "Community leaders established the Civic Center to bring world-class performing arts to the city.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Civic_Center_Historic_District.JPG", citation: "Civic Center Historic District, Des Moines, Iowa. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1979, title: "Civic Center Opens", desc: "The Des Moines Civic Center officially opened, revitalizing the downtown arts district.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Civic_Center_Historic_District.JPG", citation: "Civic Center Historic District, Des Moines, Iowa. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1983, title: "Skywalk System Expansion", desc: "The Des Moines Skywalk underwent major expansion, allowing indoor downtown navigation year-round.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/0/0d/Des_Moines_Skywalk.jpg", citation: "Des Moines Skywalk System. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1987, title: "New Historical Building", desc: "The modern State Historical Building of Iowa opened, showcasing the state's heritage.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b0/The_State_Historical_Museum_of_Iowa_-_23093235882.jpg", citation: "Wright, L. (2015). The State Historical Museum of Iowa, Des Moines. [Photograph]. Wikimedia Commons. CC BY 2.0." },
+  { year: 1991, title: "801 Grand Completed", desc: "The 801 Grand skyscraper was completed, becoming the tallest building in Iowa at 45 stories.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/8/87/801_Grand_-_Des_Moines_01.jpg", citation: "801 Grand, Des Moines, Iowa. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 1993, title: "Great Flood: Community Resilience", desc: "When the Des Moines River crested at 28.4 feet, destroying the water treatment plant and cutting off 250,000 residents for twelve days, the city's response became a landmark in civic solidarity. Neighbors shared water, volunteers ran bottle distribution, and faith communities opened their doors. The water system reopened faster than any expert predicted — a testament to community will.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/a/a8/FLOOD_DAMAGE_-_NARA_-_544580.jpg", citation: "National Archives and Records Administration. Flood damage photograph. [Photograph]. NARA 544580. Public domain." },
+  { year: 1997, title: "Downtown Revitalization Vision", desc: "City leaders unveiled sweeping plans to rebuild the core and reconnect with the riverfront.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Morning_Skyline_-_Des_Moines%2C_Iowa_-_Winter_on_the_Des_Moines_River_%2824805016620%29_%28cropped2%29.jpg/1280px-Morning_Skyline_-_Des_Moines%2C_Iowa_-_Winter_on_the_Des_Moines_River_%2824805016620%29_%28cropped2%29.jpg", citation: "Morning Skyline — Des Moines, Iowa, Winter on the Des Moines River. [Photograph]. Flickr / Wikimedia Commons. CC BY-SA 2.0." },
+  { year: 2001, title: "Iowa Events Center Planned", desc: "Funding and planning were approved for a massive new downtown arena and convention center.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/7/74/Photo_RuanCenter_north-eastside_des_moines_usa_2008-04-27.JPG", citation: "Ruan Center, Des Moines, Iowa. (April 27, 2008). [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 2005, title: "Wells Fargo Arena & SCI", desc: "Wells Fargo Arena and the Science Center of Iowa opened, transforming downtown entertainment.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/6/6d/Wellsfargoarena.jpg", citation: "Wells Fargo Arena, Des Moines, Iowa. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 2009, title: "Pappajohn Sculpture Park", desc: "The John and Mary Pappajohn Sculpture Park opened, turning the Western Gateway into an outdoor gallery.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/cf/View_from_the_Pappajohn_Sculpture_Park.jpg", citation: "View from the Pappajohn Sculpture Park, Des Moines, Iowa. [Photograph]. Wikimedia Commons. CC BY-SA 2.0." },
+  { year: 2013, title: "Principal Riverwalk", desc: "The Principal Riverwalk was dedicated, creating scenic trails and pedestrian bridges.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/15/Foot_bridge_over_Gray%27s_Lake_at_dusk.jpg", citation: "Foot Bridge over Gray's Lake at Dusk, Des Moines, Iowa. [Photograph]. Wikimedia Commons. CC BY-SA 4.0." },
+  { year: 2016, title: "Water Quality Lawsuit", desc: "Des Moines Water Works filed a high-profile lawsuit regarding agricultural runoff.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/cd/Des_Moines_Water_Works_Building_-_City_of_Des_Moines%2C_Iowa_%2823947115093%29.jpg", citation: "Des Moines Water Works Building, City of Des Moines, Iowa. [Photograph]. Wikimedia Commons. CC BY 2.0." },
+  { year: 2018, title: "Krause Gateway Center", desc: "The architecturally stunning Krause Gateway Center opened, designed by Renzo Piano.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/1/1e/DesMoinesIowaNight.jpg", citation: "Des Moines, Iowa at night. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 2021, title: "Lauridsen Skatepark", desc: "The Lauridsen Skatepark opened as the largest open skatepark in the United States.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/3/3c/Pedlow_Field_Skate_Park.JPG", citation: "Pedlow Field Skate Park, Los Angeles. [Photograph]. Public domain via Wikimedia Commons." },
+  { year: 2023, title: "ICON Water Trails", desc: "Construction broke ground on the ICON Water Trails, connecting regional recreational water sites.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Des_Moines_River_at_floodplain.jpg/640px-Des_Moines_River_at_floodplain.jpg", citation: "Des Moines River at floodplain. [Photograph]. Wikimedia Commons. CC BY-SA 3.0." },
+  { year: 2026, title: "New Airport Terminal", desc: "Des Moines International Airport is completing the first phase of its modernized terminal.", imageUrl: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Des_Moines_International_Airport.jpg", citation: "Des Moines International Airport. [Photograph]. Public domain via Wikimedia Commons." },
 ];
 
 // ─── HISTORY PAGE ───────────────────────────────────────────────────────────
@@ -1451,23 +1604,49 @@ function HistoryPage() {
         </div>
 
         {/* Content card */}
-        <div key={animKey} className="history-card" style={{
-          display: "flex", background: "var(--cream)", borderRadius: 8, border: "1px solid #8B5E3C",
-          overflow: "hidden", boxShadow: "0 12px 48px rgba(0,0,0,0.08)",
-          minHeight: 400, animation: "scaleIn 0.35s cubic-bezier(0.16,1,0.3,1)",
-          flexWrap: "wrap",
-        }}>
+        <AnimatePresence mode="wait">
+        <motion.div
+          key={animKey}
+          initial={{ opacity: 0, y: 18, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -12, scale: 0.98 }}
+          transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+          className="history-card"
+          style={{
+            display: "flex", background: "var(--cream)", borderRadius: 8, border: "1px solid #8B5E3C",
+            overflow: "hidden", boxShadow: "0 12px 48px rgba(0,0,0,0.08)",
+            minHeight: 400, flexWrap: "wrap",
+          }}
+        >
           <div className="history-card-img" style={{
             flex: "1 1 340px", minHeight: 320, background: "#e0dcd7",
-            display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden",
+            display: "flex", flexDirection: "column", alignItems: "stretch", justifyContent: "flex-start", overflow: "hidden",
           }}>
-            {ev.imageUrl && !imgErr ? (
-              <img src={ev.imageUrl} alt={ev.title} onError={() => setImgErr(true)}
-                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", animation: "fadeIn 0.5s ease" }} />
-            ) : (
-              <div style={{ textAlign: "center", padding: 32, color: "var(--mist)" }}>
-                <div style={{ fontSize: "2.5rem", marginBottom: 8 }}>🖼️</div>
-                <div style={{ fontSize: "0.85rem" }}>Image unavailable</div>
+            <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", minHeight: 280 }}>
+              {ev.imageUrl && !imgErr ? (
+                <motion.img
+                  src={ev.imageUrl}
+                  alt={ev.title}
+                  onError={() => setImgErr(true)}
+                  initial={{ scale: 1.08, filter: "blur(6px)" }}
+                  animate={{ scale: 1, filter: "blur(0px)" }}
+                  transition={{ duration: 0.55, ease: "easeOut" }}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                />
+              ) : (
+                <div style={{ textAlign: "center", padding: 32, color: "var(--mist)" }}>
+                  <div style={{ fontSize: "2.5rem", marginBottom: 8 }}>🖼️</div>
+                  <div style={{ fontSize: "0.85rem" }}>Image unavailable</div>
+                </div>
+              )}
+            </div>
+            {ev.citation && (
+              <div style={{
+                fontSize: "0.58rem", color: "#555", padding: "5px 10px",
+                fontStyle: "italic", background: "rgba(0,0,0,0.07)",
+                lineHeight: 1.4, borderTop: "1px solid rgba(139,94,60,0.2)",
+              }}>
+                {ev.citation}
               </div>
             )}
           </div>
@@ -1476,11 +1655,15 @@ function HistoryPage() {
             flex: "1.2 1 360px", padding: "48px 44px",
             display: "flex", flexDirection: "column", justifyContent: "center",
           }}>
-            <div style={{
-              fontFamily: "'Playfair Display', serif", fontSize: "3.4rem",
-              color: "var(--peach)", fontWeight: 700, lineHeight: 1, marginBottom: 6,
-              animation: "slideInRight 0.5s ease",
-            }}>{ev.year}</div>
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              style={{
+                fontFamily: "'Playfair Display', serif", fontSize: "3.4rem",
+                color: "var(--peach)", fontWeight: 700, lineHeight: 1, marginBottom: 6,
+              }}
+            >{ev.year}</motion.div>
             <h3 style={{
               fontSize: "1.4rem", fontWeight: 700, marginBottom: 16,
               color: "var(--charcoal)", animation: "slideInRight 0.5s ease 0.05s both",
@@ -1529,7 +1712,8 @@ function HistoryPage() {
               }} aria-label="Share this historical event">📤 Share</button>
             </div>
           </div>
-        </div>
+        </motion.div>
+        </AnimatePresence>
 
         <p style={{ textAlign: "center", marginTop: 20, fontSize: "0.8rem", color: "var(--mist)" }}>
           {idx + 1} of {timelineData.length} events · Click any year to jump
@@ -1571,8 +1755,8 @@ const heroesData = [
   { name: "Willie S. Glanton", title: "Trailblazing Legislator", shortDesc: "First African American woman elected to the Iowa Legislature.", longDesc: "Willie Stevenson Glanton shattered barriers as the first African American woman elected to the Iowa State Legislature in 1964 and the first to serve as assistant Polk County attorney.", achievements: ["First Black woman in Iowa Legislature.", "First Black assistant county attorney.", "Des Moines Human Rights Commission."], image: "https://www.legis.iowa.gov/photo?action=getPhoto&ga=61&pid=1253&pType=3" },
   { name: "Bill Bryson", title: "Best-Selling Author", shortDesc: "Immortalized 1950s Des Moines in his hit memoirs.", longDesc: "Born and raised in Des Moines, Bryson's hometown features prominently in 'The Life and Times of the Thunderbolt Kid', a nostalgic memoir about growing up in Des Moines.", achievements: ["'A Walk in the Woods' best-seller.", "'Thunderbolt Kid' memoir.", "Awarded honorary OBE."], image: "https://upload.wikimedia.org/wikipedia/commons/3/35/Neil_MacGregor%2C_Bill_Bryson%2C_Claire_Walker%2C_Huw_Edwards_%2828449155987%29_%28Bryson_cropped%29.jpg" },
   { name: "Captain James Allen", title: "Founder", shortDesc: "Selected the site at the confluence of two rivers in 1843.", longDesc: "In 1843, Captain James Allen selected the point where the Raccoon River flows into the Des Moines River to establish a military post that became the future capital city.", achievements: ["Selected Des Moines location.", "Built the original fort.", "Managed early trade relations."], image: "https://upload.wikimedia.org/wikipedia/commons/5/53/Fort_Des_Moines_Historic_Complex%2C_Building_No._46%2C_Des_Moines_%28Polk_County%2C_Iowa%29.jpg" },
-  { name: "Mary Louise Smith", title: "Political Leader", shortDesc: "First woman to chair the Republican National Committee.", longDesc: "Mary Louise Smith championed civil rights and the Equal Rights Amendment. In 1974, she became the first woman to chair the RNC.", achievements: ["First female RNC Chair.", "Co-founded Iowa Women's Political Caucus.", "Iowa Women's Hall of Fame (1977)."], image: "https://upload.wikimedia.org/wikipedia/commons/2/24/IowaStateCapNorthView.jpg" },
-  { name: "Frederick M. Hubbell", title: "Business Pioneer", shortDesc: "Founded Equitable Life Insurance and built Terrace Hill.", longDesc: "Hubbell built his fortune in real estate, railroads, and insurance. He expanded Terrace Hill, later donated to serve as the Governor's residence.", achievements: ["Co-founded Equitable Life Insurance.", "Built railroad and real estate empire.", "Legacy includes Terrace Hill."], image: "https://images.findagrave.com/photos/2011/23/44057349_129591948632.jpg" },
+  { name: "Mary Louise Smith", title: "Political Leader", shortDesc: "First woman to chair the Republican National Committee.", longDesc: "Mary Louise Smith championed civil rights and the Equal Rights Amendment. In 1974, she became the first woman to chair the RNC.", achievements: ["First female RNC Chair.", "Co-founded Iowa Women's Political Caucus.", "Iowa Women's Hall of Fame (1977)."], image: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Civic_Center_Historic_District.JPG" },
+  { name: "Frederick M. Hubbell", title: "Business Pioneer", shortDesc: "Founded Equitable Life Insurance and built Terrace Hill.", longDesc: "Hubbell built his fortune in real estate, railroads, and insurance. He expanded Terrace Hill, later donated to serve as the Governor's residence.", achievements: ["Co-founded Equitable Life Insurance.", "Built railroad and real estate empire.", "Legacy includes Terrace Hill."], image: "https://upload.wikimedia.org/wikipedia/commons/1/12/Capitol_building%2C_Des_Moines%2C_Iowa.jpg" },
   { name: "James B. Morris", title: "Publisher & Legal Pioneer", shortDesc: "Published the Iowa Bystander newspaper for 50 years.", longDesc: "After serving as one of the first Black officers in WWI at Fort Des Moines, James B. Morris purchased the 'Iowa Bystander' in 1922, using it to fight discrimination for half a century.", achievements: ["Published Iowa Bystander 50 years.", "Founding National Bar Association member.", "Fort Des Moines officer graduate."], image: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/5th_Provisional_Company_officers_reserve_training_Camp_Ft._Des_Moines_Ia._LCCN2016652396.jpg/640px-5th_Provisional_Company_officers_reserve_training_Camp_Ft._Des_Moines_Ia._LCCN2016652396.jpg" },
 ];
 
@@ -1597,14 +1781,23 @@ function HeroesPage() {
         <FadeSection><SectionLabel text="Notable Figures" /></FadeSection>
         <div className="heroes-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))", gap: 20, marginBottom: 64 }}>
           {heroesData.map((hero, i) => (
-            <FadeSection key={i} delay={i * 0.06}>
-              <div className="hero-card" onClick={() => setModal(i)} style={{
-                background: "var(--cream)", borderRadius: 8, overflow: "hidden", border: "1px solid #8B5E3C",
-                cursor: "pointer", transition: "all 0.35s cubic-bezier(0.16,1,0.3,1)",
-                boxShadow: "0 2px 12px rgba(44,24,16,0.1)", position: "relative",
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-8px)"; e.currentTarget.style.boxShadow = "0 20px 48px rgba(0,0,0,0.18)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 12px rgba(0,0,0,0.04)"; }}
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 48, scale: 0.9, rotateX: 8 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+              viewport={{ once: true, margin: "-60px" }}
+              transition={{ duration: 0.65, delay: i * 0.07, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <motion.div
+                className="hero-card"
+                onClick={() => setModal(i)}
+                whileHover={{ y: -10, boxShadow: "0 24px 56px rgba(0,0,0,0.22)", scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 340, damping: 22 }}
+                style={{
+                  background: "var(--cream)", borderRadius: 8, overflow: "hidden", border: "1px solid #8B5E3C",
+                  cursor: "pointer", boxShadow: "0 2px 12px rgba(44,24,16,0.1)", position: "relative",
+                }}
               >
                 <div style={{ height: 210, background: "#e0dcd7", overflow: "hidden", position: "relative" }}>
                   <img src={hero.image} alt={hero.name} onError={e => e.target.style.display = "none"}
@@ -1627,8 +1820,8 @@ function HeroesPage() {
                   <div style={{ fontSize: "0.68rem", color: "var(--copper)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>{hero.title}</div>
                   <div style={{ fontSize: "0.84rem", color: "var(--mist)", lineHeight: 1.5 }}>{hero.shortDesc}</div>
                 </div>
-              </div>
-            </FadeSection>
+              </motion.div>
+            </motion.div>
           ))}
         </div>
 
@@ -1901,27 +2094,38 @@ function VoicesPage() {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 20, marginBottom: 0 }}>
           {ORAL_HISTORIES.map((h, i) => (
-            <FadeSection key={i} delay={i * 0.07}>
-              <div style={{
-                background: "var(--cream)", borderRadius: 10, padding: "26px 24px",
-                border: "1px solid rgba(120,80,30,0.14)",
-                borderLeft: "3px solid var(--peach)",
-                boxShadow: "0 2px 14px rgba(28,16,8,0.09)",
-                transition: "all 0.25s ease", height: "100%",
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 10px 28px rgba(28,16,8,0.14)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 2px 14px rgba(28,16,8,0.09)"; }}
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: i % 2 === 0 ? -40 : 40, y: 20 }}
+              whileInView={{ opacity: 1, x: 0, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.65, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <motion.div
+                whileHover={{ y: -6, boxShadow: "0 14px 36px rgba(28,16,8,0.18)" }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                style={{
+                  background: "var(--cream)", borderRadius: 10, padding: "26px 24px",
+                  border: "1px solid rgba(120,80,30,0.14)",
+                  borderLeft: "3px solid var(--peach)",
+                  boxShadow: "0 2px 14px rgba(28,16,8,0.09)",
+                  height: "100%", cursor: "default",
+                }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 14 }}>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: "1.05rem", color: "var(--charcoal)", marginBottom: 2 }}>{h.name}</div>
                     <div style={{ fontSize: "0.72rem", color: "var(--copper)", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.09em" }}>{h.tag}</div>
                   </div>
-                  <div style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--peach)", fontFamily: "'Playfair Display', serif", flexShrink: 0, marginLeft: 12 }}>{h.year}</div>
+                  <motion.div
+                    animate={{ opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: i * 0.4 }}
+                    style={{ fontSize: "1.5rem", fontWeight: 700, color: "var(--peach)", fontFamily: "'Playfair Display', serif", flexShrink: 0, marginLeft: 12 }}
+                  >{h.year}</motion.div>
                 </div>
                 <p style={{ color: "var(--mist)", fontSize: "0.88rem", lineHeight: 1.7, fontStyle: "italic", margin: 0 }}>"{h.excerpt}"</p>
-              </div>
-            </FadeSection>
+              </motion.div>
+            </motion.div>
           ))}
         </div>
         </div>
@@ -2911,7 +3115,11 @@ export default function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [confettiTrigger, setConfettiTrigger] = useState(null);
   const pendingPage = useRef(null);
+
+  // Wire up navigation click sound via Web Audio API
+  useEffect(() => { setupNavSound(); }, []);
 
   useEffect(() => {
     const handler = (e) => {
@@ -2938,12 +3146,14 @@ export default function App() {
     if (p === page) return;
     pendingPage.current = p;
     setTransitioning(true);
+    if (typeof window.__playNavSound === "function") window.__playNavSound();
+    // Fire confetti when navigating to Heroes page
+    if (p === "heroes") setConfettiTrigger(Date.now());
     setTimeout(() => {
       setPage(pendingPage.current);
       window.scrollTo({ top: 0 });
       setTransitioning(false);
     }, 210);
-    if (typeof window.__playNavSound === "function") window.__playNavSound();
   };
 
   const renderPage = () => {
@@ -2955,6 +3165,7 @@ export default function App() {
       case "sources": return <SourcesPage />;
       case "then-now": return <ThenNowPage />;
       case "neighborhoods": return <NeighborhoodPage />;
+      case "education": return <EducationPage />;
       default: return <HomePage setPage={navigate} />;
     }
   };
@@ -2962,15 +3173,23 @@ export default function App() {
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <GlobalStyles />
+
+      {/* ── Global effects ── */}
+      <CursorTrail />
+      <BackToTop />
+      <ConfettiBurst trigger={confettiTrigger} />
+      <DidYouKnow page={page} />
+
       {/* Scroll progress bar */}
       <div style={{
         position: "fixed", top: 0, left: 0, zIndex: 10001,
         height: 3, width: `${scrollProgress}%`,
-        background: "linear-gradient(90deg, var(--copper), var(--peach))",
+        background: "linear-gradient(90deg, var(--copper), var(--peach), #FFD700)",
         transition: "width 0.1s linear",
         pointerEvents: "none",
-        boxShadow: "0 0 6px rgba(201,138,42,0.5)",
+        boxShadow: "0 0 8px rgba(201,138,42,0.7)",
       }} />
+
       {/* Skip to main content — accessibility */}
       <a
         href="#main-content"
@@ -2985,17 +3204,21 @@ export default function App() {
       >
         Skip to main content
       </a>
+
       <Navbar activePage={page} setPage={navigate} onSearchOpen={() => setSearchOpen(true)} />
+
       <main
         id="main-content"
         tabIndex={-1}
         style={{
           flex: 1,
           opacity: transitioning ? 0 : 1,
-          transform: transitioning ? "translateY(10px)" : "translateY(0)",
-          transition: "opacity 0.21s ease, transform 0.21s ease",
+          transform: transitioning ? "translateY(12px) scale(0.995)" : "translateY(0) scale(1)",
+          filter: transitioning ? "blur(3px)" : "blur(0)",
+          transition: "opacity 0.22s ease, transform 0.22s ease, filter 0.22s ease",
         }}
       >{renderPage()}</main>
+
       <Footer setPage={navigate} />
       <SearchModal
         isOpen={searchOpen}
