@@ -18,7 +18,7 @@ const GRADIENT_ITEMS = [
   { id: "voices",        label: "Voices",     Icon: IoMicOutline,            from: "#56CCF2", to: "#2F80ED" },
   { id: "map",           label: "Map",        Icon: IoMapOutline,            from: "#80FF72", to: "#2ED573" },
   { id: "neighborhoods", label: "Areas",      Icon: IoGridOutline,           from: "#a955ff", to: "#7B2FBE" },
-  { id: "then-now",      label: "Then/Now",   Icon: IoSwapHorizontalOutline, from: "#FF6B9D", to: "#C44569" },
+  { id: "then-now",      label: "Numbers",    Icon: IoSwapHorizontalOutline, from: "#FF6B9D", to: "#C44569" },
   { id: "sources",       label: "Reference",  Icon: IoLibraryOutline,        from: "#A8EDEA", to: "#5FC3BA" },
   { id: "education",    label: "Education",  Icon: IoSchoolOutline,         from: "#F7971E", to: "#FFD200" },
 ];
