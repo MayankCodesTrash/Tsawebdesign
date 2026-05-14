@@ -253,9 +253,18 @@ const GlobalStyles = () => (
       .map-sidebar { min-width: unset !important; }
       .quiz-grid { grid-template-columns: 1fr !important; }
       .hero-card-overlay { display: none !important; }
+      .voices-tabs { gap: 4px !important; }
+      .voices-tabs button { padding: 8px 10px !important; font-size: 0.72rem !important; }
+      .cork-board { padding: 20px 12px 16px !important; }
+      .cork-board > div { grid-template-columns: 1fr 1fr !important; gap: 18px 12px !important; }
+      .pin-card { padding: 22px 12px 12px !important; }
+      .page-hero-inner { padding: 110px 16px 48px !important; }
+      .page-hero-inner h1 { font-size: clamp(1.6rem, 6vw, 2.4rem) !important; }
+      .sources-grid { grid-template-columns: 1fr !important; }
     }
-    @media (max-width: 480px) {
+    @media (max-width: 420px) {
       .heroes-grid { grid-template-columns: 1fr !important; }
+      .cork-board > div { grid-template-columns: 1fr !important; }
     }
     @media (max-width: 768px) {
       .desktop-nav { display: none !important; }
@@ -446,7 +455,7 @@ const NAV_ITEMS = [
   { id: "voices", label: "Voices" },
   { id: "map", label: "Historical Map" },
   { id: "neighborhoods", label: "Neighborhoods" },
-  { id: "then-now", label: "Then & Now" },
+  { id: "then-now", label: "By the Numbers" },
   { id: "education", label: "Education" },
   { id: "sources", label: "Reference" },
 ];
@@ -2053,7 +2062,7 @@ function VoicesPage() {
         position: "sticky", top: 60, zIndex: 90,
         boxShadow: "0 2px 8px rgba(28, 16, 8, 0.08)",
       }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 32px", display: "flex", gap: 0, overflowX: "auto" }}>
+        <div className="voices-tabs" style={{ maxWidth: 1100, margin: "0 auto", padding: "0 32px", display: "flex", gap: 0, overflowX: "auto" }}>
           {[
             { id: "newspapers", label: "📰 From the Archives" },
             { id: "oral", label: "Oral Histories" },
@@ -2373,7 +2382,7 @@ function CommunityGuestbook() {
       {entries.length > 0 && (
         <FadeSection delay={0.1}>
           {/* Cork board */}
-          <div style={{
+          <div className="cork-board" style={{
             background: "linear-gradient(135deg, #c8a96a 0%, #b8956a 30%, #c8a96a 60%, #b5935f 100%)",
             borderRadius: 12, padding: "32px 24px 24px",
             boxShadow: "inset 0 2px 8px rgba(0,0,0,0.2), 0 4px 20px rgba(0,0,0,0.15)",
@@ -2397,7 +2406,7 @@ function CommunityGuestbook() {
                 const bg = PIN_BG[ci];
                 const pinColor = PIN_COLORS[ci];
                 return (
-                  <div key={e.id || i} style={{
+                  <div key={e.id || i} className="pin-card" style={{
                     background: bg,
                     borderRadius: 3,
                     padding: "28px 16px 16px",

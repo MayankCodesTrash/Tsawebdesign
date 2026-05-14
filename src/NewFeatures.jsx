@@ -212,224 +212,152 @@ const THEN_NOW_PAIRS = [
     fact: "The Near South Side's Latino population grew over 300% between 1990 and 2020. It hosts Iowa's largest Cinco de Mayo celebration, drawing 20,000+ attendees each year to honor a community that has shaped Des Moines for over 80 years.",
   },
 ];
-// ─── THEN & NOW PAGE ─────────────────────────────────────────────────────────
-export function ThenNowPage() {
-  const [active, setActive] = useState(0);
-  const [sliderPos, setSliderPos] = useState(50);
-  const [dragging, setDragging] = useState(false);
-  const [hintDone, setHintDone] = useState(false);
-  const containerRef = useRef(null);
-  const [thenError, setThenError] = useState(false);
-  const [nowError, setNowError] = useState(false);
-  const pair = THEN_NOW_PAIRS[active];
+// ─── BY THE NUMBERS PAGE ─────────────────────────────────────────────────────
+const STATS = [
+  { number: 1843, suffix: "", label: "Year Founded", sub: "Fort Des Moines established at the river confluence", color: "#8B5E3C" },
+  { number: 702, suffix: "K+", label: "Metro Population", sub: "Greater Des Moines area residents today", color: "#C98A2A" },
+  { number: 180, suffix: "+", label: "Years of History", sub: "From frontier fort to modern capital city", color: "#5C7A3E" },
+  { number: 275, suffix: " ft", label: "Capitol Dome Height", sub: "Iowa's gold-domed Capitol, the tallest in the nation at completion", color: "#4A7FA5" },
+  { number: 1200, suffix: "+", label: "Black Officers Commissioned", sub: "At Fort Des Moines in 1917 — a first in U.S. history", color: "#7B4FA5" },
+  { number: 50000, suffix: " W", label: "WHO Radio Power", sub: "Clear-channel 50,000-watt station launched in 1924", color: "#C9542A" },
+  { number: 1, suffix: "M+", label: "State Fair Visitors/Year", sub: "Iowa State Fair draws over 1 million every August since 1886", color: "#2A8B6E" },
+  { number: 28.4, suffix: " ft", label: "1993 Flood Crest", sub: "Des Moines River crest that cut off 250,000 residents for 12 days", color: "#3A6BA5" },
+  { number: 45, suffix: " stories", label: "801 Grand Tower", sub: "Iowa's tallest building, completed 1991", color: "#8B3E3E" },
+  { number: 4, suffix: "", label: "Rivers & Communities", sub: "Raccoon River, Des Moines River, and 180 years of diverse communities", color: "#5C8B3E" },
+  { number: 23, suffix: " karat", label: "Capitol Dome Gold Leaf", sub: "Real 23-karat gold leaf covers the iconic dome — regilded every decade", color: "#C9A82A" },
+  { number: 7, suffix: " to 2", label: "Tinker Supreme Court Ruling", sub: "The 1969 landmark ruling protecting student free speech, born in Des Moines", color: "#6B3E8B" },
+];
 
-  const FALLBACK = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='500'%3E%3Crect fill='%23232830' width='900' height='500'/%3E%3Ctext x='450' y='240' text-anchor='middle' fill='%23556070' font-size='18' font-family='sans-serif'%3EHistorical Photo%3C/text%3E%3Ctext x='450' y='268' text-anchor='middle' fill='%23556070' font-size='13' font-family='sans-serif'%3E(Image unavailable)%3C/text%3E%3C/svg%3E";
+function AnimatedNumber({ target, suffix, inView }) {
+  const [display, setDisplay] = useState(0);
+  useEffect(() => {
+    if (!inView) return;
+    const isDecimal = target % 1 !== 0;
+    const duration = 1400;
+    const steps = 50;
+    const interval = duration / steps;
+    let step = 0;
+    const timer = setInterval(() => {
+      step++;
+      const progress = step / steps;
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const val = isDecimal ? Math.round(target * eased * 10) / 10 : Math.round(target * eased);
+      setDisplay(val);
+      if (step >= steps) { setDisplay(target); clearInterval(timer); }
+    }, interval);
+    return () => clearInterval(timer);
+  }, [inView, target]);
+  return <>{display}{suffix}</>;
+}
 
-  const updateSlider = useCallback((clientX) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const pct = Math.min(96, Math.max(4, ((clientX - rect.left) / rect.width) * 100));
-    setSliderPos(pct);
+function StatCard({ stat, index }) {
+  const [inView, setInView] = useState(false);
+  const ref = useRef(null);
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true); }, { threshold: 0.3 });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
   }, []);
+  return (
+    <div ref={ref} style={{
+      background: "#FFF8EE", borderRadius: 12, padding: "28px 22px",
+      border: `1px solid ${stat.color}33`,
+      borderTop: `4px solid ${stat.color}`,
+      boxShadow: "0 4px 20px rgba(0,0,0,0.07)",
+      display: "flex", flexDirection: "column", gap: 8,
+      transition: "transform 0.3s ease, box-shadow 0.3s ease",
+    }}
+    onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.13)"; }}
+    onMouseLeave={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.07)"; }}
+    >
+      <div style={{
+        fontFamily: "'Playfair Display', serif",
+        fontSize: "clamp(1.8rem, 4vw, 2.6rem)", fontWeight: 800,
+        color: stat.color, lineHeight: 1, letterSpacing: "-0.02em",
+      }}>
+        <AnimatedNumber target={stat.number} suffix={stat.suffix} inView={inView} />
+      </div>
+      <div style={{ fontWeight: 700, fontSize: "0.92rem", color: "#2A1608", fontFamily: "'DM Sans', sans-serif" }}>{stat.label}</div>
+      <div style={{ fontSize: "0.78rem", color: "#6B5040", lineHeight: 1.5, fontFamily: "'DM Sans', sans-serif" }}>{stat.sub}</div>
+    </div>
+  );
+}
 
-  const onMouseDown = (e) => { setDragging(true); updateSlider(e.clientX); e.preventDefault(); };
-  const onMouseMove = useCallback((e) => { if (dragging) updateSlider(e.clientX); }, [dragging, updateSlider]);
-  const onMouseUp = useCallback(() => setDragging(false), []);
-  const onTouchMove = useCallback((e) => { updateSlider(e.touches[0].clientX); e.preventDefault(); }, [updateSlider]);
-
-  useEffect(() => {
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
-    return () => { window.removeEventListener("mousemove", onMouseMove); window.removeEventListener("mouseup", onMouseUp); };
-  }, [onMouseMove, onMouseUp]);
-
-  useEffect(() => { setSliderPos(50); setThenError(false); setNowError(false); setHintDone(false); }, [active]);
-
-  useEffect(() => {
-    if (hintDone) return;
-    const steps = [
-      { pos: 50, delay: 700 },
-      { pos: 28, delay: 1100 },
-      { pos: 72, delay: 1900 },
-      { pos: 50, delay: 2600 },
-    ];
-    const timers = steps.map(({ pos, delay }) =>
-      setTimeout(() => setSliderPos(pos), delay)
-    );
-    const done = setTimeout(() => setHintDone(true), 3000);
-    return () => { timers.forEach(clearTimeout); clearTimeout(done); };
-  }, [active]);
-
+export function ThenNowPage() {
   return (
     <div style={{ background: "var(--warm)", minHeight: "100vh" }}>
-      {/* Page hero */}
+      {/* Hero */}
       <div style={{
-        padding: "140px 32px 80px", textAlign: "center",
-        background: "linear-gradient(170deg, var(--charcoal) 0%, var(--slate) 100%)",
+        padding: "140px 32px 72px", textAlign: "center",
+        background: "linear-gradient(170deg, #2A1608 0%, #3D1F0D 100%)",
         position: "relative", overflow: "hidden",
       }}>
-        <div style={{ position: "absolute", inset: 0, opacity: 0.03, backgroundImage: "radial-gradient(circle at 2px 2px, white 1px, transparent 0)", backgroundSize: "32px 32px" }} />
-        <div style={{ width: 48, height: 3, background: "var(--peach)", margin: "0 auto 24px", borderRadius: 2, animation: "scaleIn 0.6s ease" }} />
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2.2rem, 5vw, 3.6rem)", color: "#fff", fontWeight: 700, letterSpacing: "-0.025em", marginBottom: 14, animation: "fadeUp 0.7s ease" }}>
-          Then &amp; Now
+        <div style={{ position: "absolute", inset: 0, opacity: 0.04, backgroundImage: "radial-gradient(circle at 2px 2px, white 1px, transparent 0)", backgroundSize: "28px 28px" }} />
+        <div style={{ width: 48, height: 3, background: "#C98A2A", margin: "0 auto 22px", borderRadius: 2 }} />
+        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 5vw, 3.4rem)", color: "#fff", fontWeight: 700, marginBottom: 14 }}>
+          Des Moines by the Numbers
         </h1>
-        <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "1.05rem", maxWidth: 560, margin: "0 auto", lineHeight: 1.7, animation: "fadeUp 0.7s ease 0.1s both" }}>
-          A community's story is written across time. Drag the divider to see how Des Moines transformed across generations — the same streets, the same corners, different worlds.
+        <p style={{ color: "rgba(255,255,255,0.55)", fontSize: "1rem", maxWidth: 520, margin: "0 auto", lineHeight: 1.7 }}>
+          180 years of history told through the numbers that define a city — from the Capitol dome to the 1993 flood, from WHO Radio to the Supreme Court.
         </p>
       </div>
 
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 32px 80px" }}>
-        {/* Location selector */}
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 32 }} role="tablist" aria-label="Choose a location">
-          {THEN_NOW_PAIRS.map((p, i) => (
-            <button
-              key={p.id}
-              role="tab"
-              aria-selected={active === i}
-              aria-controls="then-now-panel"
-              onClick={() => setActive(i)}
-              style={{
-                padding: "10px 20px", borderRadius: 10, border: "1px solid",
-                borderColor: active === i ? "var(--peach)" : "rgba(0,0,0,0.1)",
-                background: active === i ? "var(--peach)" : "var(--cream)",
-                color: active === i ? "var(--charcoal)" : "var(--slate)",
-                fontWeight: active === i ? 700 : 500, fontSize: "0.88rem",
-                cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
-                transition: "all 0.25s ease",
-                transform: active === i ? "translateY(-2px)" : "",
-                boxShadow: active === i ? "0 6px 20px rgba(139,94,60,0.3)" : "none",
-              }}
-            >{p.location}</button>
-          ))}
-        </div>
-
-        {/* Slider */}
-        <div
-          id="then-now-panel"
-          role="tabpanel"
-          aria-label={`Before and after: ${pair.location}`}
-          ref={containerRef}
-          onMouseDown={onMouseDown}
-          onTouchStart={(e) => { updateSlider(e.touches[0].clientX); }}
-          onTouchMove={onTouchMove}
-          style={{
-            position: "relative", borderRadius: 20, overflow: "hidden",
-            cursor: dragging ? "ew-resize" : "col-resize",
-            boxShadow: "0 24px 72px rgba(0,0,0,0.18)",
-            userSelect: "none", aspectRatio: "16/9",
-            background: "#3D1F0D",
-          }}
-        >
-          {/* NOW image (right side / background) */}
-          <img
-            src={nowError ? FALLBACK : pair.now.url}
-            onError={() => setNowError(true)}
-            alt={`${pair.location} in ${pair.now.year}`}
-            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
-            draggable={false}
-          />
-
-          {/* THEN image (clipped left side) */}
-          <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 ${100 - sliderPos}% 0 0)`, transition: dragging ? "none" : "clip-path 0.55s cubic-bezier(0.16,1,0.3,1)" }}>
-            <img
-              src={thenError ? FALLBACK : pair.then.url}
-              onError={() => setThenError(true)}
-              alt={`${pair.location} in ${pair.then.year}`}
-              style={{ width: "100%", height: "100%", objectFit: "cover" }}
-              draggable={false}
-            />
-            {/* sepia tint on historical side */}
-            <div style={{
-              position: "absolute", inset: 0,
-              background: "rgba(160, 110, 60, 0.2)",
-              mixBlendMode: "multiply",
-            }} />
-          </div>
-
-          {/* Divider */}
-          <div style={{
-            position: "absolute", top: 0, bottom: 0, left: `${sliderPos}%`,
-            width: 3, background: "#fff", transform: "translateX(-50%)",
-            boxShadow: "0 0 16px rgba(0,0,0,0.5)",
-            pointerEvents: "none",
-            transition: dragging ? "none" : "left 0.55s cubic-bezier(0.16,1,0.3,1)",
-          }}>
-            <div style={{
-              position: "absolute", top: "50%", left: "50%",
-              transform: "translate(-50%,-50%)",
-              width: 48, height: 48, borderRadius: "50%",
-              background: "#fff", boxShadow: "0 4px 24px rgba(0,0,0,0.4)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontSize: "1.1rem", color: "var(--charcoal)", fontWeight: 700,
-            }} aria-hidden="true">⟺</div>
-          </div>
-
-          {/* Year badges */}
-          <div style={{
-            position: "absolute", top: 14, left: 14,
-            background: "rgba(20,24,28,0.88)", backdropFilter: "blur(8px)",
-            color: "#fff", padding: "6px 14px", borderRadius: 8,
-            fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em",
-            fontFamily: "'JetBrains Mono', monospace",
-            opacity: sliderPos > 12 ? 1 : 0, transition: "opacity 0.2s",
-            pointerEvents: "none",
-          }}>THEN · {pair.then.year}</div>
-
-          <div style={{
-            position: "absolute", top: 14, right: 14,
-            background: "rgba(139,94,60,0.92)", backdropFilter: "blur(8px)",
-            color: "var(--charcoal)", padding: "6px 14px", borderRadius: 8,
-            fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.1em",
-            fontFamily: "'JetBrains Mono', monospace",
-            opacity: sliderPos < 88 ? 1 : 0, transition: "opacity 0.2s",
-            pointerEvents: "none",
-          }}>NOW · {pair.now.year}</div>
-
-          {/* Instruction hint */}
-          <div style={{
-            position: "absolute", bottom: 14, left: "50%", transform: "translateX(-50%)",
-            background: "rgba(0,0,0,0.55)", color: "rgba(255,255,255,0.7)",
-            padding: "5px 14px", borderRadius: 20, fontSize: "0.72rem",
-            fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap",
-            pointerEvents: "none",
-          }}>← Drag to reveal →</div>
-        </div>
-
-        {/* Captions */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginTop: 18 }} className="then-now-captions">
-          <div style={{ background: "var(--cream)", padding: "20px 24px", borderRadius: 14, borderLeft: "3px solid rgba(0,0,0,0.1)" }}>
-            <div style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.15em", color: "var(--mist)", textTransform: "uppercase", marginBottom: 8 }}>Then · {pair.then.year}</div>
-            <p style={{ fontSize: "0.88rem", color: "var(--slate)", lineHeight: 1.65, margin: 0 }}>{pair.then.caption}</p>
-          </div>
-          <div style={{ background: "var(--cream)", padding: "20px 24px", borderRadius: 14, borderLeft: "3px solid var(--peach)" }}>
-            <div style={{ fontSize: "0.62rem", fontWeight: 700, letterSpacing: "0.15em", color: "var(--copper)", textTransform: "uppercase", marginBottom: 8 }}>Now · {pair.now.year}</div>
-            <p style={{ fontSize: "0.88rem", color: "var(--slate)", lineHeight: 1.65, margin: 0 }}>{pair.now.caption}</p>
-          </div>
-        </div>
-
-        {/* Fact pill */}
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "56px 24px 80px" }}>
+        {/* Stat grid */}
         <div style={{
-          marginTop: 16, marginBottom: 0,
-          background: "var(--charcoal)", borderRadius: 14, padding: "18px 24px",
-          display: "flex", alignItems: "flex-start", gap: 14,
-        }}>
-          <span style={{ fontSize: "1.3rem", flexShrink: 0 }} aria-hidden="true">💡</span>
-          <p style={{ color: "rgba(255,255,255,0.75)", fontSize: "0.9rem", lineHeight: 1.65, margin: 0 }}>
-            <strong style={{ color: "var(--peach)" }}>Did you know? </strong>
-            {pair.fact}
-          </p>
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+          gap: 20, marginBottom: 64,
+        }} className="stats-grid">
+          {STATS.map((stat, i) => <StatCard key={i} stat={stat} index={i} />)}
+        </div>
+
+        {/* Population chart */}
+        <div style={{ marginBottom: 56 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
+            <div style={{ width: 32, height: 2, background: "#C98A2A", borderRadius: 1 }} />
+            <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#8B5E3C" }}>Population Growth</span>
+          </div>
+          <PopulationChart />
+        </div>
+
+        {/* Highlight facts */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
+          <div style={{ width: 32, height: 2, background: "#C98A2A", borderRadius: 1 }} />
+          <span style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: "#8B5E3C" }}>Did You Know?</span>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 16 }} className="facts-grid">
+          {[
+            { icon: "🏛️", fact: "Iowa's Capitol is the only state capitol with five domes — the largest rises 275 feet and is covered in 23-karat gold leaf, regilded every decade." },
+            { icon: "⚖️", fact: "The 1969 Tinker v. Des Moines Supreme Court ruling (7–2) established that students do not 'shed their constitutional rights at the schoolhouse gate.'" },
+            { icon: "💧", fact: "During the Great Flood of 1993, Des Moines became the largest city in U.S. history to lose its entire water supply. Residents were without water for 12 days." },
+            { icon: "🎖️", fact: "Fort Des Moines is the only place in U.S. history where both Black officers (1917) and Army women (1942) received their first training — two civil rights firsts at one address." },
+            { icon: "📻", fact: "WHO Radio launched in 1924 and quickly grew to 50,000 watts — one of the most powerful radio stations in America. A young Ronald Reagan was a broadcaster here in the 1930s." },
+            { icon: "🎡", fact: "The Iowa State Fair has been held every August since 1854 — interrupted only by World War II. It inspired the 1945 Rodgers & Hammerstein musical 'State Fair.'" },
+          ].map((f, i) => (
+            <div key={i} style={{
+              background: "#2A1608", borderRadius: 10, padding: "22px 20px",
+              display: "flex", gap: 14, alignItems: "flex-start",
+            }}>
+              <span style={{ fontSize: "1.4rem", flexShrink: 0 }}>{f.icon}</span>
+              <p style={{ color: "rgba(255,255,255,0.78)", fontSize: "0.86rem", lineHeight: 1.65, margin: 0, fontFamily: "'DM Sans', sans-serif" }}>{f.fact}</p>
+            </div>
+          ))}
         </div>
       </div>
 
       <style>{`
         @media (max-width: 600px) {
-          .then-now-captions { grid-template-columns: 1fr !important; }
+          .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
+          .facts-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 380px) {
+          .stats-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>
   );
 }
-
 // ─── POPULATION DATA ──────────────────────────────────────────────────────────
 const POP_DATA = [
   { year: 1850, pop: 502,    event: "Fort Des Moines settled" },
