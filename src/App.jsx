@@ -250,7 +250,8 @@ const GlobalStyles = () => (
       .history-card-img { min-height: 200px !important; flex: none !important; }
       .heroes-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
       .map-layout { flex-direction: column !important; }
-      .map-sidebar { min-width: unset !important; }
+      .map-sidebar { min-width: unset !important; width: 100% !important; }
+      .map-container { height: 320px !important; min-height: 320px !important; }
       .quiz-grid { grid-template-columns: 1fr !important; }
       .hero-card-overlay { display: none !important; }
       .voices-tabs { gap: 4px !important; }
@@ -3138,7 +3139,11 @@ function HistoricalMapPage() {
       maxZoom: 19,
     }).addTo(map);
     mapInstanceRef.current = map;
+    setTimeout(() => map.invalidateSize(), 200);
+    const ro = new ResizeObserver(() => map.invalidateSize());
+    if (mapRef.current) ro.observe(mapRef.current);
     return () => {
+      ro.disconnect();
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
@@ -3223,7 +3228,7 @@ function HistoricalMapPage() {
         <div className="map-layout" style={{ maxWidth: 1200, margin: "24px auto 60px", padding: "0 24px", display: "flex", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
 
           {/* Leaflet map */}
-          <div style={{ flex: "1 1 520px", borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.08)", height: 560 }}>
+          <div className="map-container" style={{ flex: "1 1 520px", borderRadius: 16, overflow: "hidden", boxShadow: "0 8px 40px rgba(0,0,0,0.12)", border: "1px solid rgba(0,0,0,0.08)", height: 560 }}>
             <div ref={mapRef} style={{ width: "100%", height: "100%" }} />
           </div>
 
