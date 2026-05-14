@@ -455,7 +455,7 @@ const NAV_ITEMS = [
   { id: "voices", label: "Voices" },
   { id: "map", label: "Historical Map" },
   { id: "neighborhoods", label: "Neighborhoods" },
-  { id: "then-now", label: "By the Numbers" },
+  { id: "then-now", label: "Numbers" },
   { id: "education", label: "Education" },
   { id: "sources", label: "Reference" },
 ];
