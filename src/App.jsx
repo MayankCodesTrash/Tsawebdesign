@@ -251,7 +251,7 @@ const GlobalStyles = () => (
       .heroes-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
       .map-layout { flex-direction: column !important; }
       .map-sidebar { min-width: unset !important; width: 100% !important; }
-      .map-container { height: 320px !important; min-height: 320px !important; }
+      .map-container { height: 300px !important; min-height: 300px !important; flex: none !important; }
       .quiz-grid { grid-template-columns: 1fr !important; }
       .hero-card-overlay { display: none !important; }
       .voices-tabs { gap: 4px !important; }
@@ -272,6 +272,9 @@ const GlobalStyles = () => (
       .mobile-toggle { display: block !important; }
       .tl-pill-row { padding: 10px 12px !important; gap: 4px !important; }
       .tl-pill { min-width: 44px !important; font-size: 0.65rem !important; }
+      .map-layout { flex-direction: column !important; }
+      .map-sidebar { min-width: unset !important; width: 100% !important; }
+      .map-container { height: 300px !important; min-height: 300px !important; flex: none !important; }
     }
   `}</style>
 );
@@ -3139,10 +3142,13 @@ function HistoricalMapPage() {
       maxZoom: 19,
     }).addTo(map);
     mapInstanceRef.current = map;
-    setTimeout(() => map.invalidateSize(), 200);
+    [100, 300, 600, 1200].forEach(ms => setTimeout(() => map.invalidateSize(), ms));
+    const onResize = () => map.invalidateSize();
+    window.addEventListener('resize', onResize);
     const ro = new ResizeObserver(() => map.invalidateSize());
     if (mapRef.current) ro.observe(mapRef.current);
     return () => {
+      window.removeEventListener('resize', onResize);
       ro.disconnect();
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
@@ -3223,8 +3229,7 @@ function HistoricalMapPage() {
         </div>
       </FadeSection>
 
-      {/* Map + sidebar layout */}
-      <FadeSection delay={0.1}>
+      {/* Map + sidebar layout — NOT wrapped in FadeSection so Leaflet gets real dimensions */}
         <div className="map-layout" style={{ maxWidth: 1200, margin: "24px auto 60px", padding: "0 24px", display: "flex", gap: 24, alignItems: "flex-start", flexWrap: "wrap" }}>
 
           {/* Leaflet map */}
@@ -3293,7 +3298,6 @@ function HistoricalMapPage() {
           </div>
 
         </div>
-      </FadeSection>
     </div>
   );
 }
